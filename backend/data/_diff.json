@@ -1,15 +1,451 @@
 {
-  "computed_at": "2026-05-02T07:35:59.288053+00:00",
+  "computed_at": "2026-05-02T10:49:07.475644+00:00",
   "summary": {
-    "new_total": 53,
-    "removed_total": 0,
+    "new_total": 51,
+    "removed_total": 9,
     "sources_with_changes": [
-      "itat_orders",
+      "pib_finance",
       "taxguru"
     ]
   },
   "by_source": {
+    "itat_orders": {
+      "category": "case_law",
+      "new_items": [],
+      "removed_ids": []
+    },
     "cbdt_circulars": {
+      "category": null,
+      "new_items": [],
+      "removed_ids": []
+    },
+    "pib_finance": {
+      "category": "press",
+      "new_items": [
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "हरियाणा के राज्यपाल ने प्रधानमंत्री से भेंट की",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257462",
+          "date": "Posted on: 02 May 2026",
+          "summary": null,
+          "item_id": "2eabdefd37b34bc2",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "प्रधानमंत्री ने श्री अजय राय के शीघ्र स्वस्थ होने की कामना की",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257442",
+          "date": "Posted on: 02 May 2026",
+          "summary": null,
+          "item_id": "6ec878eae182f4fe",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "प्रधानमंत्री ने मध्य प्रदेश के जबलपुर में नाव पलटने से हुई जानमाल की हानि पर शोक व्यक्त किया",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257350",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "a322402aa9f178e7",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "प्रधानमंत्री ने प्रधानमंत्री उज्ज्वला योजना के परिवर्तनकारी प्रभाव को उजागर करने वाला एक लेख साझा किया",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257221",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "28ad2bc5f74e77d7",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "प्रधानमंत्री ने गुजरात दिवस पर गुजरात लोगों को शुभकामनाएं दीं",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257189",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "7c7075c509f039db",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "प्रधानमंत्री ने महाराष्ट्र दिवस के अवसर पर महाराष्ट्र की जनता को शुभकामनाएं दीं",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257200",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "d3db50be5e6cb33f",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "प्रधानमंत्री ने बुद्ध पूर्णिमा के अवसर पर सभी को शुभकामनाएं दीं",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257188",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "fb72bfe78e12f05b",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "अतंर्राष्ट्रीय योग महोत्सव 2026 के आयोजन से 50 दिन पहले 6,000 लोगों ने भुजंगासन कर एशिया रिकॉर्ड बनाया",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257483",
+          "date": "Posted on: 02 May 2026",
+          "summary": null,
+          "item_id": "c6f8c4c4af304ed2",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "अंतरराष्ट्रीय योग दिवस 2026 के लिए 50 दिन शेष: तेलंगाना कल योग महोत्सव मनाने के लिए तैयार",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257346",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "c88e0051827b0605",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "डीपीआईआईटी सचिव श्री अमरदीप सिंह भाटिया ने हरियाणा और राजस्थान में एनआईसीडीसी परियोजनाओं की समीक्षा की; उद्योग जगत के हितधारकों के साथ परामर्श आयोजित किया",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257397",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "82dfbb9969b69c3f",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "द्विपक्षीय आर्थिक सहयोग को सुदृढ़ करने के लिए भारत-तंजानिया संयुक्त व्यापार समिति की 5वीं बैठक दार एस सलाम में आयोजित की गई",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257325",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "803a84fa04e19648",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "केन्द्रीय गृह एवं सहकारिता मंत्री श्री अमित शाह ने लद्दाख में विभिन्न डेयरी अवसंरचना एवं सहकारी पहलों का शिलान्यास और उद्घाटन किया",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257360",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "b82250f2c210c1a3",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "सुगम्यता को मज़बूत बनाना: बीआईएस ने प्राथमिकता वाले सहायक उत्पादों के लिए छह नए मानक प्रकाशित किए",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257362",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "f96847301607597b",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "नौसेना प्रमुख का म्यांमार की यात्रा",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257463",
+          "date": "Posted on: 02 May 2026",
+          "summary": null,
+          "item_id": "77e787c379be2a17",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "श्री अनुग्रह नारायण दास ने रक्षा लेखा महानियंत्रक का कार्यभार ग्रहण किया",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257345",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "e80975c9402180fa",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "स्वदेशी उन्नत स्टील्थ फ्रिगेट 'महेंद्रगिरी' (प्रोजेक्ट 17ए) की डिलीवरी",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257284",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "13e7b7278f371085",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "श्री विश्वजीत सहाय ने सचिव (रक्षा वित्त) के रूप में कार्यभार ग्रहण किया",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257263",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "e0aa05021f2dea04",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "भारत की राष्ट्रपति ने सेना प्रशिक्षण कमान मुख्यालय का दौरा किया",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257443",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "e9d5ee6b399bafab",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "‘पद्म डोरी’ का वैश्विक लॉन्‍च",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257440",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "75a63ffda0f55265",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "मई की भीषण गर्मी को लेकर घबराने की कोई जरूरत नहीं; सरल सावधानियों से इसके प्रभाव को प्रभावी ढंग से नियंत्रित किया जा सकता है: डॉ. जितेंद्र सिंह",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257482",
+          "date": "Posted on: 02 May 2026",
+          "summary": null,
+          "item_id": "33a2c1c67890dba3",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "विशाखापत्तनम स्थित आंध्र विश्वविद्यालय में कोस्टल एटमॉस्फेरिक रिसर्च टेस्टबेड (सी-एआरटी) की खुली वेधशाला का उद्घाटन",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257347",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "4867901326321492",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "सर्वोत्तम कार्यप्रणालियों, नई पहलों और सुदृढ़ स्वास्थ्य प्रणालियों पर बल देने के साथ नवोन्मेषण और समावेशिता पर राष्ट्रीय शिखर सम्मेलन का समापन",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257353",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "0b3feeb194abba50",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "केन्द्रीय गृह एवं सहकारिता मंत्री श्री अमित शाह ने आज लेह में भगवान बुद्ध के पवित्र अवशेषों के प्रदर्शन का उद्घाटन किया",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257373",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "2523cd3507841cbd",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "आंध्र प्रदेश, अरुणाचल प्रदेश, हरियाणा, चंडीगढ़, मध्य प्रदेश और छत्तीसगढ़ में मकानसूचीकरण एवं मकानों की गणना (HLO) का कार्य आज से शुरू",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257369",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "02c194b94b6f6c0e",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "Operation WHITE STRIKE : NCB ने मुंबई क्षेत्र में बड़े कोकीन सिंडिकेट का भंडाफोड़ कर 349 किलोग्राम उच्च गुणवत्ता वाली कोकीन जब्त की, जिसकी अनुमानित कीमत ₹1,745 करोड़",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257340",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "feb050c41ee0a540",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "लाइव इवेंट्स डेवलपमेंट सेल की चौथी बैठक में भारत को लाइव इवेंट्स के वैश्विक केंद्र के रूप में स्थापित करने की दिशा में रोडमैप की समीक्षा की गई",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257321",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "c32a0750e74ecd74",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "श्री आशुतोष गोवारिकर को 57वें भारतीय अंतर्राष्ट्रीय फिल्म महोत्सव के लिए महोत्सव निदेशक नियुक्त किया गया है",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257230",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "36ba8bb482335709",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "डॉ. मनसुख मांडविया 3 मई को कर्नाटक के डोड्डाबल्लापुर में 100 बिस्तरों वाले ईएसआईसी अस्पताल का उद्घाटन करेंगे",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257324",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "eede0df12226f402",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "भरत खेड़ा ने सूक्ष्म, लघु एवं मध्यम उद्यम मंत्रालय के सचिव के रूप में कार्यभार ग्रहण किया",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257261",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "4ebe8a2fb8e2dcbc",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "पंचायती राज मंत्रालय हैदराबाद स्थित एनआईआरडी एंड पीआर में आत्मनिर्भर पंचायत पहल पर 2 मई 2026 को एक जागरूकता कार्यशाला का आयोजन करेगा",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257367",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "a5bf3d83ff389859",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "संसदीय कार्य मंत्रालय ने सक्रिय भागीदारी और ठोस परिणामों के साथ स्वच्छता पखवाड़ा-2026 का समापन किया",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257227",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "19edee53a1749cbe",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "शासन के तेजी से उभरते क्षेत्रों में तीव्र अनुकूलनशीलता और निरंतर सीखने की क्षमता प्रभावी लोक प्रशासन के लिए जरूरी है: केंद्रीय मंत्री डॉ. जितेंद्र सिंह",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257344",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "07598062245708e5",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "पश्चिम एशिया में वर्तमान घटनाक्रमों के मद्देनजर प्रमुख क्षेत्रों पर नवीनतम जानकारी",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257382",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "39d4e48d6c738728",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "केंद्रीय मंत्री नितिन गडकरी ने गुजरात में भारत का पहला मल्टी-लेन फ्री फ्लो बैरियर-रहित टोलिंग सिस्टम लॉन्च किया",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257279",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "598f558163a958f8",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "ओडिशा के विकास को नई रफ्तार, श्री शिवराज सिंह चौहान और मोहन चरण मांझी की उपस्थिति में डबल इंजन सरकार ने रायगड़ा से शुरू किया विकास का नया अध्याय",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257259",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "e19592ba20f11775",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "केन्द्रीय मंत्री जुएल ओराम ने ‘अंतिम-पायदान तक सेवाओं की मजबूत पहुंच’ का आह्वान किया; ‘जनजातीय कार्य मंत्रालय चिंतन शिविर 2026’ में बाबा रामदेव ने जुझारूपन पर जोर दिया",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257452",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "48ccf68238033602",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "महिला एवं बाल विकास मंत्रालय द्वारा ब्रिक्स महिला कार्य समूह की पहली प्रारंभिक बैठक आयोजित की गई",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257217",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "fb2c57b8277ab656",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "भारत में चिकित्सा और स्‍वास्‍थ्‍य पर्यटन",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257448",
+          "date": "Posted on: 02 May 2026",
+          "summary": null,
+          "item_id": "000424fcb030714a",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "ग्रेट निकोबार परियोजना: अक्सर पूछे जाने वाले प्रश्न (सवाल-जवाब)",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257396",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "91db66817ae6e4ee",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "भारत के बदलते कार्यबल को सशक्त बनाती महिलाएं",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257219",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "c1f1b8d71ff35fd6",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "ग्रेट निकोबार परियोजना",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257175",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "2d529398ea57e107",
+          "raw_meta": {}
+        },
+        {
+          "source": "pib_finance",
+          "category": "press",
+          "title": "केंद्रीय मंत्री श्री जेपी नड्डा ने एनआईपीईआर मोहाली का दौरा किया और जैव-फार्मा अनुसंधान एवं नवाचार की समीक्षा की",
+          "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257361",
+          "date": "Posted on: 01 May 2026",
+          "summary": null,
+          "item_id": "66af759435452ac8",
+          "raw_meta": {}
+        }
+      ],
+      "removed_ids": []
+    },
+    "cbdt_press_releases": {
       "category": null,
       "new_items": [],
       "removed_ids": []
@@ -19,53 +455,7 @@
       "new_items": [],
       "removed_ids": []
     },
-    "cbdt_press_releases": {
-      "category": null,
-      "new_items": [],
-      "removed_ids": []
-    },
-    "itat_orders": {
-      "category": "case_law",
-      "new_items": [
-        {
-          "source": "itat_orders",
-          "category": "case_law",
-          "title": "Case Status",
-          "url": "https://itat.gov.in/judicial/casestatus",
-          "date": null,
-          "summary": null,
-          "item_id": "ef9911578c84de4e",
-          "raw_meta": {}
-        },
-        {
-          "source": "itat_orders",
-          "category": "case_law",
-          "title": "Tribunal Orders",
-          "url": "https://itat.gov.in/judicial/tribunalorders",
-          "date": null,
-          "summary": null,
-          "item_id": "93ec2edbc31fcca2",
-          "raw_meta": {}
-        },
-        {
-          "source": "itat_orders",
-          "category": "case_law",
-          "title": "Notice Board (Judicial Info)",
-          "url": "https://itat.gov.in/judicial/notice_board",
-          "date": null,
-          "summary": null,
-          "item_id": "504862271042cc6d",
-          "raw_meta": {}
-        }
-      ],
-      "removed_ids": []
-    },
     "livelaw_tax": {
-      "category": null,
-      "new_items": [],
-      "removed_ids": []
-    },
-    "pib_finance": {
       "category": null,
       "new_items": [],
       "removed_ids": []
@@ -76,505 +466,105 @@
         {
           "source": "taxguru",
           "category": "analysis",
-          "title": "Section 234E TDS Late Fee Invalid for Pre-2015 Period Due to Lack of Legal Provision",
-          "url": "https://taxguru.in/income-tax/section-234e-tds-late-fee-invalid-pre-2015-period-due-lack-legal-provision.html",
-          "date": "Sat, 02 May 2026 05:10:06 +0000",
-          "summary": "<p>The tribunal held that no late fee under Section 234E can be imposed for periods prior to 1 June 2015 due to absence of enabling provisions in Section 200A. The levy was deleted following consistent judicial precedents.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/section-234e-tds-late-fee-invalid-pre-2015-period-due-lack-legal-provision.html\">Section 234E TDS Late Fee Invalid for Pre-2015 Period Due to Lack of Legal Provision</a> appeared first on <a href=\"https://taxguru.in\">TaxGu",
-          "item_id": "fa3a88d5548cc190",
+          "title": "Delay Condoned with Cost: ITAT Grants Fresh Chance, Slams Non-Complianc",
+          "url": "https://taxguru.in/income-tax/delay-condoned-cost-itat-grants-fresh-chance-slams-non-complianc.html",
+          "date": "Sat, 02 May 2026 09:35:29 +0000",
+          "summary": "<p>The issue involved dismissal of appeal due to delay and non-appearance. The tribunal condoned the delay citing medical reasons and remanded the matter for fresh assessment, imposing cost for non-compliance.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/delay-condoned-cost-itat-grants-fresh-chance-slams-non-complianc.html\">Delay Condoned with Cost: ITAT Grants Fresh Chance, Slams Non-Complianc</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+          "item_id": "8946d1d4dcdea418",
           "raw_meta": {}
         },
         {
           "source": "taxguru",
           "category": "analysis",
-          "title": "ITAT Delhi Restores Appeal as Hyper-Technical View on Delay Defeated Justice",
-          "url": "https://taxguru.in/income-tax/itat-delhi-restores-appeal-hyper-technical-view-delay-defeated-justice.html",
-          "date": "Sat, 02 May 2026 04:27:00 +0000",
-          "summary": "<p>The Tribunal held that dismissal of appeal solely on limitation without considering bona fide reasons was unjustified. It restored the matter for adjudication on merits, emphasizing a liberal approach.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/itat-delhi-restores-appeal-hyper-technical-view-delay-defeated-justice.html\">ITAT Delhi Restores Appeal as Hyper-Technical View on Delay Defeated Justice</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "7421f7c949a0c07c",
+          "title": "U/s 153C Valid but Addition Fails: No Incriminating Material = No Deemed Dividend",
+          "url": "https://taxguru.in/income-tax/u-s-153c-valid-addition-fails-incriminating-material-deemed-dividend.html",
+          "date": "Sat, 02 May 2026 09:19:35 +0000",
+          "summary": "<p>The issue was addition of deemed dividend under search assessment. The tribunal held that without incriminating material, additions in completed assessments are unsustainable.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/u-s-153c-valid-addition-fails-incriminating-material-deemed-dividend.html\">U/s 153C Valid but Addition Fails: No Incriminating Material = No Deemed Dividend</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+          "item_id": "97e96b8895bfa689",
           "raw_meta": {}
         },
         {
           "source": "taxguru",
           "category": "analysis",
-          "title": "Assessment Set Aside Due to Need for Fresh Examination of Books & Fair Hearing: ITAT Delhi",
-          "url": "https://taxguru.in/income-tax/assessment-set-due-fresh-examination-books-fair-hearing-itat-delhi.html",
-          "date": "Sat, 02 May 2026 04:14:38 +0000",
-          "summary": "<p>The Tribunal set aside the assessment after noting that books of accounts were not produced and required reconsideration. It directed a fresh decision with proper opportunity, emphasizing procedural fairness.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/assessment-set-due-fresh-examination-books-fair-hearing-itat-delhi.html\">Assessment Set Aside Due to Need for Fresh Examination of Books &#038; Fair Hearing: ITAT Delhi</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.<",
-          "item_id": "03808681ddc80b9e",
+          "title": "Reassessment After 4 Years Quashed as No Failure to Disclose Material Facts: Bombay HC",
+          "url": "https://taxguru.in/income-tax/reassessment-4-years-quashed-failure-disclose-material-facts-bombay-hc.html",
+          "date": "Sat, 02 May 2026 09:01:11 +0000",
+          "summary": "<p>The issue was whether reassessment could be initiated after four years without fresh evidence. The court held such reopening invalid when based on existing records and no failure of disclosure.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/reassessment-4-years-quashed-failure-disclose-material-facts-bombay-hc.html\">Reassessment After 4 Years Quashed as No Failure to Disclose Material Facts: Bombay HC</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+          "item_id": "1ea73b47d3899784",
           "raw_meta": {}
         },
         {
           "source": "taxguru",
           "category": "analysis",
-          "title": "Section 194T: TDS Rules for Partnership Firms and LLP Partners",
-          "url": "https://taxguru.in/income-tax/section-194t-tds-rules-partnership-firms-llp-partners.html",
-          "date": "Fri, 01 May 2026 08:38:18 +0000",
-          "summary": "<p>The Finance Act, 2024 has inserted a new section, 194T, for TDS deduction by partnership firms/Limited Liability Partnerships (LLPs). Section 194T takes effect from 1st April, 2025 (AY 2026-27), to bring payments such as salary, remuneration, commission, bonus and interest (whether on capital or on loan) by a partnership firm/LLP to its partners under the [&#8230;]</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/section-194t-tds-rules-partnership-firms-llp-partners.html\">Section 194T: ",
-          "item_id": "d523ec570b0bd0b5",
+          "title": "870-Day Delay Not Condoned: ITAT Refuses Relief, Calls Out Negligence & “No Sufficient Cause”",
+          "url": "https://taxguru.in/income-tax/870-day-delay-condoned-itat-refuses-relief-calls-negligence-no-sufficient-cause.html",
+          "date": "Sat, 02 May 2026 09:01:06 +0000",
+          "summary": "<p>The issue was whether a long delay in filing appeals could be condoned. The tribunal held that absence of credible explanation bars condonation, leading to dismissal of appeals.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/870-day-delay-condoned-itat-refuses-relief-calls-negligence-no-sufficient-cause.html\">870-Day Delay Not Condoned: ITAT Refuses Relief, Calls Out Negligence &#038; “No Sufficient Cause”</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+          "item_id": "8560b12bb0497a19",
           "raw_meta": {}
         },
         {
           "source": "taxguru",
           "category": "analysis",
-          "title": "Safe Harbour Rules under New Income Tax Act, 2025 & Rules, 2026- Part II",
-          "url": "https://taxguru.in/income-tax/safe-harbour-rules-income-tax-act-2025-income-tax-rules-2026-part-ii.html",
-          "date": "Fri, 01 May 2026 06:14:22 +0000",
-          "summary": "<p>The framework outlines mandatory disclosures and timelines for opting into safe harbour. Key takeaway: strict compliance is essential to gain tax certainty.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/safe-harbour-rules-income-tax-act-2025-income-tax-rules-2026-part-ii.html\">Safe Harbour Rules under New Income Tax Act, 2025 &#038; Rules, 2026- Part II</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "a41ce7fb40fc8757",
+          "title": "Wrong Section Claim Not Fatal: ITAT Remands Matter & Nullifies Penalty",
+          "url": "https://taxguru.in/income-tax/wrong-section-claim-fatal-itat-remands-matter-nullifies-penalty.html",
+          "date": "Sat, 02 May 2026 08:49:48 +0000",
+          "summary": "<p>The issue was denial of capital gains exemption due to claim under wrong section. The tribunal held that a genuine claim cannot be rejected merely for citing an incorrect provision and remanded the case.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/wrong-section-claim-fatal-itat-remands-matter-nullifies-penalty.html\">Wrong Section Claim Not Fatal: ITAT Remands Matter &#038; Nullifies Penalty</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+          "item_id": "9eb84b2e4e8bdb52",
           "raw_meta": {}
         },
         {
           "source": "taxguru",
           "category": "analysis",
-          "title": "Form 122 : One Declaration, Complete Salary TDS Control",
-          "url": "https://taxguru.in/income-tax/form-122-declaration-complete-salary-tds-control.html",
-          "date": "Fri, 01 May 2026 05:06:11 +0000",
-          "summary": "<p>The new form consolidates multiple income disclosures into one, enabling accurate TDS deduction. Key takeaway: unified reporting reduces excess tax deduction and refunds.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/form-122-declaration-complete-salary-tds-control.html\">Form 122 : One Declaration, Complete Salary TDS Control</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "65da346ab98814af",
+          "title": "Penalty U/s 270A Quashed: No Specific Charge of “Misreporting” = No Penalty",
+          "url": "https://taxguru.in/income-tax/penalty-u-s-270a-quashed-specific-charge-misreporting-penalty.html",
+          "date": "Sat, 02 May 2026 08:35:35 +0000",
+          "summary": "<p>The issue was whether penalty for misreporting can be imposed without specifying the applicable clause. The tribunal held such penalty invalid and ordered its deletion.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/penalty-u-s-270a-quashed-specific-charge-misreporting-penalty.html\">Penalty U/s 270A Quashed: No Specific Charge of “Misreporting” = No Penalty</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+          "item_id": "3debd0031cbf2e5c",
           "raw_meta": {}
         },
         {
           "source": "taxguru",
           "category": "analysis",
-          "title": "Bombay HC Quashes Section 270A Penalty Due to Absence of Under-Reported Income",
-          "url": "https://taxguru.in/income-tax/bombay-hc-quashes-section-270a-penalty-due-absence-under-reported-income.html",
-          "date": "Fri, 01 May 2026 04:48:31 +0000",
-          "summary": "<p>Court held that penalty under Section 270A cannot apply where assessed income does not exceed processed income. Key takeaway: statutory conditions must be strictly met.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/bombay-hc-quashes-section-270a-penalty-due-absence-under-reported-income.html\">Bombay HC Quashes Section 270A Penalty Due to Absence of Under-Reported Income</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "b5498d26c6a6a3b0",
+          "title": "Gauhati HC on a humane approach & powers of Commissioner under Section 264",
+          "url": "https://taxguru.in/income-tax/gauhati-hc-humane-approach-powers-commissioner-section-264.html",
+          "date": "Sat, 02 May 2026 08:06:16 +0000",
+          "summary": "<p>The Court noted that the taxpayer could not upload large volumes of documents due to technical limits. It held that authorities should adopt a practical and humane approach, including on-site verification. Failure to do so vitiates proceedings.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/gauhati-hc-humane-approach-powers-commissioner-section-264.html\">Gauhati HC on a humane approach &#038; powers of Commissioner under Section 264</a> appeared first on <a href=\"https://taxguru.in\">T",
+          "item_id": "ecc77c72cde8425e",
           "raw_meta": {}
         },
         {
           "source": "taxguru",
           "category": "analysis",
-          "title": "No Section 69A Cash Deposit Addition Without Proper Inquiry & Evidence: ITAT Mumbai",
-          "url": "https://taxguru.in/income-tax/section-69a-cash-deposit-addition-proper-inquiry-evidence-itat-mumbai.html",
-          "date": "Fri, 01 May 2026 04:42:32 +0000",
-          "summary": "<p>The Tribunal held that the assessee had adequately explained the source of cash deposits with supporting evidence. Addition under Section 69A was deleted as the AO failed to rebut the explanation.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/section-69a-cash-deposit-addition-proper-inquiry-evidence-itat-mumbai.html\">No Section 69A Cash Deposit Addition Without Proper Inquiry &#038; Evidence: ITAT Mumbai</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "2bb45086ebe48a90",
+          "title": "TDS & TCS Changes from 1st April 2026",
+          "url": "https://taxguru.in/income-tax/tds-tcs-1st-april-2026.html",
+          "date": "Sat, 02 May 2026 08:01:05 +0000",
+          "summary": "<p>The reform consolidates TDS provisions into a structured system and introduces digital compliance mechanisms. It enhances clarity, reduces errors, and improves reporting efficiency.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/tds-tcs-1st-april-2026.html\">TDS &#038; TCS Changes from 1st April 2026</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+          "item_id": "08a9827b15ad863d",
           "raw_meta": {}
         },
         {
           "source": "taxguru",
           "category": "analysis",
-          "title": "Penny Stock Allegation Rejected Due to Lack of Evidence Against Share Transactions",
-          "url": "https://taxguru.in/income-tax/penny-stock-allegation-rejected-due-lack-evidence-share-transactions.html",
-          "date": "Fri, 01 May 2026 04:39:54 +0000",
-          "summary": "<p>The tribunal ruled that reliance only on an investigation report without independent evidence cannot justify treating LTCG as bogus. Additions under Section 68 and commission were deleted.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/penny-stock-allegation-rejected-due-lack-evidence-share-transactions.html\">Penny Stock Allegation Rejected Due to Lack of Evidence Against Share Transactions</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "ebf4f25cf66cfd03",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "ITAT Rejects TP Adjustment Due to Incorrect Benchmarking of Power Tariff",
-          "url": "https://taxguru.in/income-tax/itat-rejects-tp-adjustment-due-incorrect-benchmarking-power-tariff.html",
-          "date": "Fri, 01 May 2026 04:37:00 +0000",
-          "summary": "<p>The Tribunal held that industrial tariff charged by electricity boards is the correct benchmark for CPP transactions. It rejected the use of generator procurement rates adopted by the TPO.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/itat-rejects-tp-adjustment-due-incorrect-benchmarking-power-tariff.html\">ITAT Rejects TP Adjustment Due to Incorrect Benchmarking of Power Tariff</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "5bf88c423d550c49",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Reassessment Notice Time-Barred as Issued Beyond Limitation Period: Karnataka HC",
-          "url": "https://taxguru.in/income-tax/reassessment-notice-time-barred-issued-limitation-period-karnataka-hc.html",
-          "date": "Fri, 01 May 2026 04:02:15 +0000",
-          "summary": "<p>The Court held that reassessment proceedings must be initiated within the statutory time limit. It found the notice issued after the deadline to be invalid.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/reassessment-notice-time-barred-issued-limitation-period-karnataka-hc.html\">Reassessment Notice Time-Barred as Issued Beyond Limitation Period: Karnataka HC</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "719e10fd101d47fb",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Complete TDS Rate Chart for FY 2026-27 with Section-Wise Breakdown",
-          "url": "https://taxguru.in/income-tax/complete-tds-rate-chart-fy-2026-27-section-wise-breakdown.html",
-          "date": "Fri, 01 May 2026 03:39:12 +0000",
-          "summary": "<p>A detailed overview of updated TDS provisions mapping old and new sections, rates, and thresholds. Helps taxpayers understand compliance requirements across all payment categories.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/complete-tds-rate-chart-fy-2026-27-section-wise-breakdown.html\">Complete TDS Rate Chart for FY 2026-27 with Section-Wise Breakdown</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "96a0f62caa1ce825",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Loose Sheets and Digital Data Not Enough: ITAT Quashes Additions for Lack of Evidence",
-          "url": "https://taxguru.in/income-tax/loose-sheets-digital-data-enough-itat-quashes-additions-lack-evidence.html",
-          "date": "Fri, 01 May 2026 02:53:58 +0000",
-          "summary": "<p>The Tribunal held that additions cannot stand without a clear link between seized material and the assessee. It ruled that third-party documents without corroboration lack evidentiary value.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/loose-sheets-digital-data-enough-itat-quashes-additions-lack-evidence.html\">Loose Sheets and Digital Data Not Enough: ITAT Quashes Additions for Lack of Evidence</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "5958243ae9572159",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Human Rights Commissions Ignore Lynching of Muslims: Hon’ble Mr Justice Atul Sreedharan",
-          "url": "https://taxguru.in/income-tax/human-rights-commissions-ignore-lynching-muslims-justice-atul-sreedharan.html",
-          "date": "Fri, 01 May 2026 02:46:33 +0000",
-          "summary": "<p>The court examined whether NHRC can direct investigations unrelated to human rights violations. It held that such actions may exceed statutory limits under existing law.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/human-rights-commissions-ignore-lynching-muslims-justice-atul-sreedharan.html\">Human Rights Commissions Ignore Lynching of Muslims: Hon’ble Mr Justice Atul Sreedharan</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "7f3fdbfbfd166e4b",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Channel owners cannot be taken as comparables for distributors for transfer pricing purpose",
-          "url": "https://taxguru.in/income-tax/channel-owners-comparables-distributors-transfer-pricing-purpose.html",
-          "date": "Thu, 30 Apr 2026 13:15:28 +0000",
-          "summary": "<p>ITAT Delhi held that companies owning and operating channels cannot be compared with distribution company for the purpose of transfer pricing. Accordingly, directs TPO to exclude such comparables for benchmarking distribution segment and determination of ALP.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/channel-owners-comparables-distributors-transfer-pricing-purpose.html\">Channel owners cannot be taken as comparables for distributors for transfer pricing purpose</a> appeared first ",
-          "item_id": "cf24611d8ab4c7e6",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Gold Monetisation Scheme 2026: Earn Interest on Idle Gold at Home",
-          "url": "https://taxguru.in/income-tax/gold-monetisation-scheme-2026-earn-interest-idle-gold-home.html",
-          "date": "Thu, 30 Apr 2026 09:55:49 +0000",
-          "summary": "<p>The scheme allows households to deposit gold and earn interest without selling it. The key takeaway is that both interest and capital gains are fully tax-exempt.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/gold-monetisation-scheme-2026-earn-interest-idle-gold-home.html\">Gold Monetisation Scheme 2026: Earn Interest on Idle Gold at Home</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "85944f5b89d11392",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "ITAT Deletes PF/ESI Disallowance as Section 143(1) Adjustment Held Beyond Scope",
-          "url": "https://taxguru.in/income-tax/itat-deletes-pf-esi-disallowance-section-1431-adjustment-held-scope.html",
-          "date": "Thu, 30 Apr 2026 08:36:21 +0000",
-          "summary": "<p>The Tribunal examined disallowance made for delayed employee contributions under Section 143(1). It held that debatable issues cannot be adjusted at the processing stage, resulting in relief to the assessee. The ruling clarifies procedural boundaries.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/itat-deletes-pf-esi-disallowance-section-1431-adjustment-held-scope.html\">ITAT Deletes PF/ESI Disallowance as Section 143(1) Adjustment Held Beyond Scope</a> appeared first on <a href=\"https",
-          "item_id": "6773b90a47c7f686",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "ITAT Quashes Section 271(1)(c Penalty as Unsigned SCN Held Void in Law",
-          "url": "https://taxguru.in/income-tax/itat-quashes-section-2711c-penalty-unsigned-scn-held-void-law.html",
-          "date": "Thu, 30 Apr 2026 07:44:12 +0000",
-          "summary": "<p>The issue involved validity of penalty proceedings initiated through an unsigned notice. The Tribunal ruled that such a notice is invalid and cannot confer jurisdiction. The decision highlights the mandatory requirement of proper authentication.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/itat-quashes-section-2711c-penalty-unsigned-scn-held-void-law.html\">ITAT Quashes Section 271(1)(c Penalty as Unsigned SCN Held Void in Law</a> appeared first on <a href=\"https://taxguru.in\">TaxGur",
-          "item_id": "a2e4ec03374dd845",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Section 11 Exemption Allowed as Property in Trustees’ Names Held Not Beneficial to Them",
-          "url": "https://taxguru.in/income-tax/section-11-exemption-allowed-property-trusteesaenames-held-beneficial.html",
-          "date": "Thu, 30 Apr 2026 07:37:15 +0000",
-          "summary": "<p>The case examined whether property registered in trustees’ names violated Section 13(1)(c). The Tribunal held no violation as no benefit accrued to trustees, allowing exemption under Section 11.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/section-11-exemption-allowed-property-trusteesaenames-held-beneficial.html\">Section 11 Exemption Allowed as Property in Trustees’ Names Held Not Beneficial to Them</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "8fd80f76ecb4e669",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "TDS Default Not Applicable as Section 197 Certificate Covers Entire Assessment Year",
-          "url": "https://taxguru.in/income-tax/tds-default-applicable-section-197-certificate-covers-entire-assessment-year.html",
-          "date": "Thu, 30 Apr 2026 07:34:34 +0000",
-          "summary": "<p>The case examined whether a lower TDS certificate applies prospectively or for the full year. The Court held it applies to the entire assessment year, negating default and interest liability.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/tds-default-applicable-section-197-certificate-covers-entire-assessment-year.html\">TDS Default Not Applicable as Section 197 Certificate Covers Entire Assessment Year</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "5d79a3fd4e880443",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Pass-Through Costs Excluded From Transfer Pricing PLI as No Value Addition Was Performed: ITAT Mumbai",
-          "url": "https://taxguru.in/income-tax/pass-through-costs-excluded-transfer-pricing-pli-addition-performed-itat-mumbai.html",
-          "date": "Wed, 29 Apr 2026 15:19:08 +0000",
-          "summary": "<p>ITAT Mumbai held that payments made to third-party vendors on a cost-to-cost basis, without any value addition by the assessee, should be treated as pass-through costs and excluded from PLI computation.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/pass-through-costs-excluded-transfer-pricing-pli-addition-performed-itat-mumbai.html\">Pass-Through Costs Excluded From Transfer Pricing PLI as No Value Addition Was Performed: ITAT Mumbai</a> appeared first on <a href=\"https://taxguru.in\">",
-          "item_id": "5703deb85e76577c",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Section 269ST Penalty Deleted as Seized Excel Sheets Did Not Prove Single Cash Transaction Above ₹2 Lakh",
-          "url": "https://taxguru.in/income-tax/section-269st-penalty-deleted-seized-excel-sheets-prove-single-cash-transaction-%e2%82%b92-lakh.html",
-          "date": "Wed, 29 Apr 2026 15:17:05 +0000",
-          "summary": "<p>The Tribunal held that consolidated Excel entries showing aggregate cash sales were insufficient to establish receipt of ₹2 lakh or more in a single transaction, and penalty under Section 271DA could not be sustained.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/section-269st-penalty-deleted-seized-excel-sheets-prove-single-cash-transaction-%e2%82%b92-lakh.html\">Section 269ST Penalty Deleted as Seized Excel Sheets Did Not Prove Single Cash Transaction Above ₹2 Lakh</a> appeared firs",
-          "item_id": "7400758c8a5e5280",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Bogus Purchase Addition Deleted Because Material Movement, Site Records & Banking Proof Established Genuineness: ITAT",
-          "url": "https://taxguru.in/income-tax/bogus-purchase-addition-deleted-material-movement-site-records-banking-proof-established-genuineness-itat.html",
-          "date": "Wed, 29 Apr 2026 14:48:51 +0000",
-          "summary": "<p>The Tribunal deleted purchase disallowances after noting invoices, transport records, weighbridge slips, tax returns and bank payments supported actual procurement and use of materials in infrastructure projects.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/bogus-purchase-addition-deleted-material-movement-site-records-banking-proof-established-genuineness-itat.html\">Bogus Purchase Addition Deleted Because Material Movement, Site Records &#038; Banking Proof Established Genuineness:",
-          "item_id": "85bbd11e279ce9a6",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Share Transfer in Family Arrangement Not Taxable: ITAT Deletes ₹489 Crore Addition",
-          "url": "https://taxguru.in/income-tax/share-transfer-family-arrangement-taxable-itat-deletes-rs-489-crore-addition.html",
-          "date": "Wed, 29 Apr 2026 14:46:11 +0000",
-          "summary": "<p>The issue was whether a share transfer without consideration constituted taxable capital gains. The Tribunal held that genuine family realignment is not taxable.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/share-transfer-family-arrangement-taxable-itat-deletes-rs-489-crore-addition.html\">Share Transfer in Family Arrangement Not Taxable: ITAT Deletes ₹489 Crore Addition</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "7cdb12c34456f221",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "ITAT Rejects Appeal Where Declared Capital Gains Accepted Without Adjustment",
-          "url": "https://taxguru.in/income-tax/itat-rejects-appeal-declared-capital-gains-accepted-adjustment.html",
-          "date": "Wed, 29 Apr 2026 14:27:18 +0000",
-          "summary": "<p>The Tribunal held that since the Assessing Officer made no addition after verifying disclosures, the grievance lacked merit. Grounds were rightly treated as infructuous due to absence of tax impact.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/itat-rejects-appeal-declared-capital-gains-accepted-adjustment.html\">ITAT Rejects Appeal Where Declared Capital Gains Accepted Without Adjustment</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "92adc495b6e7ff49",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Mandatory PAN Requirement Introduced for Post Office Transactions Under Income Tax Rules 2026",
-          "url": "https://taxguru.in/income-tax/mandatory-pan-requirement-introduced-post-office-transactions-income-tax-rules-2026.html",
-          "date": "Wed, 29 Apr 2026 14:13:03 +0000",
-          "summary": "<p>The consolidation into Form 121 introduces stricter documentation and reporting obligations. The decision emphasizes accountability and structured tax reporting mechanisms.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/mandatory-pan-requirement-introduced-post-office-transactions-income-tax-rules-2026.html\">Mandatory PAN Requirement Introduced for Post Office Transactions Under Income Tax Rules 2026</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "b425fee351bda451",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "As a Foreign Company, Do I Need to File Annual CIT in China?",
-          "url": "https://taxguru.in/income-tax/foreign-company-file-annual-cit-china.html",
-          "date": "Wed, 29 Apr 2026 13:41:03 +0000",
-          "summary": "<p>The issue is whether foreign businesses without offices in China must comply with tax laws. The key takeaway is that activities and income sources can trigger CIT obligations even without physical presence.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/foreign-company-file-annual-cit-china.html\">As a Foreign Company, Do I Need to File Annual CIT in China?</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "4b06e7b86db93feb",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Reopening Invalid as Notice Issued Beyond Six-Year Limitation Period: SC",
-          "url": "https://taxguru.in/income-tax/reopening-invalid-notice-issued-six-year-limitation-period-sc.html",
-          "date": "Wed, 29 Apr 2026 13:24:11 +0000",
-          "summary": "<p>The issue was whether reassessment notice issued after six years was valid. The Court upheld that such notices are time-barred and cannot be sustained under law.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/reopening-invalid-notice-issued-six-year-limitation-period-sc.html\">Reopening Invalid as Notice Issued Beyond Six-Year Limitation Period: SC</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "0cb1264baa922318",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Delhi HC Quashed Reopening Notice as Issued Beyond Six-Year Limitation",
-          "url": "https://taxguru.in/income-tax/delhi-hc-quashed-reopening-notice-issued-six-year-limitation.html",
-          "date": "Wed, 29 Apr 2026 13:22:55 +0000",
-          "summary": "<p>The Court examined whether reassessment notice issued beyond limitation was valid. It held that notices issued after expiry of the six-year limit under the old regime are barred and liable to be set aside.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/delhi-hc-quashed-reopening-notice-issued-six-year-limitation.html\">Delhi HC Quashed Reopening Notice as Issued Beyond Six-Year Limitation</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "66309762ed935da8",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Reopening Invalid Without Independent Material Showing Escapement: Gujarat HC",
-          "url": "https://taxguru.in/income-tax/reopening-invalid-independent-material-showing-escapement-gujarat-hc.html",
-          "date": "Wed, 29 Apr 2026 12:51:54 +0000",
-          "summary": "<p>The Court held that reassessment under Sections 147/148 cannot be initiated solely on third-party data without independent evidence of income escapement. It ruled that such reopening amounts to suspicion and lacks the required “reason to believe.”</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/reopening-invalid-independent-material-showing-escapement-gujarat-hc.html\">Reopening Invalid Without Independent Material Showing Escapement: Gujarat HC</a> appeared first on <a href=\"https://ta",
-          "item_id": "98a49e146696e35c",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Section 80GGC Deduction Denied as Donation Linked to Bogus Political Party Activities",
-          "url": "https://taxguru.in/income-tax/section-80ggc-deduction-denied-donation-linked-bogus-political-party-activities.html",
-          "date": "Wed, 29 Apr 2026 12:43:07 +0000",
-          "summary": "<p>The Tribunal upheld disallowance of deduction where donations were routed back to donors through layered transactions. The key takeaway is that non-genuine donations do not qualify for tax deduction.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/section-80ggc-deduction-denied-donation-linked-bogus-political-party-activities.html\">Section 80GGC Deduction Denied as Donation Linked to Bogus Political Party Activities</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "fab0cd14e0494447",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Philosophy of Income Tax Act 2025: Perspectives from Great Thinkers",
-          "url": "https://taxguru.in/income-tax/philosophy-income-tax-act-2025-perspectives-great-thinkers.html",
-          "date": "Wed, 29 Apr 2026 12:01:06 +0000",
-          "summary": "<p>The new tax law addresses long-standing concerns over complexity by reducing provisions and simplifying language. It introduces structural clarity and digital tools to improve compliance while reducing taxpayer burden. </p>\n<p>The post <a href=\"https://taxguru.in/income-tax/philosophy-income-tax-act-2025-perspectives-great-thinkers.html\">Philosophy of Income Tax Act 2025: Perspectives from Great Thinkers</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "c8503eb3e94d370d",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Cloud Service Payments Not Taxable as Royalty Due to No Transfer of IP Rights: SC",
-          "url": "https://taxguru.in/income-tax/cloud-service-payments-taxable-royalty-due-transfer-ip-rights-sc.html",
-          "date": "Wed, 29 Apr 2026 11:52:58 +0000",
-          "summary": "<p>The Supreme Court affirmed that payments for cloud computing services are not royalty where no intellectual property rights are transferred. It held that mere access to services does not amount to use of equipment or technology under tax law.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/cloud-service-payments-taxable-royalty-due-transfer-ip-rights-sc.html\">Cloud Service Payments Not Taxable as Royalty Due to No Transfer of IP Rights: SC</a> appeared first on <a href=\"https://taxguru",
-          "item_id": "ef73398390d647fd",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Date of DRP Upload, Not Visibility in AO Module, Determines Receipt: Telangana HC",
-          "url": "https://taxguru.in/income-tax/date-drp-upload-visibility-ao-module-determines-receipt-telangana-hc.html",
-          "date": "Wed, 29 Apr 2026 11:50:54 +0000",
-          "summary": "<p>The Court held that the issue of treating DRP upload as receipt was already settled by earlier rulings. It dismissed the Revenue’s appeals while making the decision subject to the Supreme Court’s final outcome.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/date-drp-upload-visibility-ao-module-determines-receipt-telangana-hc.html\">Date of DRP Upload, Not Visibility in AO Module, Determines Receipt: Telangana HC</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "fab68c806394a1bd",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "TP Segment Split Rejected as Trading & After-Sales Services Are Inextricably Linked; TNMM at Entity Level Upheld: ITAT Delhi",
-          "url": "https://taxguru.in/income-tax/tp-segment-split-rejected-trading-tnmm-entity-level-upheld-itat-delhi.html",
-          "date": "Wed, 29 Apr 2026 11:47:51 +0000",
-          "summary": "<p>The Tribunal held that trading and service activities were inextricably linked and could not be segmented. It accepted entity-level TNMM, rendering TP adjustments unsustainable.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/tp-segment-split-rejected-trading-tnmm-entity-level-upheld-itat-delhi.html\">TP Segment Split Rejected as Trading &#038; After-Sales Services Are Inextricably Linked; TNMM at Entity Level Upheld: ITAT Delhi</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru",
-          "item_id": "8bfacc5230f605e6",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "TDS Credit Can’t Be Denied Merely Because It Appears in Sister Concern’s 26AS: ITAT Delhi",
-          "url": "https://taxguru.in/income-tax/tds-credit-cant-denied-appears-sister-concerns-26as-itat-delhi.html",
-          "date": "Wed, 29 Apr 2026 11:45:01 +0000",
-          "summary": "<p>The Tribunal held that TDS credit cannot be denied merely because it does not appear under the assessee’s PAN. It ruled that the assessee cannot be forced to ensure revision of TDS returns by the deductor.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/tds-credit-cant-denied-appears-sister-concerns-26as-itat-delhi.html\">TDS Credit Can’t Be Denied Merely Because It Appears in Sister Concern’s 26AS: ITAT Delhi</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "a79530293978e16e",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Only Legitimate Tax Can Be Collected; ITAT Restores BBC Distribution Fee Royalty Taxability Issue",
-          "url": "https://taxguru.in/income-tax/legitimate-tax-collected-itat-restores-bbc-distribution-fee-royalty-taxability-issue.html",
-          "date": "Wed, 29 Apr 2026 11:43:01 +0000",
-          "summary": "<p>The Tribunal set aside the dismissal of a delayed appeal, holding that the issue of distribution fee taxability requires fresh examination on merits. The case was remanded to the Assessing Officer for reconsideration with proper hearing.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/legitimate-tax-collected-itat-restores-bbc-distribution-fee-royalty-taxability-issue.html\">Only Legitimate Tax Can Be Collected; ITAT Restores BBC Distribution Fee Royalty Taxability Issue</a> appeared fi",
-          "item_id": "66143b0f0dc49f88",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Refund of Earlier Advance Can’t Be Taxed as Accommodation Entry U/s 68: ITAT Delhi",
-          "url": "https://taxguru.in/income-tax/refund-earlier-advance-cant-taxed-accommodation-entry-section-68-itat-delhi.html",
-          "date": "Wed, 29 Apr 2026 11:40:53 +0000",
-          "summary": "<p>The Tribunal held that return of advances cannot be taxed under Section 68. The key takeaway is that explained transactions supported by records cannot be treated as unexplained income.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/refund-earlier-advance-cant-taxed-accommodation-entry-section-68-itat-delhi.html\">Refund of Earlier Advance Can’t Be Taxed as Accommodation Entry U/s 68: ITAT Delhi</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "845ae1fb4b47de44",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "No Penalty Where Return Filed After Probate Grant and Income Fully Disclosed in Form 26AS",
-          "url": "https://taxguru.in/income-tax/penalty-return-filed-probate-grant-income-fully-disclosed-form-26as.html",
-          "date": "Wed, 29 Apr 2026 11:36:36 +0000",
-          "summary": "<p>The Tribunal held that delay in filing the return due to pending probate proceedings was beyond the control of executors. It ruled that such delay constituted a bona fide explanation, leading to deletion of penalty under Section 270A.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/penalty-return-filed-probate-grant-income-fully-disclosed-form-26as.html\">No Penalty Where Return Filed After Probate Grant and Income Fully Disclosed in Form 26AS</a> appeared first on <a href=\"https://taxg",
-          "item_id": "56d22f8dba7f254f",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "No TDS on Foreign Agent Commission for Services Rendered Abroad; ITAT Deletes Section 40(a)(i) Disallowance",
-          "url": "https://taxguru.in/income-tax/tds-foreign-agent-commission-services-rendered-abroad-itat-deletes-section-40ai-disallowance.html",
-          "date": "Wed, 29 Apr 2026 11:31:39 +0000",
-          "summary": "<p>The Tribunal held that commission paid to foreign agents for services rendered outside India is not taxable in India. Consequently, no TDS obligation arises, and disallowance under section 40(a)(i) was deleted.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/tds-foreign-agent-commission-services-rendered-abroad-itat-deletes-section-40ai-disallowance.html\">No TDS on Foreign Agent Commission for Services Rendered Abroad; ITAT Deletes Section 40(a)(i) Disallowance</a> appeared first on <a",
-          "item_id": "be000b6904335508",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "No Section 43B Disallowance as Service Tax Not Claimed in P&L: ITAT Dehradun",
-          "url": "https://taxguru.in/income-tax/section-43b-disallowance-service-tax-claimed-pl-itat-dehradun.html",
-          "date": "Wed, 29 Apr 2026 11:28:54 +0000",
-          "summary": "<p>The tribunal recalled its earlier order after finding it addressed an incorrect issue. It ultimately upheld that no disallowance applies when no expense is claimed.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/section-43b-disallowance-service-tax-claimed-pl-itat-dehradun.html\">No Section 43B Disallowance as Service Tax Not Claimed in P&#038;L: ITAT Dehradun</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "d0958509518a6d81",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "No Adhoc Disallowance of Commission on Assumptions Without Specific Defects: ITAT Delhi",
-          "url": "https://taxguru.in/income-tax/adhoc-disallowance-commission-assumptions-specific-defects-itat-delhi.html",
-          "date": "Wed, 29 Apr 2026 11:12:04 +0000",
-          "summary": "<p>The issue was whether commission payments were genuine business expenses. The Tribunal held that disallowance based on non-response and suspicion was not justified. The key takeaway is that conjectures cannot replace evidence in tax assessments.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/adhoc-disallowance-commission-assumptions-specific-defects-itat-delhi.html\">No Adhoc Disallowance of Commission on Assumptions Without Specific Defects: ITAT Delhi</a> appeared first on <a href=\"h",
-          "item_id": "3edcd377b13284b0",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Foreign Tax Credit Cannot Be Denied for Partial Overseas Return Filing: ITAT Mumbai",
-          "url": "https://taxguru.in/income-tax/foreign-tax-credit-denied-partial-overseas-return-filing-itat-mumbai.html",
-          "date": "Wed, 29 Apr 2026 11:10:32 +0000",
-          "summary": "<p>The Tribunal held that FTC claims cannot be rejected solely due to incomplete foreign tax return filing. The key takeaway is that authorities must verify available and subsequent evidence before denying relief.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/foreign-tax-credit-denied-partial-overseas-return-filing-itat-mumbai.html\">Foreign Tax Credit Cannot Be Denied for Partial Overseas Return Filing: ITAT Mumbai</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "628f088134ccf594",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Search on Third Party Cannot Extend Reassessment Time Without Assessee Link: SC",
-          "url": "https://taxguru.in/income-tax/search-party-extend-reassessment-time-assessee-link-sc.html",
-          "date": "Wed, 29 Apr 2026 11:01:09 +0000",
-          "summary": "<p>The Supreme Court held that reassessment notices issued after the six-year limit are barred. It affirmed that expired cases cannot be revived under later provisions.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/search-party-extend-reassessment-time-assessee-link-sc.html\">Search on Third Party Cannot Extend Reassessment Time Without Assessee Link: SC</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "b483c7c61a30cce3",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Captive Power Valuation Must Include Electricity Duty for 80-IA Deduction: Calcutta HC",
-          "url": "https://taxguru.in/income-tax/captive-power-valuation-include-electricity-duty-80-ia-deduction-calcutta-hc.html",
-          "date": "Wed, 29 Apr 2026 10:59:38 +0000",
-          "summary": "<p>The issue concerned overlap of deductions under Sections 80-IA and 80HHC. The Court held that 80HHC profits cannot be reduced by 80-IA deduction, ensuring independent computation.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/captive-power-valuation-include-electricity-duty-80-ia-deduction-calcutta-hc.html\">Captive Power Valuation Must Include Electricity Duty for 80-IA Deduction: Calcutta HC</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "ceb2e2777d505e31",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Cash Deposits from Tractor Sales Can’t Be Taxed as Unexplained Income: ITAT Ahmedabad",
-          "url": "https://taxguru.in/income-tax/cash-deposits-tractor-sales-cant-taxed-unexplained-income-itat-ahmedabad.html",
-          "date": "Wed, 29 Apr 2026 10:55:42 +0000",
-          "summary": "<p>The tribunal held that cash deposits backed by sales records cannot be treated as unexplained income. It upheld deletion of addition where transactions were properly documented.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/cash-deposits-tractor-sales-cant-taxed-unexplained-income-itat-ahmedabad.html\">Cash Deposits from Tractor Sales Can’t Be Taxed as Unexplained Income: ITAT Ahmedabad</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "39cbf26cc25b3777",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Bogus Purchase Addition Remanded as Fresh Evidence Warrants Verification: ITAT Surat",
-          "url": "https://taxguru.in/income-tax/bogus-purchase-addition-remanded-fresh-evidence-warrants-verification-itat-surat.html",
-          "date": "Wed, 29 Apr 2026 10:53:21 +0000",
-          "summary": "<p>The assessee produced new evidence including invoices and tax returns of suppliers. The Tribunal held that these documents must be examined before deciding the issue.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/bogus-purchase-addition-remanded-fresh-evidence-warrants-verification-itat-surat.html\">Bogus Purchase Addition Remanded as Fresh Evidence Warrants Verification: ITAT Surat</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "b0dfc1880f7c2726",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "No Capital Gains Tax on Void Sale Deed Executed Through Forged POA: ITAT Ahmedabad",
-          "url": "https://taxguru.in/income-tax/capital-gains-tax-void-sale-deed-executed-forged-poa-itat-ahmedabad.html",
-          "date": "Wed, 29 Apr 2026 10:51:58 +0000",
-          "summary": "<p>The issue involved taxation of capital gains based on a disputed land sale. The Tribunal held that once the sale deed was declared void, no capital gains could arise.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/capital-gains-tax-void-sale-deed-executed-forged-poa-itat-ahmedabad.html\">No Capital Gains Tax on Void Sale Deed Executed Through Forged POA: ITAT Ahmedabad</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "c53fa0f797a37130",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "Commission Agent Not Eligible for TDS Credit on Farmers’ Income: ITAT Ahmedabad",
-          "url": "https://taxguru.in/income-tax/commission-agent-eligible-tds-credit-farmersaeincome-itat-ahmedabad.html",
-          "date": "Wed, 29 Apr 2026 10:43:28 +0000",
-          "summary": "<p>The tribunal held that TDS credit cannot be claimed by an agent when the underlying income belongs to farmers. It ruled that credit must align with the person offering the income to tax.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/commission-agent-eligible-tds-credit-farmersaeincome-itat-ahmedabad.html\">Commission Agent Not Eligible for TDS Credit on Farmers’ Income: ITAT Ahmedabad</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "5934542da4fed607",
-          "raw_meta": {}
-        },
-        {
-          "source": "taxguru",
-          "category": "analysis",
-          "title": "SC Dismisses Revenue Appeal as Assessment Based on Guesswork Without Proof",
-          "url": "https://taxguru.in/income-tax/sc-dismisses-revenue-appeal-assessment-based-guesswork-proof.html",
-          "date": "Wed, 29 Apr 2026 10:24:35 +0000",
-          "summary": "<p>The issue was whether addition based on estimated yield was valid. The SC upheld that without material evidence, such additions are unsustainable and cannot be based on suspicion.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/sc-dismisses-revenue-appeal-assessment-based-guesswork-proof.html\">SC Dismisses Revenue Appeal as Assessment Based on Guesswork Without Proof</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
-          "item_id": "d24494d506dd4115",
+          "title": "Reassessment Quashed for Wrong Sanction: ITAT Bangalore Strikes Down 147 Order for Breach of Section 151",
+          "url": "https://taxguru.in/income-tax/reassessment-quashed-wrong-sanction-itat-bangalore-strikes-147-order-breach-section-151.html",
+          "date": "Sat, 02 May 2026 08:00:00 +0000",
+          "summary": "<p>The issue was whether reassessment notice issued without approval from the correct authority is valid. The tribunal held it invalid and quashed the assessment for lack of jurisdiction.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/reassessment-quashed-wrong-sanction-itat-bangalore-strikes-147-order-breach-section-151.html\">Reassessment Quashed for Wrong Sanction: ITAT Bangalore Strikes Down 147 Order for Breach of Section 151</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru",
+          "item_id": "dc66ac4cb2b408e9",
           "raw_meta": {}
         }
       ],
-      "removed_ids": []
+      "removed_ids": [
+        "5934542da4fed607",
+        "39cbf26cc25b3777",
+        "d24494d506dd4115",
+        "b0dfc1880f7c2726",
+        "3edcd377b13284b0",
+        "ceb2e2777d505e31",
+        "628f088134ccf594",
+        "c53fa0f797a37130",
+        "b483c7c61a30cce3"
+      ]
     }
   }
 }
