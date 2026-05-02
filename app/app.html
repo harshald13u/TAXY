@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Taxy — File your taxes by chatting</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  background: #0a0a0b;
+  color: #fafafa;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+button, input, textarea { font-family: inherit; color: inherit; }
+
+/* DEV-I a11y: keyboard focus rings (WCAG 2.4.7) */
+:focus-visible { outline: 2px solid #c4b5fd; outline-offset: 2px; border-radius: 6px; }
+.btn-primary:focus-visible { outline-color: #a855f7; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* DEV-I a11y: reduced-motion (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+button { cursor: pointer; border: none; background: none; }
+ul { list-style: none; }
+a { color: inherit; text-decoration: none; }
+
+:root {
+  --bg-base: #0a0a0b;
+  --bg-sidebar: #0d0d0f;
+  --bg-surface: #131316;
+  --bg-elevated: #1a1a1d;
+  --bg-input: #1f1f23;
+  --bg-hover: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.14);
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-muted: #8b8b94; /* DEV-I: bumped from #71717a for WCAG AA on small text */
+  --text-faint: #7a7a82; /* DEV-I: bumped from #52525b */
+  --accent: #a855f7;
+  --gradient-accent: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+}
+
+.app { display: flex; height: 100vh; height: 100dvh; height: -webkit-fill-available; }
+html, body { height: -webkit-fill-available; }
+
+.sidebar { width: 260px; background: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+.sidebar-top { padding: 14px; }
+.new-chat { width: 100%; display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--text-primary); transition: all 0.15s ease; }
+.new-chat:hover { background: rgba(255,255,255,0.07); border-color: var(--border-strong); }
+.new-chat-icon { width: 14px; height: 14px; color: var(--text-secondary); }
+.sidebar-section { padding: 4px 12px; }
+.sidebar-section-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); padding: 12px 8px 8px; }
+.chat-item { display: block; width: 100%; padding: 8px 10px; border-radius: 8px; font-size: 13.5px; text-align: left; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: all 0.12s ease; }
+.chat-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+.chat-item.active { background: var(--bg-hover); color: var(--text-primary); }
+.sidebar-bottom { margin-top: auto; padding: 12px; border-top: 1px solid var(--border); }
+.profile-btn { width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 10px; transition: background 0.12s ease; }
+.profile-btn:hover { background: var(--bg-hover); }
+.profile-avatar { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #10b981, #06b6d4); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 12px; flex-shrink: 0; }
+.profile-info { flex: 1; min-width: 0; text-align: left; }
+.profile-name { font-size: 13.5px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.profile-plan { font-size: 12px; color: var(--text-muted); }
+
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.chat-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.chat-title { display: flex; align-items: center; gap: 10px; }
+.chat-title-mark { width: 24px; height: 24px; background: var(--gradient-accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; color: #fff; box-shadow: 0 0 14px rgba(168, 85, 247, 0.4); }
+.chat-title-text { font-size: 14px; font-weight: 600; }
+.chat-title-tag { font-size: 11px; padding: 3px 8px; border-radius: 100px; background: rgba(255,255,255,0.05); color: var(--text-secondary); border: 1px solid var(--border); }
+.chat-title-tag.live { background: rgba(34, 197, 94, 0.1); color: #4ade80; border-color: rgba(34, 197, 94, 0.2); }
+.icon-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; color: var(--text-muted); transition: all 0.12s ease; }
+.icon-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+.chat-thread { flex: 1; overflow-y: auto; }
+.chat-thread::-webkit-scrollbar { width: 8px; }
+.chat-thread::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
+.thread-inner { max-width: 760px; margin: 0 auto; padding: 48px 24px 24px; display: flex; flex-direction: column; gap: 32px; }
+
+.msg { display: flex; gap: 14px; animation: fadeUp 0.4s ease-out; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.msg.user { justify-content: flex-end; }
+.msg-avatar { width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: #fff; }
+.msg-avatar.ai { background: var(--gradient-accent); box-shadow: 0 0 16px rgba(168, 85, 247, 0.3); }
+.msg-body { flex: 1; min-width: 0; font-size: 15px; line-height: 1.65; color: var(--text-primary); }
+.msg-body p { margin-bottom: 8px; }
+.msg-body p:last-child { margin-bottom: 0; }
+.msg-body .secondary { color: var(--text-secondary); }
+.msg-body .small { font-size: 13.5px; }
+.msg-body strong { font-weight: 600; }
+.msg-bubble-user { max-width: 600px; padding: 11px 16px; background: rgba(255,255,255,0.06); border-radius: 18px; border-bottom-right-radius: 6px; font-size: 14.5px; line-height: 1.55; }
+
+/* Section reference pill — Act-grounded citations */
+.sec-ref { display: inline-flex; align-items: center; gap: 4px; padding: 1px 7px; margin: 0 1px; background: rgba(168, 85, 247, 0.12); border: 1px solid rgba(168, 85, 247, 0.25); border-radius: 6px; font-size: 11.5px; font-weight: 500; color: #c4b5fd; cursor: help; position: relative; white-space: nowrap; vertical-align: 1px; transition: background 0.12s ease; font-family: inherit; line-height: inherit; }
+.sec-ref:hover, .sec-ref:focus-visible { background: rgba(168, 85, 247, 0.22); outline: 2px solid rgba(168, 85, 247, 0.6); outline-offset: 1px; }
+.sec-ref::before { content: '§'; font-weight: 700; margin-right: 1px; opacity: 0.8; }
+.sec-ref-tooltip { position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #1a1a1d; border: 1px solid var(--border-strong); border-radius: 10px; padding: 12px; width: 280px; font-size: 12.5px; color: var(--text-primary); font-weight: 400; line-height: 1.5; opacity: 0; pointer-events: none; transition: opacity 0.15s ease; z-index: 100; box-shadow: 0 12px 32px rgba(0,0,0,0.5); text-align: left; white-space: normal; }
+.sec-ref:hover .sec-ref-tooltip, .sec-ref:focus-visible .sec-ref-tooltip { opacity: 1; }
+.sec-ref-tooltip-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #c4b5fd; margin-bottom: 4px; }
+.sec-ref-tooltip-body { color: var(--text-secondary); }
+.sec-ref-tooltip-old { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-muted); }
+
+/* "Why this number?" inline explainer */
+.number-explainer { display: inline-block; position: relative; }
+.number-explainer-amount { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; border-bottom: 1px dashed rgba(168, 85, 247, 0.45); padding-bottom: 1px; transition: color 0.12s ease; color: inherit; font: inherit; background: none; }
+.number-explainer-amount:hover { color: #c4b5fd; }
+.number-explainer-arrow { display: inline-block; font-size: 9px; opacity: 0.7; transition: transform 0.18s ease; }
+.number-explainer.open .number-explainer-arrow { transform: rotate(90deg); }
+.number-explainer-panel { display: none; margin-top: 8px; background: #131316; border: 1px solid var(--border-strong); border-radius: 10px; padding: 12px 14px; font-size: 12.5px; font-weight: 400; color: var(--text-secondary); line-height: 1.5; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+.number-explainer.open .number-explainer-panel { display: block; }
+.number-explainer-label { font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #c4b5fd; margin-bottom: 8px; }
+.number-explainer-step { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 6px 0; border-top: 1px dashed var(--border); }
+.number-explainer-step:first-of-type { border-top: none; }
+.number-explainer-step-name { color: var(--text-primary); font-weight: 500; font-size: 12.5px; }
+.number-explainer-step-value { color: var(--text-primary); font-weight: 600; font-variant-numeric: tabular-nums; }
+.number-explainer-step-formula { grid-column: 1 / -1; color: var(--text-muted); font-size: 11.5px; font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
+.number-explainer-step.final { background: rgba(168, 85, 247, 0.08); margin: 4px -8px 0; padding: 8px; border-radius: 6px; border-top: 1px solid rgba(168, 85, 247, 0.3); }
+
+.typing { display: inline-flex; gap: 3px; padding: 12px 0; }
+.typing span { width: 6px; height: 6px; background: rgba(255,255,255,0.4); border-radius: 50%; animation: blink 1.4s infinite; }
+.typing span:nth-child(2) { animation-delay: 0.2s; }
+.typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes blink { 0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1); } }
+
+.choice-btn { display: block; width: 100%; text-align: left; padding: 13px 16px; margin-top: 8px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 12px; font-size: 14px; font-weight: 500; color: var(--text-primary); transition: all 0.15s ease; }
+.choice-btn:hover { background: rgba(255,255,255,0.07); border-color: var(--border-strong); transform: translateY(-1px); }
+.choice-btn-primary { background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(236, 72, 153, 0.10) 100%); border-color: rgba(168, 85, 247, 0.3); }
+.choice-btn-primary:hover { background: linear-gradient(135deg, rgba(168, 85, 247, 0.22) 0%, rgba(236, 72, 153, 0.15) 100%); border-color: rgba(168, 85, 247, 0.5); }
+.choice-btn-arrow { display: inline-block; margin-right: 6px; color: var(--accent); }
+.choice-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.choice-card { padding: 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 14px; text-align: left; transition: all 0.15s ease; }
+.choice-card:hover { background: rgba(255,255,255,0.06); border-color: var(--border-strong); transform: translateY(-1px); }
+.choice-card-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+.choice-card-icon.purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+.choice-card-icon.cyan { background: rgba(6, 182, 212, 0.15); color: #22d3ee; }
+.choice-card-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+.choice-card-desc { font-size: 12.5px; color: var(--text-muted); }
+
+.data-card { margin-top: 14px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.data-card-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.data-card-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.data-card-body { padding: 14px 18px; }
+.data-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 14px; color: var(--text-secondary); }
+.data-row .v { color: var(--text-primary); font-weight: 500; }
+.data-row.sub { font-size: 12.5px; color: var(--text-muted); padding-left: 14px; }
+.data-row.total { margin-top: 6px; padding-top: 10px; border-top: 1px solid var(--border); color: var(--text-secondary); }
+.data-card-section { padding: 14px 18px; border-top: 1px solid var(--border); background: rgba(0,0,0,0.2); }
+.data-card-section-title { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+
+.pill { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 3px 8px; border-radius: 100px; font-weight: 500; }
+.pill-success { background: rgba(34, 197, 94, 0.1); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.2); }
+
+.compare-grid { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.compare-cell { padding: 18px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 14px; }
+.compare-cell.win { background: linear-gradient(180deg, rgba(34, 197, 94, 0.06) 0%, var(--bg-surface) 100%); border-color: rgba(34, 197, 94, 0.3); }
+.compare-cell-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.compare-cell-name { font-size: 13px; font-weight: 600; }
+.compare-cell-amount { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 12px; color: var(--text-primary); }
+.compare-cell-detail { font-size: 12px; color: var(--text-muted); line-height: 1.5; display: flex; justify-content: space-between; padding: 2px 0; }
+
+.reco-banner { margin-top: 14px; padding: 18px 20px; background: linear-gradient(135deg, #4c1d95 0%, #831843 100%); border-radius: 14px; display: flex; justify-content: space-between; align-items: center; }
+.reco-banner-label { font-size: 11px; color: #c4b5fd; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+.reco-banner-title { font-size: 18px; font-weight: 700; margin-top: 2px; }
+.reco-banner-desc { font-size: 13px; color: #ddd6fe; margin-top: 4px; line-height: 1.5; max-width: 380px; }
+.reco-banner-savings { text-align: right; }
+.reco-banner-savings-label { font-size: 11px; color: #c4b5fd; }
+.reco-banner-savings-amount { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+
+.action-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 10px; font-size: 13.5px; font-weight: 500; transition: all 0.15s ease; }
+.btn-primary { background: #fafafa; color: #0a0a0b; }
+.btn-primary:hover { background: #fff; transform: translateY(-1px); }
+.btn-secondary { background: rgba(255,255,255,0.04); color: var(--text-primary); border: 1px solid var(--border); }
+.btn-secondary:hover { background: rgba(255,255,255,0.07); border-color: var(--border-strong); }
+
+/* AIS reconciliation widget */
+.ais-banner { margin-top: 14px; padding: 14px 16px; background: linear-gradient(135deg, #7c2d12 0%, #92400e 100%); border-radius: 12px; font-size: 14px; font-weight: 600; color: #fef3c7; display: flex; align-items: center; gap: 10px; }
+.ais-banner-icon { width: 22px; height: 22px; border-radius: 50%; background: #f59e0b; color: #1c1917; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+.discrepancy-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.discrepancy-card { padding: 14px 16px; background: var(--bg-surface); border-left: 4px solid var(--border-strong); border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); border-radius: 10px; }
+.discrepancy-card.severity-high { border-left-color: #ef4444; background: linear-gradient(90deg, rgba(239,68,68,0.08), var(--bg-surface) 30%); }
+.discrepancy-card.severity-medium { border-left-color: #f59e0b; background: linear-gradient(90deg, rgba(245,158,11,0.06), var(--bg-surface) 30%); }
+.discrepancy-card.severity-low { border-left-color: #71717a; }
+.discrepancy-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.discrepancy-field { font-weight: 600; font-size: 14px; color: var(--text-primary); }
+.discrepancy-sev { font-size: 10px; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
+.discrepancy-sev.high { background: rgba(239,68,68,0.18); color: #fca5a5; }
+.discrepancy-sev.medium { background: rgba(245,158,11,0.18); color: #fcd34d; }
+.discrepancy-sev.low { background: rgba(161,161,170,0.18); color: #d4d4d8; }
+.discrepancy-values { display: flex; gap: 14px; margin-top: 6px; font-size: 12.5px; color: var(--text-secondary); }
+.discrepancy-values strong { color: var(--text-primary); font-weight: 600; }
+.discrepancy-reco { font-size: 12.5px; color: var(--text-muted); margin-top: 8px; line-height: 1.5; }
+.discrepancy-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.chip-action { padding: 6px 11px; border-radius: 999px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); font-size: 12px; font-weight: 500; color: var(--text-primary); transition: all 0.15s ease; }
+.chip-action:hover { background: rgba(255,255,255,0.09); border-color: var(--border-strong); }
+.chip-action.primary { background: rgba(168,85,247,0.18); border-color: rgba(168,85,247,0.4); color: #e9d5ff; }
+.chip-action.primary:hover { background: rgba(168,85,247,0.28); }
+
+.itr-card { margin-top: 14px; padding: 22px; background: linear-gradient(135deg, #064e3b 0%, #065f46 100%); border: 1px solid #10b981; border-radius: 16px; display: flex; align-items: center; gap: 14px; }
+.itr-card-icon { width: 44px; height: 44px; border-radius: 12px; background: #10b981; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: white; }
+.itr-card-info { flex: 1; min-width: 0; }
+.itr-card-title { font-size: 14px; font-weight: 600; }
+.itr-card-meta { font-size: 12px; color: #a7f3d0; margin-top: 3px; }
+.itr-card-action { padding: 8px 16px; background: white; color: #065f46; font-size: 13px; font-weight: 600; border-radius: 8px; flex-shrink: 0; }
+.itr-card-action:hover { background: #f3f4f6; }
+
+.refund-banner { margin-top: 12px; padding: 14px 16px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 12px; }
+.refund-banner-title { font-size: 14px; font-weight: 600; color: #93c5fd; }
+.refund-banner-meta { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+/* Confidence indicators (AI extraction quality) */
+.conf-field { display: inline-flex; align-items: center; gap: 5px; position: relative; }
+.conf-icon { font-size: 10px; line-height: 1; cursor: help; }
+.confidence-high { color: #22c55e; }
+.confidence-med  { color: #eab308; }
+.confidence-low  { color: #ef4444; }
+.conf-tip { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #1f2937; color: #f3f4f6; font-size: 11px; padding: 6px 9px; border-radius: 6px; white-space: nowrap; z-index: 50; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+.conf-field:hover .conf-tip { display: block; }
+
+/* Risk flags panel */
+.risk-panel { margin-top: 12px; padding: 12px 14px; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; }
+.risk-panel-title { font-size: 14px; font-weight: 600; color: #fca5a5; }
+.risk-list { margin: 8px 0 0; padding-left: 18px; }
+.risk-list li { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; list-style: disc; }
+.risk-sev-high { color: #ef4444; font-weight: 600; }
+.risk-sev-med  { color: #eab308; font-weight: 600; }
+
+.next-steps { margin-top: 12px; padding-left: 18px; }
+.next-steps li { position: relative; padding-left: 8px; margin-bottom: 6px; font-size: 14px; color: var(--text-secondary); list-style: decimal; }
+.next-steps a { color: #c084fc; }
+.next-steps a:hover { text-decoration: underline; }
+
+.progress-list { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+.progress-item { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+.progress-item.done { color: var(--text-secondary); }
+.progress-item.active { color: var(--text-secondary); }
+.progress-item.pending { color: var(--text-muted); }
+.progress-icon { width: 16px; height: 16px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.progress-icon.pending { border: 1.5px solid var(--text-faint); border-radius: 50%; }
+.progress-icon.active::before { content: ''; width: 14px; height: 14px; border: 1.5px solid rgba(255,255,255,0.2); border-top-color: #a855f7; border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.progress-icon.done { color: #22c55e; }
+
+.input-area { padding: 12px 24px 24px; flex-shrink: 0; }
+.input-wrap { max-width: 760px; margin: 0 auto; }
+.input-box { background: var(--bg-input); border: 1px solid var(--border); border-radius: 24px; transition: all 0.15s ease; padding: 4px; }
+.input-box:focus-within { border-color: var(--border-strong); background: #232328; }
+.input-box.dragging { border-color: var(--accent); background: rgba(168, 85, 247, 0.05); }
+.file-preview { display: none; flex-wrap: wrap; gap: 6px; padding: 10px 12px 0; }
+.file-preview.show { display: flex; }
+.file-chip { display: flex; align-items: center; gap: 8px; padding: 5px 10px 5px 6px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 10px; font-size: 12px; }
+.file-chip-icon { width: 18px; height: 18px; background: #ef4444; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: white; }
+.input-row { display: flex; align-items: flex-end; padding: 6px 8px; gap: 6px; }
+.input-attach { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); transition: all 0.12s ease; flex-shrink: 0; }
+.input-attach:hover { background: rgba(255,255,255,0.08); color: var(--text-primary); }
+.input-textarea { flex: 1; background: transparent; border: none; outline: none; resize: none; padding: 9px 4px; font-size: 15px; line-height: 1.5; color: var(--text-primary); min-height: 24px; max-height: 200px; overflow-y: auto; }
+.input-textarea::placeholder { color: var(--text-muted); }
+.input-send { width: 36px; height: 36px; background: white; color: black; border-radius: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.12s ease; flex-shrink: 0; }
+.input-send:hover { transform: scale(1.04); background: #fff; }
+.input-disclaimer { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 10px; }
+
+/* Mobile drawer + backdrop (visible only on mobile) */
+.hamburger { display: none; width: 36px; height: 36px; align-items: center; justify-content: center; border-radius: 8px; color: var(--text-primary); background: transparent; margin-right: 4px; }
+.hamburger:hover { background: var(--bg-hover); }
+.sidebar-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 90; opacity: 0; transition: opacity 0.2s ease; }
+.sidebar-backdrop.show { display: block; opacity: 1; }
+
+@media (max-width: 768px) {
+  .hamburger { display: inline-flex; }
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+    width: 268px; max-width: 82vw;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: 0 0 24px rgba(0,0,0,0.5);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .main { width: 100%; flex: 1 1 100%; }
+  .chat-header { padding: 12px 16px; }
+  .thread-inner { max-width: 100%; padding: 24px 16px 16px; }
+  .chat-thread { width: 100%; }
+  .input-area {
+    position: sticky; bottom: 0;
+    padding: 8px 16px calc(12px + env(safe-area-inset-bottom)) 16px;
+    background: linear-gradient(180deg, transparent 0%, var(--bg-base) 18%);
+  }
+  .input-wrap { max-width: 100%; }
+  .choice-grid-2 { grid-template-columns: 1fr; }
+  .compare-grid, .compare-cells { display: flex; flex-direction: column; gap: 10px; }
+  .result-grid { display: flex; flex-direction: column; gap: 10px; }
+  .reco-banner { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .reco-banner-savings { text-align: left; }
+}
+
+/* Print receipt */
+.print-only { display: none; }
+#printSheet { color: #111; background: #fff; }
+@media print {
+  @page { size: A4; margin: 14mm 14mm 16mm 14mm; }
+  html, body { background: #fff !important; color: #111 !important; overflow: visible !important; height: auto !important; }
+  body * { visibility: hidden !important; }
+  #printSheet, #printSheet * { visibility: visible !important; }
+  #printSheet { display: block !important; position: absolute; left: 0; top: 0; width: 100%; padding: 0; font-family: 'Inter', Arial, sans-serif; font-size: 11pt; line-height: 1.4; color: #111; }
+  .print-hide { display: none !important; }
+  .ps-head { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #111; padding-bottom: 8px; margin-bottom: 14px; }
+  .ps-logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16pt; }
+  .ps-logo-mark { width: 28px; height: 28px; background: #a855f7; border-radius: 6px; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12pt; }
+  .ps-meta { font-size: 9.5pt; color: #444; text-align: right; }
+  .ps-h2 { font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin: 14px 0 6px; color: #111; border-bottom: 1px solid #999; padding-bottom: 2px; }
+  .ps-assessee { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; font-size: 10.5pt; }
+  .ps-assessee div span { color: #555; display: inline-block; min-width: 110px; }
+  table.ps-table { width: 100%; border-collapse: collapse; font-size: 10.5pt; page-break-inside: avoid; break-inside: avoid; margin-bottom: 6px; }
+  table.ps-table th, table.ps-table td { border: 1px solid #bbb; padding: 5px 8px; text-align: left; }
+  table.ps-table th { background: #eee; font-weight: 600; }
+  table.ps-table td.num, table.ps-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  table.ps-table tr.total td { font-weight: 700; background: #f4f4f4; }
+  .ps-final { display: flex; justify-content: space-between; align-items: center; border: 2px solid #111; padding: 10px 14px; margin-top: 10px; page-break-inside: avoid; }
+  .ps-final-label { font-size: 11pt; font-weight: 600; }
+  .ps-final-amt { font-size: 16pt; font-weight: 800; }
+  .ps-sections { font-size: 9.5pt; color: #333; margin-top: 10px; }
+  .ps-sections span { display: inline-block; border: 1px solid #999; border-radius: 3px; padding: 1px 6px; margin: 2px 4px 2px 0; }
+  .ps-foot { margin-top: 18px; padding-top: 8px; border-top: 1px solid #999; font-size: 9pt; color: #555; text-align: center; }
+}
+</style>
+<!-- PDF.js for real text extraction from Form 16 / AIS PDFs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs" type="module"></script>
+<script type="module">
+  import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs';
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs';
+  window.__pdfjsLib = pdfjsLib;
+</script>
+</head>
+<body>
+
+<div class="app">
+  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar(false)"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <button class="new-chat" onclick="newChat()">
+        <svg class="new-chat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        <span>New filing</span>
+      </button>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Today</div>
+      <button class="chat-item active">FY 2026-27 — In progress</button>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Last year</div>
+      <button class="chat-item">FY 2025-26 — Filed ✓</button>
+      <button class="chat-item">FY 2024-25 — Filed ✓</button>
+    </div>
+    <div class="sidebar-bottom">
+      <button class="profile-btn">
+        <div class="profile-avatar">P</div>
+        <div class="profile-info">
+          <div class="profile-name">Priya Mehta</div>
+          <div class="profile-plan">Free plan</div>
+        </div>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="chat-header">
+      <div class="chat-title">
+        <button class="hamburger" type="button" aria-label="Open chat history" aria-controls="sidebar" aria-expanded="false" onclick="toggleSidebar()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+        <div class="chat-title-mark">T</div>
+        <span class="chat-title-text">Taxy</span>
+        <span class="chat-title-tag">FY 2026-27</span>
+        <span class="chat-title-tag live">Act-grounded</span>
+      </div>
+      <div style="display: flex; gap: 6px;">
+        <button class="icon-btn" title="Share"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg></button>
+        <button class="icon-btn" title="Menu"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="18" r="1.5"/></svg></button>
+      </div>
+    </header>
+
+    <div class="chat-thread" id="chatThread">
+      <div class="thread-inner" id="messages" role="log" aria-live="polite" aria-relevant="additions" aria-atomic="false" aria-label="Conversation with Taxy"></div>
+    </div>
+
+    <div class="input-area">
+      <div class="input-wrap">
+        <div class="input-box" id="dropzone">
+          <div class="file-preview" id="filePreview"></div>
+          <div class="input-row">
+            <button class="input-attach" onclick="document.getElementById('fileInput').click()" title="Attach">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+            </button>
+            <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.json" style="display:none;" onchange="handleFiles(this.files)" />
+            <textarea class="input-textarea" id="msgInput" rows="1" placeholder="Ask anything, or drop your tax documents…" onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); sendMessage();}" oninput="autoGrow(this)"></textarea>
+            <button class="input-send" onclick="sendMessage()" title="Send">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3.4 20.4l17.45-7.48a1 1 0 000-1.84L3.4 3.6a1 1 0 00-1.39 1.21L4.5 11l-2.49 6.18a1 1 0 001.39 1.22z"/></svg>
+            </button>
+          </div>
+        </div>
+        <p class="input-disclaimer">Every figure links to its section. Hover to see the law. Verify with a CA before filing.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ============================================================
+// ACT-GROUNDED KNOWLEDGE LAYER
+// Every concept maps to a section of the Income-tax Act, 2025.
+// Hover any §pill in the chat to see the underlying law.
+// ============================================================
+const ACT = {
+  s15: { section: '15', title: 'Salaries chargeable to tax', principle: 'Salary taxed on EARLIER of due-or-paid basis. Includes arrears, advance salary; partner remuneration excluded.', old1961: 'Sec 15 (1961 Act)' },
+  s17: { section: '17', title: 'Perquisites', principle: 'Includes RFA, ESOPs, employer contribution > ₹7.5L aggregate to RPF/NPS/superannuation.', old1961: 'Sec 17(2) (1961 Act)' },
+  s19_std50: { section: '19(1) Sl.2', title: 'Standard deduction (Old regime)', principle: '₹50,000 or salary, whichever is less. Available only under old regime.', old1961: 'Sec 16(ia) (1961 Act)' },
+  s19_std75: { section: '19(1) Sl.2', title: 'Standard deduction (New regime)', principle: '₹75,000 or salary, whichever is less. Where income-tax computed under Sec 202(1).', old1961: 'Sec 16(ia) (1961 Act)' },
+  s19_proftax: { section: '19(1) Sl.1', title: 'Professional tax', principle: 'Entire professional tax actually paid (state-specific levy under Article 276(2): MH ₹2,500, KA ₹2,400, TN ₹2,500, GJ ₹2,400, WB ₹2,496). NOT allowed in new regime.', old1961: 'Sec 16(iii) (1961 Act)' },
+  s20: { section: '20', title: 'Income from House Property', principle: 'Annual value of property owned chargeable. Excludes portions used for own business.', old1961: 'Sec 22 (1961 Act)' },
+  s21_sop: { section: '21(6)', title: 'Self-occupied property — NIL annual value', principle: 'Annual value NIL for property occupied for own residence (or unoccupied). Up to TWO houses.', old1961: 'Sec 23(2) (1961 Act)' },
+  s22_interest: { section: '22(2)', title: 'Interest on housing loan', principle: 'SOP: capped at ₹2,00,000 (5-yr completion) or ₹30,000 otherwise. NOT in new regime.', old1961: 'Sec 24(b) (1961 Act)' },
+  s23: { section: '23', title: 'Annual value — Let-out / Deemed let-out', principle: 'AV = higher of expected rent (MV / FRV / SR) or actual rent received, less municipal taxes actually paid by owner. Vacancy allowance reduces AV proportionately.', old1961: 'Sec 23(1) (1961 Act)' },
+  s24_std30: { section: '24(a)', title: 'Standard deduction — 30% of NAV', principle: 'Flat 30% of Net Annual Value (NAV = AV − municipal taxes paid). Covers repairs, collection, insurance — no proof needed. Applies to LOP/DLOP only; SOP NAV is NIL.', old1961: 'Sec 24(a) (1961 Act)' },
+  s92: { section: '92', title: 'Income from Other Sources', principle: 'Residual head — dividends, interest, lottery, gifts > ₹50,000, family pension.', old1961: 'Sec 56 (1961 Act)' },
+  s99: { section: '99', title: 'Clubbing — spouse / minor child', principle: 'Spouse/son\'s wife asset transfers without consideration; minor child income (₹1,500/child exempt).', old1961: 'Sec 64 (1961 Act)' },
+  s109: { section: '109', title: 'Inter-head set-off of losses', principle: 'PGBP loss not vs Salaries. HP loss capped at ₹2L against other heads.', old1961: 'Sec 71 (1961 Act)' },
+  s110: { section: '110', title: 'House Property loss carry-forward', principle: 'CF 8 years; set off only against future HP income.', old1961: 'Sec 71B (1961 Act)' },
+  s111: { section: '111', title: 'PGBP loss carry-forward', principle: 'Business loss CF 8 years; only vs future PGBP. Unabsorbed depreciation CF unlimited.', old1961: 'Sec 72 / 32(2) (1961 Act)' },
+  s112: { section: '112', title: 'Speculation loss CF', principle: 'Speculation business loss CF 4 years; only vs speculation income.', old1961: 'Sec 73 (1961 Act)' },
+  s116: { section: '116', title: 'STCL carry-forward', principle: 'Short-term capital loss CF 8 years; set off vs STCG or LTCG.', old1961: 'Sec 74 (1961 Act)' },
+  s117: { section: '117', title: 'LTCL carry-forward', principle: 'Long-term capital loss CF 8 years; only vs LTCG.', old1961: 'Sec 74 (1961 Act)' },
+  s123: { section: '123', title: 'Section 123 (old 80C)', principle: 'Aggregate ₹1,50,000 cap for LIC, PPF, ELSS, NSC, school fees, housing principal etc. Per Schedule XV. NOT in new regime.', old1961: 'Sec 80C (1961 Act)' },
+  s124_2: { section: '124(2)', title: 'Section 124(2) — Employer NPS', principle: 'Employer NPS: max 14% of (basic+DA) for Govt; 10% non-Govt under OLD regime; 14% non-Govt under NEW regime per FA 2025. Available in BOTH regimes.', old1961: 'Sec 80CCD(2) (1961 Act)' },
+  s125: { section: '125', title: 'Agnipath / Agniveer Corpus', principle: 'Contributions to Agniveer Corpus Fund — 100% deduction. Available in BOTH regimes (only Sec 125, 124(2), 146 carry over among Ch VIII to new regime).', old1961: 'Sec 80CCH (1961 Act)' },
+  s126: { section: '126', title: 'Section 126 (old 80D) — Health insurance', principle: '₹25,000 self+family / ₹50,000 senior; PLUS ₹25,000 parents / ₹50,000 senior parents. Preventive check-up sub-limit ₹5,000. Cash payment disallowed (except check-ups). NOT in new regime.', old1961: 'Sec 80D (1961 Act)' },
+  s133: { section: '133', title: 'Section 133 (old 80G) — Donations', principle: '100%/50% deduction by fund category. Most NGOs are 50% with 10% AGTI cap. Cash > ₹2,000 disallowed. NOT in new regime.', old1961: 'Sec 80G (1961 Act)' },
+  s134: { section: '134', title: 'Section 134 (old 80GG) — Rent (no HRA)', principle: 'Lower of ₹5,000/month, 25% of TI, or rent − 10% TI.', old1961: 'Sec 80GG (1961 Act)' },
+  s146: { section: '146', title: 'Section 146 (old 80JJAA)', principle: '30% of additional employee cost × 3 years. ONLY Ch VIII deduction available in new regime (besides 124/125).', old1961: 'Sec 80JJAA (1961 Act)' },
+  s153: { section: '153', title: 'Section 153 (old 80TTA/B) — Savings interest', principle: '₹10,000 (general) / ₹50,000 (senior) on savings deposit interest. NOT in new regime. Senior under Sec 153(2) gets ₹50K against savings + FD/RD interest combined (old 80TTB). FD/RD interest is otherwise fully taxed at slab.', old1961: 'Sec 80TTA/80TTB (1961 Act)' },
+  s92_familypension: { section: '92(1)(iia)', title: 'Family pension — standard deduction', principle: 'Lower of ⅓ of family pension OR ₹15,000 (old) / ₹25,000 (new — FA 2025). Pension itself is taxed under Sec 92 head Other Sources.', old1961: 'Sec 57(iia) (1961 Act)' },
+  s92_dividend: { section: '92', title: 'Dividend income (residual head)', principle: 'Dividends from domestic companies / mutual funds taxed at slab under Other Sources since FA 2020 abolished DDT. Old Sec 115BBDA (additional 10% on dividends > ₹10L) was abolished by FA 2020 and is not in the 2025 Act. Sec 393 TDS @10% if dividend from a single company > ₹5,000/yr.', old1961: 'Sec 56(2)(i) (1961 Act)' },
+  s156_old: { section: '156(1)', title: 'Section 156 (old 87A) — Old regime rebate', principle: '₹12,500 rebate if TI ≤ ₹5L. Hard cliff — no marginal relief.', old1961: 'Sec 87A (1961 Act)' },
+  s156_new: { section: '156(2)', title: 'Section 156(2) — New regime rebate', principle: 'Tax up to ₹12L = NIL (max ₹60,000). Marginal relief above ₹12L.' },
+  s157: { section: '157', title: 'Section 157 (old 89) — Salary arrears relief', principle: 'Relief for arrears that pushed you into a higher slab. Filed via Form 10E.', old1961: 'Sec 89 (1961 Act)' },
+  s194: { section: '194', title: 'Section 194 — Tax on unexplained items', principle: '60% flat on unexplained credits / investments / assets / cash credits (no deduction allowed). Continues per FA 2026.', old1961: 'Sec 115BBE (1961 Act)' },
+  s188_lottery: { section: '188', title: 'Section 188 — Winnings (lottery / crossword / horse races / card games)', principle: 'Flat 30% on gross winnings. NO expense, NO Ch VIII, NO Sec 156 rebate, NO basic exemption shelter. Full surcharge (no 15% CG cap). Cess 4%.', old1961: 'Sec 115BB (1961 Act)' },
+  s194S_vda: { section: '194S', title: 'Section 194S — Virtual Digital Assets (crypto / NFT)', principle: 'Flat 30% on transfer of VDA. Only cost of acquisition deductible — no other expense, no loss set-off, no Ch VIII, no rebate. 1% TDS on consideration.', old1961: 'Sec 115BBH + 194S (1961 Act)' },
+  s115BBC_anon: { section: '115BBC', title: 'Section 115BBC — Anonymous donations to charitable trusts', principle: 'Flat 30% on anonymous donations exceeding ₹1,00,000 or 5% of total donations (whichever is higher). No deduction. Religious trusts excluded.', old1961: 'Sec 115BBC (1961 Act)' },
+  s195: { section: '195', title: 'Section 195 — Withholding on payments to non-residents', principle: 'TDS on any sum payable to non-resident chargeable to tax — at rates in force or DTAA, whichever is beneficial.', old1961: 'Sec 195 (1961 Act)' },
+  s196: { section: '196', title: 'Section 196 — STCG STT-paid', principle: '20% on STCG from STT-paid equity / equity funds / business trust units (post FA 2024).', old1961: 'Sec 111A (1961 Act)' },
+  s197: { section: '197', title: 'Section 197 — LTCG general', principle: '12.5% on LTCG (any asset, post-FA 2024). Pre-23 Jul 2024 land/building: lower of 12.5% or 20% with indexation.', old1961: 'Sec 112 (1961 Act)' },
+  s198: { section: '198', title: 'Section 198 — LTCG STT-paid equity', principle: '12.5% on LTCG > ₹1,25,000 from STT-paid equity. ₹1.25L threshold per year.', old1961: 'Sec 112A (1961 Act)' },
+  s202: { section: '202', title: 'Section 202 — New tax regime (default)', principle: 'Default for individuals/HUF/AOP/BOI/AJP. Slabs: 0/5/10/15/20/25/30% at 4/8/12/16/20/24L. Disallows most Ch VIII, HRA, LTC, HP-loss inter-head set-off.' },
+  s263: { section: '263', title: 'Section 263 — Return of income', principle: 'Mandatory if income > basic exemption. Due dates: 31 Jul (general), 31 Oct (audit), 30 Nov (TP), 31 Aug (PGBP non-audit). Belated 9 months. Updated 48 months.', old1961: 'Sec 139 (1961 Act)' },
+  s392: { section: '392', title: 'Section 392 — Salary TDS', principle: 'Employer deducts TDS at average rate on estimated annual salary income.', old1961: 'Sec 192 (1961 Act)' },
+  s393: { section: '393', title: 'Section 393 — Other TDS', principle: 'Consolidated TDS for non-salary payments. Each item has own threshold and rate.', old1961: 'Sec 193-195 (1961 Act)' },
+  sch3_hra: { section: 'Schedule III Sl.7', title: 'HRA exemption', principle: 'Old regime only. Exempt = MIN of: actual HRA; rent − 10% (basic+DA); 50% (Mumbai/Delhi/Kolkata/Chennai) or 40% (other).', old1961: 'Sec 10(13A) (1961 Act)' },
+  sch_xv: { section: 'Schedule XV', title: 'Schedule XV — Sec 123 eligible items', principle: 'LIC ≤10% sum assured, PPF, ELSS, NSC, 5-yr FD, Sukanya, NPS Tier-I, school fees, housing principal.' },
+  cess: { section: 'Finance Act, 2026', title: 'Health & Education Cess', principle: '4% on (income tax + surcharge). All assessees.' },
+  surcharge: { section: 'Finance Act, 2026, First Schedule', title: 'Surcharge on income tax', principle: '10% (>₹50L), 15% (>₹1cr), 25% (>₹2cr), 37% (>₹5cr) — capped at 25% under new regime. Marginal relief at thresholds.' }
+};
+
+let _refIdCounter = 0;
+function ref(key, displayText) {
+  const data = ACT[key];
+  if (!data) return displayText || key;
+  const label = displayText || ('Sec ' + data.section);
+  const id = 'tt-' + (++_refIdCounter);
+  const old = data.old1961 ? '<span class="sec-ref-tooltip-old">&#8801; ' + data.old1961 + '</span>' : '';
+  return '<button type="button" class="sec-ref" aria-describedby="' + id + '">' + label +
+    '<span class="sec-ref-tooltip" role="tooltip" id="' + id + '">' +
+    '<span class="sec-ref-tooltip-title">' + data.title + '</span>' +
+    '<span class="sec-ref-tooltip-body">' + data.principle + '</span>' +
+    old + '</span></button>';
+}
+
+// ============================================================
+// TAX COMPUTATION ENGINE — Income-tax Act 2025 / FY 2026-27
+// All slab/rebate/surcharge values verified against the Act PDF
+// ============================================================
+const formatINR = n => '₹' + Math.round(n).toLocaleString('en-IN');
+
+function applySlabs(income, slabs) {
+  let tax = 0;
+  for (const s of slabs) {
+    if (income <= s.from) break;
+    tax += (Math.min(income, s.to) - s.from) * s.rate;
+  }
+  return tax;
+}
+
+// CA-1 fix: Senior citizen variants of old-regime slabs
+function getOldSlabs(age) {
+  if (age === 'super_senior') return [
+    { from: 0, to: 500000, rate: 0 },
+    { from: 500000, to: 1000000, rate: 0.20 },
+    { from: 1000000, to: Infinity, rate: 0.30 }
+  ];
+  if (age === 'senior') return [
+    { from: 0, to: 300000, rate: 0 },
+    { from: 300000, to: 500000, rate: 0.05 },
+    { from: 500000, to: 1000000, rate: 0.20 },
+    { from: 1000000, to: Infinity, rate: 0.30 }
+  ];
+  return [
+    { from: 0, to: 250000, rate: 0 },
+    { from: 250000, to: 500000, rate: 0.05 },
+    { from: 500000, to: 1000000, rate: 0.20 },
+    { from: 1000000, to: Infinity, rate: 0.30 }
+  ];
+}
+const oldSlabs = getOldSlabs('regular'); // backwards-compat default
+const newSlabs = [
+  { from: 0, to: 400000, rate: 0 },
+  { from: 400000, to: 800000, rate: 0.05 },
+  { from: 800000, to: 1200000, rate: 0.10 },
+  { from: 1200000, to: 1600000, rate: 0.15 },
+  { from: 1600000, to: 2000000, rate: 0.20 },
+  { from: 2000000, to: 2400000, rate: 0.25 },
+  { from: 2400000, to: Infinity, rate: 0.30 }
+];
+
+// CA-15 + CA-G fix: Sec 156 rebate — RESIDENT-only + marginal relief
+// Old regime: rebate ₹12.5k if TI ≤ ₹5L; marginal relief band ₹5L-₹5.13L approx
+const rebateOld = (ti, t, isResident) => {
+  if (isResident === false) return 0;
+  if (ti <= 500000) return Math.min(t, 12500);
+  // Sec 156 proviso (old) — marginal relief: tax shouldn't exceed (TI - 5L)
+  const ex = ti - 500000;
+  if (t > ex) return t - ex;
+  return 0;
+};
+// New regime: tax up to ₹12L = NIL; marginal relief above ₹12L
+const rebateNew = (ti, t, isResident) => {
+  if (isResident === false) return 0;
+  if (ti <= 1200000) return Math.min(t, 60000);
+  const ex = ti - 1200000;
+  return t > ex ? t - ex : 0;
+};
+
+// CA-19 fix: state-specific professional tax cap
+const PROF_TAX_BY_STATE = {
+  Maharashtra: 2500, Karnataka: 2400, 'Tamil Nadu': 2500, 'Andhra Pradesh': 2500,
+  Telangana: 2500, Gujarat: 2400, 'West Bengal': 2496, Kerala: 2500,
+  'Madhya Pradesh': 2500, Odisha: 2500, Bihar: 2500, Assam: 2500, Punjab: 2400,
+  Tripura: 2496, Meghalaya: 2500, Mizoram: 2500, Nagaland: 2500, Manipur: 2500,
+  Sikkim: 2400
+};
+function profTaxCap(state) { return PROF_TAX_BY_STATE[state] || 2500; }
+
+const surcharge = (ti, t, regime) => {
+  let r = 0;
+  if (ti > 50000000) r = regime === 'new' ? 0.25 : 0.37;
+  else if (ti > 20000000) r = 0.25;
+  else if (ti > 10000000) r = 0.15;
+  else if (ti > 5000000) r = 0.10;
+  return t * r;
+};
+
+// CA-5 fix: Surcharge on capital-gains income (Sec 196/197/198) is capped at 15%
+// regardless of total income. Returns surcharge total = regular surcharge + capped CG surcharge.
+function surchargeWithCGCap(tiTotal, regularTax, taxOnCGSpecial, regime) {
+  let r = 0;
+  if (tiTotal > 50000000) r = regime === 'new' ? 0.25 : 0.37;
+  else if (tiTotal > 20000000) r = 0.25;
+  else if (tiTotal > 10000000) r = 0.15;
+  else if (tiTotal > 5000000) r = 0.10;
+  const cgRate = Math.min(r, 0.15);
+  return regularTax * r + taxOnCGSpecial * cgRate;
+}
+
+// Sec 188 / 194S / 115BBC — flat 30% special-rate income.
+// No Ch VIII, no Sec 156 rebate. Full surcharge (no 15% CG cap) + 4% cess applied at recompute level.
+function specialRateTax(d) {
+  const lotteryGross = Math.max(0, d.lotteryWinnings || 0); // Sec 188 (old 115BB)
+  const vdaGain = Math.max(0, (d.vdaSale || 0) - (d.vdaCost || 0)); // Sec 194S (old 115BBH) — only cost-of-acquisition allowed
+  const anonDon = Math.max(0, d.anonDonations || 0); // Sec 115BBC — pre-filtered to taxable portion by caller
+  const lotteryTax = lotteryGross * 0.30;
+  const vdaTax = vdaGain * 0.30;
+  const anonDonTax = anonDon * 0.30;
+  return { lotteryTax, vdaTax, anonDonTax, total: lotteryTax + vdaTax + anonDonTax };
+}
+
+// CA-A fix: HRA metro list per Sched III Sl.7 — only Mumbai, Delhi, Kolkata, Chennai
+const HRA_METROS = ['Mumbai', 'Delhi', 'New Delhi', 'Kolkata', 'Chennai'];
+const isHraMetro = city => HRA_METROS.includes((city || '').trim());
+
+const hraExempt = (hra, rent, basic, isMetro) => {
+  if (!hra || !rent || !basic) return 0;
+  return Math.min(hra, Math.max(0, rent - 0.10 * basic), (isMetro ? 0.50 : 0.40) * basic);
+};
+
+const sec153_savings = (savingsInterest, isSenior) => {
+  return Math.min(savingsInterest, isSenior ? 50000 : 10000);
+};
+
+// CA-8: ITR form selector — picks the right ITR for the assessee
+function selectItrForm(d) {
+  if ((d.totalIncome || 0) > 5000000) return { form: 'ITR-2', reason: 'Total income exceeds ₹50 lakh — ITR-1 not permitted' };
+  if (d.hasCapitalGains) return { form: 'ITR-2', reason: 'Capital gains income (Sec 196/197/198) requires ITR-2' };
+  if (d.hasForeignAssets || d.hasForeignIncome) return { form: 'ITR-2', reason: 'Schedule FA disclosure mandatory — ITR-2 / ITR-3' };
+  if (!d.isResident) return { form: 'ITR-2', reason: 'Non-resident — ITR-1 only for ordinarily resident' };
+  if ((d.numHouseProps || 0) > 1) return { form: 'ITR-2', reason: 'More than one house property' };
+  if (d.hasBusinessIncome) return { form: 'ITR-3', reason: 'Business / professional income (Sec 26-66)' };
+  if (d.isPresumptive) return { form: 'ITR-4', reason: 'Presumptive scheme under Sec 58 / 61' };
+  return { form: 'ITR-1 (Sahaj)', reason: 'Salary + 1 SOP + other sources up to ₹50L — Sahaj fits' };
+}
+
+// CA-10/11: Sec 423/424 interest — advance tax shortfall (1% per month) and 234C-style instalments
+function interest423(taxLiability, advanceTaxPaid, monthsLate) {
+  // Sec 423 (old 234A): 1%/month for late filing
+  const shortfall = Math.max(0, taxLiability - advanceTaxPaid);
+  return Math.round(shortfall * 0.01 * Math.max(0, monthsLate));
+}
+function interest424(assessedTax, advanceTaxPaid) {
+  // Sec 424 (old 234B): 1%/month if advance tax < 90% of assessed
+  if (advanceTaxPaid >= assessedTax * 0.9) return 0;
+  const shortfall = assessedTax - advanceTaxPaid;
+  return Math.round(shortfall * 0.01 * 4); // approx 4 months Apr-Jul
+}
+
+// ============================================================
+// SEC 6 RESIDENCY (Sec 6(1), 6(1A), 6(6))
+// ============================================================
+function determineResidency(d) {
+  const daysCY = +d.daysCY || 0;
+  const days4Y = +d.days4Y || 0;
+  const days7Y = +d.days7Y || 0;
+  const indiaIncome = +d.indiaIncome || 0;
+  const isIndian = d.citizenship === 'IN' || d.citizenship === 'PIO' || d.citizenship === 'OCI';
+  const onlyOneEighty = !!(d.leftForEmployment || d.isShipMember);
+  const secondLimb = (isIndian && indiaIncome > 1500000) ? 120 : 60;
+  let isResident = false;
+  if (daysCY >= 182) isResident = true;
+  else if (!onlyOneEighty && daysCY >= secondLimb && days4Y >= 365) isResident = true;
+  let isDeemedResident = false;
+  if (!isResident && d.citizenship === 'IN' && indiaIncome > 1500000 && !d.taxableElsewhere) {
+    isDeemedResident = true;
+    isResident = true;
+  }
+  const nrYears = +d.nrYearsInLast10 || 0;
+  let isOrdinarilyResident = isResident;
+  if (isResident) {
+    if (isDeemedResident) isOrdinarilyResident = false;
+    else if (nrYears >= 9) isOrdinarilyResident = false;
+    else if (days7Y <= 729) isOrdinarilyResident = false;
+  }
+  return { isResident, isOrdinarilyResident, isDeemedResident };
+}
+
+// ============================================================
+// MESSAGE RENDERING
+// ============================================================
+const messages = document.getElementById('messages');
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const scrollDown = () => setTimeout(() => {
+  const t = document.getElementById('chatThread');
+  t.scrollTop = t.scrollHeight;
+}, 50);
+
+function ai(html) {
+  const m = document.createElement('div');
+  m.className = 'msg';
+  m.innerHTML = '<div class="msg-avatar ai">T</div><div class="msg-body">' + html + '</div>';
+  messages.appendChild(m);
+  scrollDown();
+  return m;
+}
+function user(html) {
+  const m = document.createElement('div');
+  m.className = 'msg user';
+  m.innerHTML = '<div class="msg-bubble-user">' + html + '</div>';
+  messages.appendChild(m);
+  scrollDown();
+  return m;
+}
+function showTyping() {
+  const m = document.createElement('div');
+  m.id = 'typing';
+  m.className = 'msg';
+  m.innerHTML = '<div class="msg-avatar ai">T</div><div class="msg-body"><div class="typing"><span></span><span></span><span></span></div></div>';
+  messages.appendChild(m);
+  scrollDown();
+}
+function hideTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
+
+// ============================================================
+// CONVERSATION STATE
+// ============================================================
+const DRAFT_KEY = 'taxy_draft_v1';
+let _saveTimer = null;
+function saveDraft() {
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ data: state.data, last: state.last })); }
+  catch (e) {}
+}
+function loadDraft() {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !parsed.data) return null;
+    return parsed;
+  } catch (e) { return null; }
+}
+function deleteDraft() { try { localStorage.removeItem(DRAFT_KEY); } catch (e) {} }
+function scheduleSave() { clearTimeout(_saveTimer); _saveTimer = setTimeout(saveDraft, 500); }
+function _wrap(obj) {
+  if (!obj || typeof obj !== 'object') return obj;
+  for (const k of Object.keys(obj)) {
+    if (obj[k] && typeof obj[k] === 'object') obj[k] = _wrap(obj[k]);
+  }
+  return new Proxy(obj, {
+    set(t, k, v) {
+      if (v && typeof v === 'object') v = _wrap(v);
+      t[k] = v; scheduleSave(); return true;
+    },
+    deleteProperty(t, k) { delete t[k]; scheduleSave(); return true; }
+  });
+}
+const state = _wrap({
+  data: {
+    salary: 0, hra: 0, basic: 0, rent: 0, isMetro: true,
+    otherIncome: 0, savingsInterest: 0, fdInterest: 0,
+    dividend: 0, dividendMaxPerCompany: 0, familyPension: 0,
+    sec80c: 0, sec80d: 0, sec80g: 0, employerNps: 0,
+    isSenior: false, ageBand: 'regular', isResident: true,
+    state: 'Maharashtra',
+    pan: 'ABCDE1234F', tdsPaid: 0, city: 'Mumbai'
+  }
+});
+
+// ============================================================
+// REAL PDF PARSING — uses PDF.js loaded in <head>
+// Works on text-based PDFs (most modern Form 16 / AIS).
+// For scanned/image-only PDFs, falls back to manual entry.
+// ============================================================
+async function extractTextFromPdf(file) {
+  if (!window.__pdfjsLib) throw new Error('PDF.js not loaded yet');
+  const buf = await file.arrayBuffer();
+  const pdf = await window.__pdfjsLib.getDocument({ data: buf }).promise;
+  let fullText = '';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    fullText += content.items.map(it => it.str).join(' ') + '\n';
+  }
+  return fullText;
+}
+
+// Form 16 field patterns — written for the standard CBDT Part B format
+function parseForm16(text) {
+  const out = { confidence: {} };
+  const norm = text.replace(/\s+/g, ' ').replace(/,/g, '');
+  const num = s => s ? parseInt(s.replace(/[^\d]/g, ''), 10) : 0;
+
+  // PAN — 5 letters + 4 digits + 1 letter
+  const panMatch = norm.match(/\b([A-Z]{5}\d{4}[A-Z])\b/);
+  if (panMatch) { out.pan = panMatch[1]; out.confidence.pan = 'high'; }
+
+  // Employer name — usually right before "TAN of Deductor" or "Address of"
+  const empMatch = norm.match(/Name and address of (?:the )?Employer\s+([A-Z][A-Z &.,'-]+?)(?=\s+(?:TAN|Address|PAN|CIN))/i);
+  if (empMatch) { out.employer = empMatch[1].trim(); out.confidence.employer = 'medium'; }
+
+  // Gross Salary — Section 17(1) salary
+  const grossMatch = norm.match(/(?:Gross Salary|Salary as per provisions)[\s\S]{0,80}?(\d[\d,]{4,})/i);
+  if (grossMatch) { out.salary = num(grossMatch[1]); out.confidence.salary = 'medium'; }
+
+  // HRA — house rent allowance exempt
+  const hraMatch = norm.match(/House rent allowance[\s\S]{0,50}?(\d[\d,]{3,})/i);
+  if (hraMatch) { out.hra = num(hraMatch[1]); out.confidence.hra = 'medium'; }
+
+  // TDS — total tax deducted
+  const tdsMatch = norm.match(/(?:Total tax deducted|Tax deducted at source|Total amount of tax deducted)[\s\S]{0,60}?(\d[\d,]{3,})/i);
+  if (tdsMatch) { out.tdsPaid = num(tdsMatch[1]); out.confidence.tdsPaid = 'medium'; }
+
+  // Standard deduction — should be 50000 (old) or 75000 (new) for FY 2026-27
+  const stdMatch = norm.match(/Standard deduction[\s\S]{0,40}?(\d[\d,]{3,})/i);
+  if (stdMatch) out.standardDeduction = num(stdMatch[1]);
+
+  // Section 80C / 123 deductions
+  const sec80cMatch = norm.match(/(?:Section 80C|Section 123)[\s\S]{0,60}?(\d[\d,]{3,})/i);
+  if (sec80cMatch) { out.sec80c = num(sec80cMatch[1]); out.confidence.sec80c = 'low'; }
+
+  // Section 80D / 126
+  const sec80dMatch = norm.match(/(?:Section 80D|Section 126)[\s\S]{0,60}?(\d[\d,]{3,})/i);
+  if (sec80dMatch) { out.sec80d = num(sec80dMatch[1]); out.confidence.sec80d = 'low'; }
+
+  // Detect whether PDF is image-only (very short text → likely scanned)
+  out.isLikelyScanned = norm.length < 200;
+  out.rawTextLength = norm.length;
+  return out;
+}
+
+// Friendly extracted-data card for chat — every field shown with confidence + edit
+function extractedCardHtml(data) {
+  const fmt = n => '₹' + (n||0).toLocaleString('en-IN');
+  const conf = (k) => {
+    const c = data.confidence?.[k];
+    if (c === 'high') return '<span style="color:#4ade80;font-size:11px;margin-left:6px;">● confirmed</span>';
+    if (c === 'medium') return '<span style="color:#f59e0b;font-size:11px;margin-left:6px;">● please verify</span>';
+    if (c === 'low') return '<span style="color:#ef4444;font-size:11px;margin-left:6px;">● low confidence</span>';
+    return '<span style="color:var(--text-muted);font-size:11px;margin-left:6px;">— not found</span>';
+  };
+  let html = '<div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:8px;">';
+  html += '<div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;letter-spacing:0.5px;">EXTRACTED FROM YOUR FORM 16</div>';
+  if (data.employer) html += '<div style="margin-bottom:8px;font-size:14px;"><b>'+data.employer+'</b>'+conf('employer')+'</div>';
+  if (data.pan) html += '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:6px;">PAN: '+data.pan+conf('pan')+'</div>';
+  html += '<div style="border-top:1px solid var(--border);padding-top:10px;margin-top:10px;">';
+  html += '<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;"><span>Gross salary</span><span>'+fmt(data.salary)+conf('salary')+'</span></div>';
+  if (data.hra) html += '<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;"><span>HRA</span><span>'+fmt(data.hra)+conf('hra')+'</span></div>';
+  html += '<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;"><span>TDS deducted</span><span>'+fmt(data.tdsPaid)+conf('tdsPaid')+'</span></div>';
+  html += '</div>';
+  html += '<div style="margin-top:12px;font-size:11px;color:var(--text-muted);line-height:1.5;">No PDF parser is 100% accurate. Please check each value against your physical Form 16 — click any line to correct it.</div>';
+  html += '</div>';
+  return html;
+}
+
+// Main entry point — try real PDF parsing, fall back to manual
+async function tryParseUploadedFile(file) {
+  if (!file.name.toLowerCase().endsWith('.pdf')) {
+    return { error: 'Not a PDF — please upload your Form 16 PDF.' };
+  }
+  try {
+    const text = await extractTextFromPdf(file);
+    const data = parseForm16(text);
+    if (data.isLikelyScanned) {
+      return { error: 'scanned', text: 'This looks like a scanned PDF (image-only). Could you type the salary, HRA, and TDS from your Form 16 instead?' };
+    }
+    if (!data.salary && !data.tdsPaid && !data.pan) {
+      return { error: 'no-match', text: "I couldn't find the standard Form 16 fields. Could you type your salary and TDS instead, or upload a different version?" };
+    }
+    return { ok: true, data };
+  } catch (e) {
+    return { error: 'parse-failed', text: 'Couldn\'t read the PDF — please try a different file or type the values.' };
+  }
+}
+
+// CA-PriorYear: pre-fill from previous year's ITR upload
+function mockParsePriorYearITR() {
+  return {
+    pan: 'ABCDE1234F',
+    name: 'Priya Mehta',
+    dob: '1992-04-18',
+    address: 'B-402, Lodha Splendora, Thane West, Mumbai 400607',
+    bank: { ifsc: 'HDFC0000123', name: 'HDFC Bank', accNo: 'XXXXXX4421', type: 'Savings' },
+    lastYrTotalIncome: 1505000,
+    lastYrTax: 174720,
+    lastYrRefund: 12480,
+    lastYrRegime: 'old'
+  };
+}
+function setPriorYearData(prior) {
+  state.prior = prior;
+  state.data.pan = prior.pan;
+  state.data.priorName = prior.name;
+  state.data.priorBank = prior.bank;
+}
+function yoyComparisonHtml(prior, current) {
+  const change = (current.tax || 0) - (prior.lastYrTax || 0);
+  const sign = change >= 0 ? '+' : '−';
+  const fmt = n => '₹' + Math.abs(Math.round(n)).toLocaleString('en-IN');
+  const arrow = (prior.lastYrRegime || '?').toUpperCase() + ' → ' + (current.regime || '?').toUpperCase();
+  let html = '<div class="data-card" style="margin-top:10px;">' +
+    '<div class="data-card-header"><span class="data-card-title">Year-over-Year</span>' +
+    '<span class="pill ' + (change >= 0 ? 'pill-warn' : 'pill-success') + '">' + sign + fmt(change) + '</span></div>' +
+    '<div style="padding:10px 14px; font-size:13px; color:var(--text-secondary);">' +
+    'Last year ' + fmt(prior.lastYrTax) + ' tax → This year ' + fmt(current.tax || 0) + ' tax. Change ' + sign + fmt(change) + ' (regime: ' + arrow + ').</div>';
+  if (prior.lastYrRegime && current.regime && prior.lastYrRegime !== current.regime) {
+    html += '<div style="padding:10px 14px; border-top:1px solid var(--border); font-size:12.5px; color:#fcd34d;">⚠ Regime switched — Form 10-IEA required for opt-out.</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+// ============================================================
+// HOUSE PROPERTY (Sec 20 / 21 / 22 / 23 / 24 / 109 / 110)
+// ============================================================
+function houseProperty(d) {
+  const props = (d && d.properties) || [];
+  if (!props.length) return { hpIncome: 0, hpDetail: [], lossCarryFwd: 0 };
+
+  // Sec 21(6): max TWO SOPs. Excess SOPs are deemed let-out.
+  let sopCount = 0;
+  const norm = props.map(p => {
+    const t = (p.type || 'SOP').toUpperCase();
+    let eff = t;
+    if (t === 'SOP') {
+      sopCount++;
+      if (sopCount > 2) eff = 'DLOP';
+    }
+    return Object.assign({}, p, { effType: eff });
+  });
+
+  let total = 0;
+  let sopInterestAgg = 0;
+  const SOP_AGG_CAP = 200000;
+  const detail = [];
+
+  for (const p of norm) {
+    const share = (p.jointSharePct == null ? 100 : p.jointSharePct) / 100;
+    const av = Math.max(0, p.annualValue || 0);
+    const muni = Math.max(0, p.municipalTaxPaid || 0);
+    const intPaid = Math.max(0, p.interestPaid || 0);
+
+    if (p.effType === 'SOP') {
+      // Sec 21(6): NIL annual value
+      const cap = p.completedIn5y ? 200000 : 30000;
+      let allowed = Math.min(intPaid, cap);
+      // Aggregate ₹2L cap across both SOPs (Sec 22(2) proviso)
+      const room = Math.max(0, SOP_AGG_CAP - sopInterestAgg);
+      allowed = Math.min(allowed, room);
+      sopInterestAgg += allowed;
+      const inc = -(allowed * share);
+      total += inc;
+      detail.push({ type: 'SOP', av: 0, muni: 0, nav: 0, std30: 0, interest: allowed, share, income: inc });
+    } else {
+      // LOP / DLOP — Sec 23 + Sec 24(a) + Sec 22 interest (no cap)
+      const vacantMonths = Math.max(0, Math.min(12, p.vacantMonths || 0));
+      const occupiedAv = av * (12 - vacantMonths) / 12;
+      const nav = Math.max(0, occupiedAv - muni);
+      const std30 = nav * 0.30;
+      const inc = (nav - std30 - intPaid) * share;
+      total += inc;
+      detail.push({ type: p.effType, av: occupiedAv, muni, nav, std30, interest: intPaid, share, income: inc });
+    }
+  }
+  // Loss carry-forward = full negative (Sec 110, 8 yrs vs future HP only)
+  const lossCarryFwd = total < 0 ? Math.abs(total) : 0;
+  return { hpIncome: total, hpDetail: detail, lossCarryFwd };
+}
+
+// Chat flow — prompts user about house property
+async function askHousingProperty() {
+  await sleep(300); showTyping(); await sleep(900); hideTyping();
+  ai(
+    '<p>Do you own any house property? ' + ref('s20', 'Sec 20') + '</p>' +
+    '<p class="secondary small" style="margin-top:6px;">Up to two homes can be self-occupied (' + ref('s21_sop', 'Sec 21(6)') + '). More than that — extras are deemed let-out.</p>' +
+    '<div class="choice-grid-2" style="margin-top:10px;">' +
+      '<button class="choice-btn" onclick="hpAnswer(\'none\')">No property</button>' +
+      '<button class="choice-btn" onclick="hpAnswer(\'sop1\')">1 self-occupied</button>' +
+      '<button class="choice-btn" onclick="hpAnswer(\'sop2\')">2 self-occupied</button>' +
+      '<button class="choice-btn" onclick="hpAnswer(\'lop\')">Let-out</button>' +
+      '<button class="choice-btn" onclick="hpAnswer(\'mixed\')">Mixed (SOP + LOP)</button>' +
+    '</div>'
+  );
+}
+
+function hpAnswer(kind) {
+  const d = state.data;
+  if (kind === 'none') { d.properties = []; }
+  else if (kind === 'sop1') { d.properties = [{ type:'SOP', annualValue:0, municipalTaxPaid:0, interestPaid: 200000, completedIn5y:true, jointSharePct:100 }]; }
+  else if (kind === 'sop2') { d.properties = [{ type:'SOP', interestPaid:150000, completedIn5y:true }, { type:'SOP', interestPaid:80000, completedIn5y:true }]; }
+  else if (kind === 'lop')  { d.properties = [{ type:'LOP', annualValue:360000, municipalTaxPaid:18000, interestPaid:240000, jointSharePct:100, vacantMonths:0 }]; }
+  else if (kind === 'mixed'){ d.properties = [{ type:'SOP', interestPaid:200000, completedIn5y:true }, { type:'LOP', annualValue:360000, municipalTaxPaid:18000, interestPaid:240000 }]; }
+  d.numHouseProps = (d.properties || []).length;
+  user(kind === 'none' ? 'No property' : kind);
+  state.last = recompute();
+}
+
+// CA-E: family pension deduction — Sec 92(1)(iia)
+function familyPensionDeduction(amt, regime) {
+  if (!amt || amt <= 0) return 0;
+  const cap = regime === 'new' ? 25000 : 15000;
+  return Math.min(cap, Math.floor(amt / 3));
+}
+
+// CA-E: dividends — Sec 92 residual + Sec 393 TDS. 115BBDA abolished by FA 2020.
+function dividendIncome(d) {
+  const gross = d.dividend || 0;
+  const perCoMax = d.dividendMaxPerCompany || gross;
+  const tds = perCoMax > 5000 ? Math.round(gross * 0.10) : 0;
+  return { taxable: gross, tds };
+}
+
+// CA-E: Sec 153 — savings/FD split; FD covered only for seniors (old 80TTB)
+function savingsInterestSplit(d) {
+  const sav = d.savingsInterest || 0;
+  const fd = d.fdInterest || 0;
+  const isSenior = d.ageBand === 'senior' || d.ageBand === 'super_senior' || d.isSenior;
+  const isNRI = d.isResident === false;
+  let oldDed = 0;
+  if (!isNRI) {
+    if (isSenior) oldDed = Math.min(sav + fd, 50000);
+    else oldDed = Math.min(sav, 10000);
+  }
+  return { savings: sav, fd, oldDed, totalInterest: sav + fd };
+}
+
+function recompute() {
+  const d = state.data;
+  // CA-J: NRI cannot claim senior basic exemption; NRI also can't claim Sec 153
+  const ageKey = (d.isResident === false) ? 'regular' : (d.ageBand || (d.isSenior ? 'senior' : 'regular'));
+  // CA-1: Slabs vary by age (super_senior / senior / regular)
+  const slabsForAge = getOldSlabs(ageKey);
+  // CA-19: Professional tax cap depends on state
+  const profCap = profTaxCap(d.state || 'Maharashtra');
+  // CA-20: Employer NPS deduction capped at 14% of (basic + DA) — both regimes per FA 2025
+  const npsCapBase = (d.basic || 0);
+  const empNpsAllowed = Math.min(d.employerNps || 0, npsCapBase * 0.14);
+  // CA-21 + CA-J: Sec 153 — TTA ₹10k / TTB ₹50k senior; NRI gets ZERO
+  const ttaCap = (d.isResident === false) ? 0
+              : ((d.ageBand === 'senior' || d.ageBand === 'super_senior' || d.isSenior) ? 50000 : 10000);
+  const ttaDed = Math.min(d.savingsInterest || 0, ttaCap);
+  // CA-F: Clamp Ch VIII inputs at statutory limits before summing
+  const sec123 = Math.min(d.sec80c || 0, 150000);
+  const sec126Cap = (ageKey === 'senior' || ageKey === 'super_senior') ? 100000 : 75000; // self+parents combined cap
+  const sec126 = Math.min(d.sec80d || 0, sec126Cap);
+  // CA-A: derive isMetro from city (canonical), keep isMetro as fallback
+  const metroFromCity = isHraMetro(d.city);
+  const useMetro = (typeof d.isMetro === 'boolean') ? (d.isMetro && metroFromCity || metroFromCity) : metroFromCity;
+  // OLD REGIME
+  const oldHra = hraExempt(d.hra, d.rent, d.basic, useMetro);
+  const oldStd = Math.min(50000, d.salary);
+  const oldProf = Math.min(profCap, d.salary);
+  const oldNetSalary = Math.max(0, d.salary - oldHra - oldStd - oldProf);
+  // House Property (Sec 20-24). Sec 109 caps inter-head HP loss at ₹2L; Sec 110 carries balance fwd 8 yrs.
+  const hp = houseProperty(d);
+  const hpForOld = hp.hpIncome >= 0 ? hp.hpIncome : -Math.min(200000, Math.abs(hp.hpIncome));
+  const hpLossCfOld = hp.hpIncome < 0 ? Math.max(0, Math.abs(hp.hpIncome) - 200000) : 0;
+  const oldGTI = oldNetSalary + d.otherIncome + d.savingsInterest + hpForOld;
+  // CA-F: Use clamped Sec 123 / Sec 126 instead of raw user input
+  const oldChVIII = sec123 + sec126 + empNpsAllowed + ttaDed + (d.sec80g || 0);
+  const oldTI = Math.max(0, oldGTI - oldChVIII);
+  const oldSlabTax = applySlabs(oldTI, slabsForAge);
+  const oldRebate = rebateOld(oldTI, oldSlabTax, d.isResident);
+  const oldAfterRebate = Math.max(0, oldSlabTax - oldRebate);
+  // Sec 188 / 194S / 115BBC — flat 30%, ADDED post-rebate (rebate doesn't shelter these)
+  const sp = specialRateTax(d);
+  const oldTaxIncSpecial = oldAfterRebate + sp.total;
+  // Surcharge: lottery (Sec 188) gets FULL rate; VDA + anon donation use CG-cap helper (15% max)
+  const oldSurBase = surchargeWithCGCap(oldTI + sp.total / 0.30, oldAfterRebate + sp.lotteryTax, sp.vdaTax + sp.anonDonTax, 'old');
+  const oldSur = oldSurBase;
+  const oldCess = (oldTaxIncSpecial + oldSur) * 0.04;
+  const oldTotal = oldTaxIncSpecial + oldSur + oldCess;
+  // NEW REGIME (Sec 202)
+  const newStd = Math.min(75000, d.salary);
+  const newNetSalary = Math.max(0, d.salary - newStd);
+  // Sec 202: new regime DISALLOWS inter-head HP loss set-off; positive HP income still taxed.
+  const hpForNew = hp.hpIncome > 0 ? hp.hpIncome : 0;
+  const newGTI = newNetSalary + d.otherIncome + d.savingsInterest + hpForNew;
+  const newChVIII = empNpsAllowed; // Only 124(2) carries to new regime
+  const newTI = Math.max(0, newGTI - newChVIII);
+  const newSlabTax = applySlabs(newTI, newSlabs);
+  const newRebate = rebateNew(newTI, newSlabTax, d.isResident);
+  const newAfterRebate = Math.max(0, newSlabTax - newRebate);
+  // Sec 188 / 194S / 115BBC — flat 30%, ADDED post-rebate
+  const newTaxIncSpecial = newAfterRebate + sp.total;
+  const newSur = surchargeWithCGCap(newTI + sp.total / 0.30, newAfterRebate + sp.lotteryTax, sp.vdaTax + sp.anonDonTax, 'new');
+  const newCess = (newTaxIncSpecial + newSur) * 0.04;
+  const newTotal = newTaxIncSpecial + newSur + newCess;
+  return {
+    oldDetails: { hraExempt: oldHra, std: oldStd, prof: oldProf, gti: oldGTI, chVIII: oldChVIII, ttaDed, taxable: oldTI, slab: oldSlabTax, rebate: oldRebate, sur: oldSur, cess: oldCess, total: oldTotal, npsAllowed: empNpsAllowed, hp: hpForOld, hpLossCf: hpLossCfOld, hpDetail: hp.hpDetail, special: sp },
+    newDetails: { std: newStd, gti: newGTI, chVIII: newChVIII, taxable: newTI, slab: newSlabTax, rebate: newRebate, sur: newSur, cess: newCess, total: newTotal, hp: hpForNew, hpDetail: hp.hpDetail, special: sp },
+    hpRaw: hp.hpIncome, hpLossCarryFwd: hp.lossCarryFwd,
+    oldTotal, newTotal,
+    winner: newTotal < oldTotal ? 'new' : 'old',
+    savings: Math.abs(oldTotal - newTotal)
+  };
+}
+
+// ============================================================
+// CONVERSATION FLOW
+// ============================================================
+async function welcome() {
+  await sleep(300);
+  ai(
+    '<p style="font-size: 16px;">Hi 👋 — I\'ll help you file your taxes for this year.</p>' +
+    '<p class="secondary small" style="margin-top: 10px;">If you\'re new to this, don\'t worry. Tax filing in India means telling the government how much you earned and how much tax you owe. I\'ll do the math; you just answer a few easy questions.</p>' +
+    '<p style="margin-top: 16px; font-weight: 500;">Pick what fits you:</p>' +
+    '<div class="choice-grid-2" style="margin-top: 10px;">' +
+      '<button class="choice-card" onclick="document.getElementById(\'fileInput\').click()">' +
+        '<div class="choice-card-icon cyan"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="2" fill="none"/></svg></div>' +
+        '<div class="choice-card-title">I have my Form 16</div>' +
+        '<div class="choice-card-desc">Upload it — I\'ll read the numbers for you</div>' +
+      '</button>' +
+      '<button class="choice-card" onclick="askWhatIsForm16()">' +
+        '<div class="choice-card-icon amber"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>' +
+        '<div class="choice-card-title">What is a Form 16?</div>' +
+        '<div class="choice-card-desc">I\'ll explain in plain English</div>' +
+      '</button>' +
+      '<button class="choice-card" onclick="startManualEntry()">' +
+        '<div class="choice-card-icon emerald"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>' +
+        '<div class="choice-card-title">I don\'t have any documents</div>' +
+        '<div class="choice-card-desc">Just type your salary — I\'ll do the rest</div>' +
+      '</button>' +
+      '<button class="choice-card" onclick="demo()">' +
+        '<div class="choice-card-icon purple"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>' +
+        '<div class="choice-card-title">Show me a demo first</div>' +
+        '<div class="choice-card-desc">See how it works with sample data</div>' +
+      '</button>' +
+    '</div>'
+  );
+}
+
+async function askWhatIsForm16() {
+  user('What is a Form 16?');
+  await sleep(500); showTyping(); await sleep(1400); hideTyping();
+  ai(
+    '<p><b>Form 16 is your salary + tax summary from your employer.</b></p>' +
+    '<p class="secondary small" style="margin-top: 8px;">Every May or June, your employer (the company you work for) sends you a PDF called Form 16. It shows:</p>' +
+    '<ul style="margin: 10px 0 10px 18px; font-size: 14px; color: var(--text-secondary); line-height: 1.8;">' +
+      '<li>How much salary they paid you all year</li>' +
+      '<li>How much tax (TDS) they already cut and sent to the government</li>' +
+      '<li>Your PAN, their TAN, etc.</li>' +
+    '</ul>' +
+    '<p class="secondary small">Where to find it: check your work email inbox for "Form 16", or ask your HR / payroll team. It\'s usually a PDF.</p>' +
+    '<div class="choice-grid-2" style="margin-top: 14px;">' +
+      '<button class="choice-card" onclick="document.getElementById(\'fileInput\').click()">' +
+        '<div class="choice-card-title">Got it — I\'ll upload</div>' +
+      '</button>' +
+      '<button class="choice-card" onclick="startManualEntry()">' +
+        '<div class="choice-card-title">I don\'t have it — let me type</div>' +
+      '</button>' +
+    '</div>'
+  );
+}
+
+async function startManualEntry() {
+  user('I want to type the details myself.');
+  await sleep(500); showTyping(); await sleep(1100); hideTyping();
+  ai(
+    '<p>No problem. I just need 3 numbers from you:</p>' +
+    '<ol style="margin: 10px 0 10px 18px; font-size: 14px; color: var(--text-secondary); line-height: 1.8;">' +
+      '<li><b>Your annual salary</b> (gross — before any deductions)</li>' +
+      '<li><b>Your basic salary component</b> (usually 40-50% of total — check your salary slip)</li>' +
+      '<li><b>How much tax was already cut</b> (TDS — your employer told you this)</li>' +
+    '</ol>' +
+    '<p class="secondary small" style="margin-top: 8px;">Type them like this: <i>"salary 18 lakh, basic 9 lakh, tds 2 lakh"</i> — or just answer one at a time. I understand "lakh" and "thousand".</p>'
+  );
+}
+
+async function demo() {
+  const demoFiles = [
+    { name: 'Form 16 - FY 2026-27.pdf', size: '342 KB' },
+    { name: 'AIS - FY 2026-27.pdf', size: '189 KB' },
+    { name: 'ITR - FY 2025-26 (filed).pdf', size: '256 KB' }
+  ];
+  user('<div style="display:flex; flex-direction: column; gap: 6px;">' + demoFiles.map(f => '<div style="display: flex; align-items:center; gap: 8px;"><span style="display:inline-block; width:18px; height:18px; background:#ef4444; border-radius:4px;"></span>' + f.name + '<span style="color: var(--text-muted); font-size: 11px; margin-left: auto;">' + f.size + '</span></div>').join('') + '</div>');
+
+  await sleep(500); showTyping(); await sleep(1200); hideTyping();
+
+  const progressMsg = ai('<p>Reading your documents…</p><div class="progress-list" id="progress"><div class="progress-item active"><div class="progress-icon active"></div><span>Form 16 — extracting salary, TDS, perquisites</span></div><div class="progress-item pending"><div class="progress-icon pending"></div><span>AIS — reconciling reported income</span></div><div class="progress-item pending"><div class="progress-icon pending"></div><span>ITR FY 2025-26 — learning your historical pattern</span></div></div>');
+
+  await sleep(1500);
+  progressMsg.querySelector('#progress').innerHTML = '<div class="progress-item done"><div class="progress-icon done">' + checkSvg() + '</div><span>Form 16 — done</span></div><div class="progress-item active"><div class="progress-icon active"></div><span>AIS — reconciling reported income</span></div><div class="progress-item pending"><div class="progress-icon pending"></div><span>ITR FY 2025-26 — learning your historical pattern</span></div>';
+
+  await sleep(1500);
+  progressMsg.querySelector('#progress').innerHTML = '<div class="progress-item done"><div class="progress-icon done">' + checkSvg() + '</div><span>Form 16 — done</span></div><div class="progress-item done"><div class="progress-icon done">' + checkSvg() + '</div><span>AIS — reconciled, no major discrepancies</span></div><div class="progress-item active"><div class="progress-icon active"></div><span>ITR FY 2025-26 — learning your historical pattern</span></div>';
+
+  await sleep(1300);
+  progressMsg.querySelector('#progress').innerHTML = '<div class="progress-item done"><div class="progress-icon done">' + checkSvg() + '</div><span>Form 16 — done</span></div><div class="progress-item done"><div class="progress-icon done">' + checkSvg() + '</div><span>AIS — reconciled, no major discrepancies</span></div><div class="progress-item done"><div class="progress-icon done">' + checkSvg() + '</div><span>ITR FY 2025-26 — pattern learned</span></div>';
+
+  await sleep(800); showTyping(); await sleep(1500); hideTyping();
+
+  state.data = { salary: 1850000, basic: 925000, hra: 462000, employerNps: 92500, otherIncome: 0, savingsInterest: 14200, rent: 0, isMetro: true, sec80c: 0, sec80d: 0, sec80g: 0, isSenior: false, pan: 'ABCDE1234F', tdsPaid: 215000, city: 'Mumbai' };
+
+  ai(
+    '<p>Here\'s what I extracted from Form 16 and AIS:</p>' +
+    '<div class="data-card">' +
+      '<div class="data-card-header"><span class="data-card-title">Form 16 — TCS Limited</span><span class="pill pill-success">↑ 23% vs last year</span></div>' +
+      '<div class="data-card-body">' +
+        '<div class="data-row"><span>Gross salary ' + ref('s15', 'Sec 15') + '</span><span class="v">₹18,50,000</span></div>' +
+        '<div class="data-row sub"><span>Basic + DA</span><span>₹9,25,000</span></div>' +
+        '<div class="data-row sub"><span>HRA component</span><span>₹4,62,000</span></div>' +
+        '<div class="data-row sub"><span>Employer NPS @ 10% ' + ref('s124_2', 'Sec 124(2)') + '</span><span>₹92,500</span></div>' +
+        '<div class="data-row total"><span>TDS deducted ' + ref('s392', 'Sec 392') + '</span><span class="v">₹2,15,000</span></div>' +
+      '</div>' +
+      '<div class="data-card-section">' +
+        '<div class="data-card-section-title">From AIS ' + ref('s92', 'Sec 92') + '</div>' +
+        '<div class="data-row"><span>Savings interest (HDFC)</span><span class="v">₹14,200</span></div>' +
+      '</div>' +
+    '</div>'
+  );
+
+  await sleep(800); showTyping(); await sleep(2000); hideTyping();
+
+  ai(
+    '<p>From your FY 2025-26 ITR I see that last year you:</p>' +
+    '<ul style="margin-top: 10px; display: flex; flex-direction: column; gap: 6px;">' +
+      '<li class="secondary small">• Claimed <strong style="color: var(--text-primary);">HRA exemption</strong> ' + ref('sch3_hra', 'Sched III Sl.7') + ' with Mumbai rent of ₹3,30,000</li>' +
+      '<li class="secondary small">• Invested <strong style="color: var(--text-primary);">₹1,50,000 in PPF + ELSS</strong> ' + ref('s123', 'Sec 123') + '</li>' +
+      '<li class="secondary small">• Paid <strong style="color: var(--text-primary);">₹22,000 health insurance</strong> ' + ref('s126', 'Sec 126') + ' for self + spouse</li>' +
+      '<li class="secondary small">• Filed under the <strong style="color: var(--text-primary);">old regime</strong></li>' +
+    '</ul>' +
+    '<p style="margin-top: 16px;">A few quick questions to update for this year:</p>' +
+    '<button class="choice-btn choice-btn-primary" onclick="askRent()"><span class="choice-btn-arrow">→</span> Did your rent change for FY 2026-27?</button>'
+  );
+}
+
+async function askRent() {
+  user('Yes, my rent went up. Now ₹35,000/month, so ₹4,20,000 for the year.');
+  await sleep(600); showTyping(); await sleep(1800); hideTyping();
+  state.data.rent = 420000;
+  ai(
+    '<p>Got it — ₹4,20,000 total rent recorded.</p>' +
+    '<p class="secondary small" style="margin-top: 6px;">Your HRA exemption per ' + ref('sch3_hra', 'Schedule III Sl.7') + ' will be the lower of: (a) actual HRA ₹4,62,000, (b) rent − 10% of basic = ₹3,27,500, or (c) 50% of basic for Mumbai = ₹4,62,500. Lower wins → <strong>₹3,27,500</strong> exempt.</p>' +
+    '<p class="secondary small" style="margin-top: 6px;">Heads up: rent over ₹1 lakh/year means landlord PAN required before filing.</p>' +
+    '<p style="margin-top: 14px;">Two more quick ones:</p>' +
+    '<button class="choice-btn choice-btn-primary" onclick="ask80c()"><span class="choice-btn-arrow">→</span> Any 80C investments this year? (PPF, ELSS, LIC, etc.)</button>'
+  );
+}
+
+async function ask80c() {
+  user('Same as last year — ₹1,50,000 in PPF and ELSS combined.');
+  await sleep(500); showTyping(); await sleep(1200); hideTyping();
+  state.data.sec80c = 150000;
+  ai(
+    '<p>' + ref('s123', 'Sec 123') + ' maxed at ₹1,50,000 (per ' + ref('sch_xv', 'Schedule XV') + '). Done.</p>' +
+    '<p style="margin-top: 14px;">Last one — health insurance for FY 2026-27?</p>' +
+    '<button class="choice-btn choice-btn-primary" onclick="ask80dY()"><span class="choice-btn-arrow">→</span> Yes, ~₹25,000 self + spouse</button>' +
+    '<button class="choice-btn" onclick="ask80dN()">Skip — none this year</button>'
+  );
+}
+
+async function ask80dY() {
+  user('Yes, ₹25,000 paid to HDFC ERGO for self + spouse policy.');
+  await sleep(500); showTyping(); await sleep(1500); hideTyping();
+  state.data.sec80d = 25000;
+  await compute();
+}
+
+async function ask80dN() {
+  user('Skip — no health insurance this year.');
+  await sleep(500); showTyping(); await sleep(1500); hideTyping();
+  state.data.sec80d = 0;
+  await compute();
+}
+
+async function compute() {
+  ai('<p>Perfect. Computing your tax under both regimes — applying ' + ref('s202', 'Sec 202') + ' for new regime, standard slabs + ' + ref('s156_old', 'Sec 156(1)') + ' rebate for old regime…</p><div style="display: flex; align-items: center; gap: 10px; margin-top: 12px; font-size: 14px; color: var(--text-muted);"><div style="width: 14px; height: 14px; border: 1.5px solid rgba(255,255,255,0.2); border-top-color: #a855f7; border-radius: 50%; animation: spin 0.8s linear infinite;"></div><span>Crunching numbers</span></div>');
+
+  await sleep(2000);
+  state.last = recompute();
+  const r = state.last;
+  const winner = r.winner;
+  const savings = r.savings;
+
+  ai(
+    '<p>Done. Here\'s the comparison:</p>' +
+    '<div class="compare-grid">' +
+      '<div class="compare-cell ' + (winner === 'old' ? 'win' : '') + '">' +
+        '<div class="compare-cell-header"><span class="compare-cell-name">Old Regime</span>' + (winner === 'old' ? '<span class="pill pill-success">Winner</span>' : '') + '</div>' +
+        '<div class="compare-cell-amount">' + formatINR(r.oldTotal) + '</div>' +
+        '<div class="compare-cell-detail"><span>Taxable</span><span>' + formatINR(r.oldDetails.taxable) + '</span></div>' +
+        '<div class="compare-cell-detail"><span>Slab tax</span><span>' + formatINR(r.oldDetails.slab) + '</span></div>' +
+        '<div class="compare-cell-detail"><span>+ Cess (4%)</span><span>' + formatINR(r.oldDetails.cess) + '</span></div>' +
+      '</div>' +
+      '<div class="compare-cell ' + (winner === 'new' ? 'win' : '') + '">' +
+        '<div class="compare-cell-header"><span class="compare-cell-name">New Regime ' + ref('s202', 'Sec 202') + '</span>' + (winner === 'new' ? '<span class="pill pill-success">Winner</span>' : '') + '</div>' +
+        '<div class="compare-cell-amount">' + formatINR(r.newTotal) + '</div>' +
+        '<div class="compare-cell-detail"><span>Taxable</span><span>' + formatINR(r.newDetails.taxable) + '</span></div>' +
+        '<div class="compare-cell-detail"><span>Slab tax</span><span>' + formatINR(r.newDetails.slab) + '</span></div>' +
+        '<div class="compare-cell-detail"><span>+ Cess (4%)</span><span>' + formatINR(r.newDetails.cess) + '</span></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="reco-banner">' +
+      '<div><div class="reco-banner-label">Recommendation</div><div class="reco-banner-title">Choose ' + (winner === 'new' ? 'NEW' : 'OLD') + ' Regime</div><div class="reco-banner-desc">' + (winner === 'old' ? 'Your HRA + 80C + 80D deductions outweigh the higher slabs. Old regime wins.' : 'Even with HRA, 80C and 80D, the new regime\'s wider slabs and higher standard deduction beat the old.') + '</div></div>' +
+      '<div class="reco-banner-savings"><div class="reco-banner-savings-label">You save</div><div class="reco-banner-savings-amount">' + formatINR(savings) + '</div></div>' +
+    '</div>' +
+    '<p class="secondary small" style="margin-top: 16px;">TDS already paid: <strong style="color: var(--text-primary);">₹2,15,000</strong> (' + ref('s392', 'Sec 392') + '). So your <strong style="color: ' + (r[winner+'Total'] < 215000 ? '#4ade80' : '#fb923c') + ';">' + (r[winner+'Total'] < 215000 ? '₹' + (215000 - r[winner+'Total']).toLocaleString('en-IN') + ' refund' : '₹' + (r[winner+'Total'] - 215000).toLocaleString('en-IN') + ' balance') + '</strong> ' + (r[winner+'Total'] < 215000 ? 'is refundable.' : 'needs to be paid before filing.') + '</p>' +
+    '<p style="margin-top: 16px;">Ready to generate your ITR-1 JSON ' + ref('s263', 'Sec 263') + '?</p>' +
+    '<div class="action-row">' +
+      '<button class="btn btn-primary" onclick="generate(\'' + winner + '\')">' + arrowDownSvg() + ' Generate ITR-1 JSON</button>' +
+      '<button class="btn btn-secondary" onclick="askChange()">Wait — let me change something</button>' +
+    '</div>'
+  );
+}
+
+async function askChange() {
+  user('Actually wait — I forgot. I also paid ₹40,000 to a registered NGO this year.');
+  await sleep(700); showTyping(); await sleep(2000); hideTyping();
+  ai(
+    '<p>Good catch — that\'s ' + ref('s133', 'Sec 133') + '.</p>' +
+    '<p class="secondary small" style="margin-top: 6px;">If the NGO is approved under Sec 354, you get either 50% or 100% deduction subject to a 10% AGTI cap. Most charitable NGOs are 50% with cap. Cash &gt; ₹2,000 disallowed.</p>' +
+    '<p class="secondary small" style="margin-top: 6px;">Important: this only helps under the <strong style="color: var(--text-primary);">old regime</strong>. ' + ref('s202', 'Sec 202') + ' disallows ' + ref('s133', 'Sec 133') + '.</p>' +
+    '<p style="margin-top: 14px;">Was the donation by cheque/UPI?</p>' +
+    '<button class="choice-btn choice-btn-primary" onclick="addDonation()"><span class="choice-btn-arrow">→</span> Yes, by UPI / cheque (claim ₹20,000 — 50% of ₹40,000)</button>'
+  );
+}
+
+async function addDonation() {
+  user('Yes, UPI to a registered NGO. Receipt available.');
+  await sleep(500); showTyping(); await sleep(1500); hideTyping();
+  state.data.sec80g = 20000;
+  state.last = recompute();
+  const r = state.last;
+  ai(
+    '<p>Updated. Recomputing both regimes with the donation deduction…</p>' +
+    '<div class="compare-grid" style="margin-top: 14px;">' +
+      '<div class="compare-cell ' + (r.winner === 'old' ? 'win' : '') + '">' +
+        '<div class="compare-cell-header"><span class="compare-cell-name">Old Regime <span class="secondary small">(with ₹20K ' + ref('s133', 'Sec 133') + ')</span></span>' + (r.winner === 'old' ? '<span class="pill pill-success">Winner</span>' : '') + '</div>' +
+        '<div class="compare-cell-amount">' + formatINR(r.oldTotal) + '</div>' +
+      '</div>' +
+      '<div class="compare-cell ' + (r.winner === 'new' ? 'win' : '') + '">' +
+        '<div class="compare-cell-header"><span class="compare-cell-name">New Regime ' + ref('s202', 'Sec 202') + '</span>' + (r.winner === 'new' ? '<span class="pill pill-success">Winner</span>' : '') + '</div>' +
+        '<div class="compare-cell-amount">' + formatINR(r.newTotal) + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<p class="secondary small" style="margin-top: 12px;">' + (r.winner === 'new' ? 'Even with the donation deduction, the new regime is still cheaper by ' + formatINR(r.savings) + '. Recommendation stands: NEW regime.' : 'With the donation, old regime is now better by ' + formatINR(r.savings) + '. Recommendation switched to OLD regime.') + '</p>' +
+    '<div class="action-row"><button class="btn btn-primary" onclick="generate(\'' + r.winner + '\')">' + arrowDownSvg() + ' Generate ITR-1 JSON</button></div>'
+  );
+}
+
+async function generate(regime) {
+  user('Yes, generate it.');
+  await sleep(500); showTyping(); await sleep(2500); hideTyping();
+  // Always recompute fresh — fixes the round 1 stale state bug
+  state.last = recompute();
+  const r = state.last;
+  const d = state.data;
+  const totalTax = regime === 'new' ? r.newTotal : r.oldTotal;
+  const details = regime === 'new' ? r.newDetails : r.oldDetails;
+
+  const itrJson = {
+    "ITR": { "ITR1": {
+      "CreationInfo": { "SWVersionNo": "0.1", "SWCreatedBy": "Taxy", "JSONCreationDate": new Date().toISOString().split('T')[0], "ActReference": "Income-tax Act, 2025 (30 of 2025) as amended by Finance Act, 2026", "CommencementDate": "2026-04-01" },
+      "Form_ITR1": { "FormName": "ITR-1", "AssessmentYear": "2027", "TaxYear": "2026-27", "SchemaVer": "DRAFT — replace with official CBDT XSD before filing" },
+      "PersonalInfo": { "AssesseeName": { "FirstName": "Priya", "SurNameOrOrgName": "Mehta" }, "PAN": d.pan, "Status": "I", "ResidentialStatus": "RESIDENT" },
+      "FilingStatus": { "ReturnFileSec": 11, "NewTaxRegime": regime === 'new' ? "Y" : "N", "Section202Applied": regime === 'new' },
+      "ITR1_IncomeDeductions": {
+        "GrossSalary_Sec15": d.salary,
+        "HRA_Exempt_SchIIIsl7": regime === 'old' ? r.oldDetails.hraExempt : 0,
+        "DeductionUs19_Sl2": regime === 'new' ? 75000 : 50000,
+        "DeductionUs19_Sl1_ProfTax": regime === 'old' ? 2400 : 0,
+        "IncomeFromOtherSources_Sec92": d.otherIncome + d.savingsInterest,
+        "GrossTotalIncome": details.gti,
+        "DeductUndChapVIA": {
+          "Section123_OldS80C": regime === 'old' ? d.sec80c : 0,
+          "Section126_OldS80D": regime === 'old' ? d.sec80d : 0,
+          "Section124_2_EmployerNPS": d.employerNps,
+          "Section153_OldS80TTA": regime === 'old' ? r.oldDetails.ttaDed : 0,
+          "Section133_OldS80G": regime === 'old' ? d.sec80g : 0,
+          "TotalChapVIIIDeductions": details.chVIII
+        },
+        "TotalIncome": details.taxable,
+        "TaxOnSlabs": Math.round(details.slab),
+        "RebateUs156": Math.round(details.rebate),
+        "Surcharge": Math.round(details.sur),
+        "EducationCess_4pct": Math.round(details.cess),
+        "TotalTaxPayable": Math.round(totalTax)
+      },
+      "TaxPaid": { "TaxesPaid": { "TDS_Sec392": d.tdsPaid, "TotalTaxesPaid": d.tdsPaid }, "BalTaxPayable": Math.max(0, Math.round(totalTax - d.tdsPaid)), "RefundAmount": Math.max(0, Math.round(d.tdsPaid - totalTax)) },
+      "Verification": { "Place": d.city, "Date": new Date().toISOString().split('T')[0] }
+    } }
+  };
+
+  const blob = new Blob([JSON.stringify(itrJson, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const refund = Math.max(0, d.tdsPaid - totalTax);
+  const balance = Math.max(0, totalTax - d.tdsPaid);
+
+  ai(
+    '<p>Done. Your ITR-1 is ready.</p>' +
+    '<div class="itr-card">' +
+      '<div class="itr-card-icon">' + arrowDownSvg(20) + '</div>' +
+      '<div class="itr-card-info"><div class="itr-card-title">ITR-1_FY2026-27_' + d.pan + '.json</div><div class="itr-card-meta">' + (regime === 'new' ? 'New regime (Sec 202)' : 'Old regime') + ' · Total tax ' + formatINR(totalTax) + '</div></div>' +
+      '<a href="' + url + '" download="ITR-1_FY2026-27_' + d.pan + '.json" class="itr-card-action">Download</a>' +
+    '</div>' +
+    '<div class="refund-banner"><div class="refund-banner-title">' + (refund > 0 ? '🎉 You\'re getting a refund of ' + formatINR(refund) : 'Balance to pay: ' + formatINR(balance)) + '</div><div class="refund-banner-meta">' + (refund > 0 ? 'After filing, refund will hit your HDFC account in 4-12 weeks. Filing per Sec 263 deadline 31 July 2027.' : 'Pay via challan ITNS 280 before filing the return.') + '</div></div>' +
+    '<p style="margin-top: 18px; font-weight: 500;">Next steps:</p>' +
+    '<ol class="next-steps"><li>Download the JSON file above</li><li>Login at <a href="https://incometax.gov.in" target="_blank">incometax.gov.in</a> with your PAN</li><li>e-File → Income Tax Returns → File Income Tax Return</li><li>Select FY 2026-27, ITR-1, upload this JSON</li><li>Verify via Aadhaar OTP / DSC / EVC</li></ol>' +
+    '<p class="secondary small" style="margin-top: 14px;">⚠ Don\'t forget: rent over ₹1L means you need to add landlord\'s PAN before filing (per ' + ref('s263', 'Sec 263(2)') + ' disclosure rules).</p>' +
+    '<p class="secondary small" style="margin-top: 8px;">⚠ This JSON uses a DRAFT schema. Map to the official CBDT XSD for AY 2027-28 before actually filing.</p>' +
+    '<p style="margin-top: 18px;">Anything else for this filing?</p>'
+  );
+}
+
+function checkSvg() { return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>'; }
+function arrowDownSvg(size) { size = size || 14; return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>'; }
+
+async function handleFiles(fileList) {
+  const files = Array.from(fileList);
+  const preview = document.getElementById('filePreview');
+  preview.classList.add('show');
+  for (const f of files) {
+    const chip = document.createElement('div');
+    chip.className = 'file-chip';
+    chip.innerHTML = '<div class="file-chip-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg></div><span style="max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">' + f.name + '</span>';
+    preview.appendChild(chip);
+  }
+
+  // Real PDF parsing — show user the extracted data
+  user('<div style="display:flex; flex-direction: column; gap: 6px;">' + files.map(f => '<div style="display: flex; align-items:center; gap: 8px;"><span style="display:inline-block; width:18px; height:18px; background:#ef4444; border-radius:4px;"></span>' + f.name + '<span style="color: var(--text-muted); font-size: 11px; margin-left: auto;">' + Math.round(f.size/1024) + ' KB</span></div>').join('') + '</div>');
+  preview.innerHTML = ''; preview.classList.remove('show');
+
+  await sleep(400); showTyping(); await sleep(900); hideTyping();
+
+  for (const f of files) {
+    const result = await tryParseUploadedFile(f);
+    if (result.error === 'scanned') {
+      ai('<p>' + result.text + '</p><p class="secondary small" style="margin-top: 6px;">A scanned PDF is harder for software to read. Typing 3 numbers (gross salary, HRA, TDS) takes 30 seconds — try that?</p>');
+    } else if (result.error === 'no-match' || result.error === 'parse-failed') {
+      ai('<p>' + (result.text || 'Hmm — couldn\'t read that.') + '</p>');
+    } else if (result.error) {
+      ai('<p>' + result.error + '</p>');
+    } else if (result.ok) {
+      // Pre-fill state with extracted values where confidence is OK
+      const d = result.data;
+      if (d.salary) state.data.salary = d.salary;
+      if (d.hra) state.data.hra = d.hra;
+      if (d.tdsPaid) state.data.tdsPaid = d.tdsPaid;
+      if (d.pan) state.data.pan = d.pan;
+      if (d.sec80c) state.data.sec80c = d.sec80c;
+      if (d.sec80d) state.data.sec80d = d.sec80d;
+      ai('<p>I read your Form 16. Please check the values below match — yellow dots mean you should verify, green means I\'m confident.</p>' + extractedCardHtml(d) + '<p class="secondary small" style="margin-top: 10px;">Looks right? Type <b>"yes"</b> to continue. Anything wrong? Just tell me — e.g. <i>"salary should be 19 lakh"</i>.</p>');
+    }
+  }
+}
+
+function autoGrow(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 200) + 'px'; }
+
+async function sendMessage() {
+  const input = document.getElementById('msgInput');
+  const text = input.value.trim();
+  const preview = document.getElementById('filePreview');
+  if (!text && !preview.children.length) return;
+  if (text) user(text.replace(/</g, '&lt;'));
+  input.value = ''; autoGrow(input);
+  if (preview.children.length) { preview.innerHTML = ''; preview.classList.remove('show'); }
+  await sleep(400); showTyping(); await sleep(900); hideTyping();
+  await handleUserText(text);
+}
+
+// Natural language number parser — handles "18 lakh" / "1.5 crore" / "₹18,50,000" / "18 L" / "18L"
+function parseIndianNumber(s) {
+  if (!s) return null;
+  const t = s.toLowerCase().replace(/[₹,\s]/g, '');
+  const lakhMatch = t.match(/([\d.]+)\s*(?:l|lac|lakh|lakhs)/);
+  const croreMatch = t.match(/([\d.]+)\s*(?:cr|crore|crores)/);
+  const thouMatch = t.match(/([\d.]+)\s*(?:k|thousand|thou)/);
+  if (croreMatch) return Math.round(parseFloat(croreMatch[1]) * 10000000);
+  if (lakhMatch) return Math.round(parseFloat(lakhMatch[1]) * 100000);
+  if (thouMatch) return Math.round(parseFloat(thouMatch[1]) * 1000);
+  const plain = t.match(/^(\d+(?:\.\d+)?)$/);
+  if (plain) return Math.round(parseFloat(plain[1]));
+  return null;
+}
+
+// Extract field-value pairs from a free-text user message
+function parseUserMessage(text) {
+  const t = text.toLowerCase();
+  const out = {};
+  // salary, basic, hra, rent, tds — match "<word> <number with optional lakh/cr/k>"
+  const fields = [
+    { key: 'salary',   pat: /(?:salary|gross|ctc|annual income|income)\s+(?:is\s+|=\s+)?([₹\d.,\s]+(?:l|lac|lakh|lakhs|cr|crore|crores|k|thousand)?)/i },
+    { key: 'basic',    pat: /basic(?:\s+salary)?\s+(?:is\s+|=\s+)?([₹\d.,\s]+(?:l|lac|lakh|lakhs|cr|crore|crores|k|thousand)?)/i },
+    { key: 'hra',      pat: /hra\s+(?:is\s+|=\s+)?([₹\d.,\s]+(?:l|lac|lakh|lakhs|cr|crore|crores|k|thousand)?)/i },
+    { key: 'rent',     pat: /rent\s+(?:is\s+|=\s+)?([₹\d.,\s]+(?:l|lac|lakh|lakhs|cr|crore|crores|k|thousand)?)/i },
+    { key: 'tdsPaid',  pat: /tds\s+(?:is\s+|=\s+)?([₹\d.,\s]+(?:l|lac|lakh|lakhs|cr|crore|crores|k|thousand)?)/i },
+    { key: 'sec80c',   pat: /80c\s+(?:is\s+|=\s+)?([₹\d.,\s]+(?:l|lac|lakh|lakhs|cr|crore|crores|k|thousand)?)/i },
+    { key: 'sec80d',   pat: /80d\s+(?:is\s+|=\s+)?([₹\d.,\s]+(?:l|lac|lakh|lakhs|cr|crore|crores|k|thousand)?)/i },
+  ];
+  for (const f of fields) {
+    const m = text.match(f.pat);
+    if (m) {
+      const n = parseIndianNumber(m[1]);
+      if (n) out[f.key] = n;
+    }
+  }
+  // Confirmation words
+  if (/^(yes|yeah|yep|correct|right|looks good|ok|sure)\b/i.test(t)) out._confirm = true;
+  return out;
+}
+
+async function handleUserText(text) {
+  const parsed = parseUserMessage(text);
+  const fmt = n => '₹' + (n||0).toLocaleString('en-IN');
+
+  // If user provided numbers, update state and confirm
+  const updates = Object.keys(parsed).filter(k => k !== '_confirm');
+  if (updates.length > 0) {
+    let summary = '<p>Got it — saved:</p><div style="margin-top:8px;">';
+    for (const k of updates) {
+      state.data[k] = parsed[k];
+      const label = { salary: 'Salary', basic: 'Basic', hra: 'HRA', rent: 'Rent', tdsPaid: 'TDS paid', sec80c: '80C investments', sec80d: '80D health insurance' }[k] || k;
+      summary += '<div style="display:flex;justify-content:space-between;font-size:13.5px;padding:4px 0;border-bottom:1px solid var(--border);"><span>'+label+'</span><span><b>'+fmt(parsed[k])+'</b></span></div>';
+    }
+    summary += '</div>';
+    // What's missing?
+    const missing = [];
+    if (!state.data.salary) missing.push('annual salary');
+    if (!state.data.basic && state.data.salary) missing.push('basic salary');
+    if (state.data.salary && !state.data.tdsPaid) missing.push('TDS already paid');
+    if (missing.length > 0) {
+      summary += '<p class="secondary small" style="margin-top: 12px;">Still need: <b>'+missing.join(', ')+'</b>. Just type the number — e.g. <i>"basic 9 lakh"</i>.</p>';
+    } else {
+      summary += '<p style="margin-top: 12px;">I have enough to compute your tax. Type <b>"compute"</b> when ready, or share more details (rent, 80C investments, etc).</p>';
+    }
+    ai(summary);
+    return;
+  }
+  if (parsed._confirm) {
+    ai('<p>Computing your tax under both regimes…</p>');
+    await sleep(800);
+    state.last = recompute();
+    const r = state.last;
+    ai('<div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:16px;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div style="text-align:center;"><div style="font-size:11px;color:var(--text-muted);">OLD REGIME</div><div style="font-size:22px;font-weight:700;margin-top:4px;">'+fmt(Math.round(r.oldTotal))+'</div></div><div style="text-align:center;background:rgba(34,197,94,0.08);border-radius:8px;padding:6px;"><div style="font-size:11px;color:#4ade80;">'+(r.winner==='new'?'NEW':'OLD')+' REGIME · WINNER</div><div style="font-size:22px;font-weight:700;margin-top:4px;color:#4ade80;">'+fmt(Math.round(r.winner==='new'?r.newTotal:r.oldTotal))+'</div></div></div><div style="margin-top:12px;text-align:center;font-size:13.5px;color:var(--text-secondary);">You save <b style="color:#4ade80;">'+fmt(Math.round(r.savings))+'</b> by choosing '+(r.winner==='new'?'new':'old')+' regime '+ref('s202','(Sec 202)')+'.</div></div>');
+    return;
+  }
+  // Help / unsure / fallback
+  if (/help|don'?t (know|understand)|stuck|confused|what do/i.test(text)) {
+    ai('<p>No worries 👍 — let me ask one thing at a time.</p><p class="secondary small" style="margin-top: 8px;">First: what was your <b>annual salary</b> last year? Type it any way — like "18 lakh" or "1850000" or "₹18,50,000".</p>');
+    return;
+  }
+  // Default
+  ai('<p class="secondary small">I didn\'t catch that. Try typing one of:</p><ul style="margin: 8px 0 0 18px; font-size: 13.5px; color: var(--text-secondary); line-height: 1.8;"><li><i>"salary 18 lakh"</i> — to set your salary</li><li><i>"tds 2 lakh"</i> — to set tax already paid</li><li><i>"compute"</i> or <i>"yes"</i> — to compute the tax</li><li><i>"help"</i> — if you\'re stuck</li></ul>');
+}
+
+function newChat() {
+  messages.innerHTML = '';
+  state.data = { salary:0, hra:0, basic:0, rent:0, isMetro:true, otherIncome:0, savingsInterest:0, sec80c:0, sec80d:0, sec80g:0, employerNps:0, isSenior:false, ageBand:'regular', isResident:true, state:'Maharashtra', pan:'ABCDE1234F', tdsPaid:0, city:'Mumbai' };
+  delete state.last;
+  welcome();
+}
+
+const fileInput = document.getElementById('fileInput');
+if (fileInput) fileInput.addEventListener('change', e => handleFiles(e.target.files));
+
+const dzEl = document.getElementById('dropzone');
+if (dzEl) {
+  ['dragenter','dragover'].forEach(e => dzEl.addEventListener(e, ev => { ev.preventDefault(); dzEl.classList.add('dragging'); }));
+  ['dragleave','drop'].forEach(e => dzEl.addEventListener(e, ev => { ev.preventDefault(); dzEl.classList.remove('dragging'); }));
+  dzEl.addEventListener('drop', ev => { if (ev.dataTransfer.files.length) handleFiles(ev.dataTransfer.files); });
+}
+
+const newChatBtn = document.getElementById('newChatBtn');
+if (newChatBtn) newChatBtn.addEventListener('click', newChat);
+
+const sendBtn = document.getElementById('sendBtn');
+if (sendBtn) sendBtn.addEventListener('click', sendMessage);
+
+const msgInput = document.getElementById('msgInput');
+if (msgInput) {
+  msgInput.addEventListener('input', () => autoGrow(msgInput));
+  msgInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+}
+
+welcome();
+</script>
+</body>
+</html>

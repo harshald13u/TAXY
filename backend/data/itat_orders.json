@@ -1,0 +1,37 @@
+{
+  "source": "itat_orders",
+  "scraped_at": "2026-05-02T07:35:58.160485+00:00",
+  "count": 3,
+  "items": [
+    {
+      "source": "itat_orders",
+      "category": "case_law",
+      "title": "Case Status",
+      "url": "https://itat.gov.in/judicial/casestatus",
+      "date": null,
+      "summary": null,
+      "item_id": "ef9911578c84de4e",
+      "raw_meta": {}
+    },
+    {
+      "source": "itat_orders",
+      "category": "case_law",
+      "title": "Tribunal Orders",
+      "url": "https://itat.gov.in/judicial/tribunalorders",
+      "date": null,
+      "summary": null,
+      "item_id": "93ec2edbc31fcca2",
+      "raw_meta": {}
+    },
+    {
+      "source": "itat_orders",
+      "category": "case_law",
+      "title": "Notice Board (Judicial Info)",
+      "url": "https://itat.gov.in/judicial/notice_board",
+      "date": null,
+      "summary": null,
+      "item_id": "504862271042cc6d",
+      "raw_meta": {}
+    }
+  ]
+}

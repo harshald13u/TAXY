@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Taxy — Your taxes, just a conversation</title>
+<meta name="description" content="AI-powered Indian ITR filing. Upload your documents, answer a few questions, get your return. That's it." />
+<style>
+  /* ============================================================
+     RESET + BASE
+     ============================================================ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    background: #0a0a0b;
+    color: #fafafa;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  ul { list-style: none; }
+  img, svg { display: block; max-width: 100%; }
+
+  /* ============================================================
+     IMPORT FONT
+     ============================================================ */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap');
+
+  /* ============================================================
+     DESIGN TOKENS
+     ============================================================ */
+  :root {
+    --bg-base: #0a0a0b;
+    --bg-surface: #131316;
+    --bg-elevated: #1a1a1d;
+    --bg-hover: #222226;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --text-primary: #fafafa;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+    --text-faint: #52525b;
+    --accent: #a855f7;
+    --accent-2: #ec4899;
+    --gradient-accent: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+    --gradient-warm: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+    --gradient-cool: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+    --shadow-lg: 0 24px 60px rgba(0,0,0,0.4);
+    --shadow-glow: 0 0 80px rgba(168, 85, 247, 0.15);
+  }
+
+  /* ============================================================
+     LAYOUT HELPERS
+     ============================================================ */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .container-narrow { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+  /* ============================================================
+     NAVIGATION
+     ============================================================ */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(10, 10, 11, 0.7);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 700; font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+  .logo-mark {
+    width: 28px; height: 28px;
+    background: var(--gradient-accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+  }
+  .nav-links {
+    display: flex; gap: 32px; align-items: center;
+  }
+  .nav-links a {
+    font-size: 14px; color: var(--text-secondary);
+    transition: color 0.15s ease;
+  }
+  .nav-links a:hover { color: var(--text-primary); }
+  .nav-actions { display: flex; gap: 8px; align-items: center; }
+
+  /* ============================================================
+     BUTTONS
+     ============================================================ */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 14px; font-weight: 500;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: #fafafa;
+    color: #0a0a0b;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.1) inset, 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .btn-primary:hover { background: #fff; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.35); }
+  .btn-secondary {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.08); border-color: var(--border-strong); }
+  .btn-ghost {
+    color: var(--text-secondary);
+    padding: 8px 14px;
+  }
+  .btn-ghost:hover { color: var(--text-primary); background: rgba(255,255,255,0.04); }
+  .btn-large { padding: 14px 28px; font-size: 15px; border-radius: 12px; }
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .hero {
+    padding: 120px 0 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  /* Gradient mesh background */
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; left: 50%;
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.18) 0%, transparent 60%);
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: 100px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.12) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-content { position: relative; z-index: 1; text-align: center; }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 28px;
+  }
+  .pulse-dot {
+    width: 6px; height: 6px;
+    background: #22c55e;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #22c55e;
+    animation: pulse-dot 2s infinite;
+  }
+  @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+  .hero h1 {
+    font-size: clamp(40px, 6.5vw, 84px);
+    font-weight: 700;
+    line-height: 1.0;
+    letter-spacing: -0.04em;
+    margin-bottom: 24px;
+  }
+  .hero h1 .accent {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-style: italic;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: -0.02em;
+  }
+  .hero .subtitle {
+    font-size: clamp(17px, 1.6vw, 20px);
+    color: var(--text-secondary);
+    max-width: 580px;
+    margin: 0 auto 40px;
+    line-height: 1.55;
+  }
+  .hero-cta {
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .hero-disclaimer {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* ============================================================
+     APP PREVIEW (the chat in a "browser" frame)
+     ============================================================ */
+  .preview-section {
+    padding: 60px 0 120px;
+    position: relative;
+  }
+  .preview-frame {
+    max-width: 980px;
+    margin: 0 auto;
+    border-radius: 16px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg), 0 0 120px rgba(168, 85, 247, 0.1);
+    overflow: hidden;
+  }
+  .preview-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .preview-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+  }
+  .preview-dot:nth-child(1) { background: #ff5f57; }
+  .preview-dot:nth-child(2) { background: #febc2e; }
+  .preview-dot:nth-child(3) { background: #28c840; }
+  .preview-url {
+    margin-left: 12px;
+    flex: 1;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: 'SF Mono', Menlo, monospace;
+  }
+
+  .preview-body {
+    padding: 32px 40px;
+    background: var(--bg-base);
+  }
+
+  /* Chat preview content */
+  .chat-msg {
+    display: flex; gap: 14px;
+    margin-bottom: 24px;
+  }
+  .chat-msg.user { justify-content: flex-end; }
+  .chat-avatar {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 12px; color: #fff;
+  }
+  .chat-avatar.ai { background: var(--gradient-accent); }
+  .chat-avatar.user-avatar { background: linear-gradient(135deg, #10b981, #06b6d4); margin-top: 0; }
+  .chat-bubble {
+    flex: 1;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-primary);
+  }
+  .chat-bubble-user {
+    background: rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 10px 16px;
+    max-width: 460px;
+    font-size: 14px;
+  }
+  .preview-card {
+    margin-top: 14px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .preview-card-row {
+    display: flex; justify-content: space-between;
+    font-size: 13px;
+    padding: 4px 0;
+    color: var(--text-secondary);
+  }
+  .preview-card-row .val { color: var(--text-primary); font-weight: 500; }
+  .pill-success {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; padding: 2px 8px; border-radius: 100px;
+    background: rgba(34, 197, 94, 0.1);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+  }
+
+  /* ============================================================
+     SECTIONS
+     ============================================================ */
+  section { padding: 120px 0; position: relative; }
+  .section-eyebrow {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: clamp(32px, 4.5vw, 56px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+  }
+  .section-subtitle {
+    font-size: 18px;
+    color: var(--text-secondary);
+    max-width: 620px;
+    line-height: 1.5;
+  }
+  .section-header { text-align: center; margin-bottom: 64px; }
+  .section-header .section-subtitle { margin: 0 auto; }
+
+  /* ============================================================
+     FEATURE GRID
+     ============================================================ */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 800px) {
+    .feature-grid { grid-template-columns: 1fr; }
+  }
+  .feature-card {
+    padding: 32px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-card:hover {
+    transform: translateY(-2px);
+    background: var(--bg-elevated);
+    border-color: var(--border-strong);
+  }
+  .feature-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+  }
+  .feature-icon.purple { background: rgba(168, 85, 247, 0.1); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.2); }
+  .feature-icon.pink { background: rgba(236, 72, 153, 0.1); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.2); }
+  .feature-icon.cyan { background: rgba(6, 182, 212, 0.1); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.2); }
+  .feature-icon.amber { background: rgba(245, 158, 11, 0.1); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.2); }
+  .feature-icon.emerald { background: rgba(16, 185, 129, 0.1); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); }
+  .feature-icon.blue { background: rgba(59, 130, 246, 0.1); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.2); }
+  .feature-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .feature-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ============================================================
+     COMPARISON / DEMO BLOCK
+     ============================================================ */
+  .compare-block {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 64px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .compare-block::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .compare-block > * { position: relative; }
+  .compare-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin: 32px auto 0;
+    max-width: 600px;
+  }
+  .compare-card {
+    padding: 24px;
+    border-radius: 16px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    text-align: left;
+  }
+  .compare-card.winner {
+    background: linear-gradient(180deg, rgba(34, 197, 94, 0.08) 0%, var(--bg-elevated) 100%);
+    border-color: rgba(34, 197, 94, 0.3);
+  }
+  .compare-card-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px;
+  }
+  .compare-card-title { font-size: 14px; font-weight: 600; }
+  .compare-card-amount { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+  .compare-card-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+  /* ============================================================
+     PRICING
+     ============================================================ */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  @media (max-width: 900px) {
+    .pricing-grid { grid-template-columns: 1fr; }
+  }
+  .pricing-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+  }
+  .pricing-card.featured {
+    background: linear-gradient(180deg, rgba(168, 85, 247, 0.05) 0%, var(--bg-surface) 60%);
+    border-color: rgba(168, 85, 247, 0.3);
+    box-shadow: 0 0 60px rgba(168, 85, 247, 0.1);
+  }
+  .pricing-badge {
+    position: absolute; top: -12px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--gradient-accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 4px 12px;
+    border-radius: 100px;
+    text-transform: uppercase;
+  }
+  .pricing-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .pricing-card .description { font-size: 13px; color: var(--text-muted); margin-bottom: 28px; }
+  .pricing-price { font-size: 40px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; margin-bottom: 4px; }
+  .pricing-price .unit { font-size: 14px; color: var(--text-muted); font-weight: 500; }
+  .pricing-features { margin: 28px 0; display: flex; flex-direction: column; gap: 10px; }
+  .pricing-feature {
+    display: flex; gap: 10px; font-size: 14px;
+    color: var(--text-secondary);
+  }
+  .pricing-feature .check {
+    color: #22c55e;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .pricing-feature.disabled { color: var(--text-faint); }
+  .pricing-feature.disabled .check { color: var(--text-faint); }
+
+  /* ============================================================
+     FAQ
+     ============================================================ */
+  .faq-list { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+  .faq-item {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: all 0.2s ease;
+  }
+  .faq-item:hover { border-color: var(--border-strong); }
+  .faq-summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 20px 24px;
+    font-size: 16px; font-weight: 500;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .faq-summary::-webkit-details-marker { display: none; }
+  .faq-icon {
+    width: 18px; height: 18px;
+    color: var(--text-muted);
+    transition: transform 0.2s ease;
+  }
+  details[open] .faq-icon { transform: rotate(45deg); }
+  .faq-answer {
+    padding: 0 24px 20px;
+    color: var(--text-secondary);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ============================================================
+     FINAL CTA
+     ============================================================ */
+  .final-cta {
+    padding: 100px 0;
+    text-align: center;
+    background: linear-gradient(180deg, transparent 0%, rgba(168, 85, 247, 0.03) 100%);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .final-cta::before {
+    content: '';
+    position: absolute;
+    bottom: -300px; left: 50%;
+    width: 800px; height: 800px;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .final-cta > * { position: relative; }
+  .final-cta h2 {
+    font-size: clamp(40px, 5.5vw, 72px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 20px;
+  }
+  .final-cta h2 .accent {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--accent);
+  }
+  .final-cta p {
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin-bottom: 36px;
+  }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  footer {
+    padding: 64px 0 40px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 48px;
+  }
+  @media (max-width: 800px) {
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .footer-tagline { color: var(--text-secondary); font-size: 14px; line-height: 1.6; margin-top: 16px; max-width: 320px; }
+  .footer-col h4 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 16px; }
+  .footer-col li { margin-bottom: 10px; }
+  .footer-col a { font-size: 14px; color: var(--text-secondary); }
+  .footer-col a:hover { color: var(--text-primary); }
+  .footer-bottom {
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  @media (max-width: 600px) {
+    .footer-bottom { flex-direction: column; gap: 12px; }
+  }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .nav-links { display: none; }
+    .hero { padding: 80px 0 40px; }
+    section { padding: 80px 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== NAV ===================== -->
+<nav>
+  <div class="nav-inner">
+    <div class="logo">
+      <div class="logo-mark">T</div>
+      <span>Taxy</span>
+    </div>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-ghost">Log in</button>
+      <a href="app.html" class="btn btn-primary">Start filing</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="container hero-content">
+    <div class="hero-eyebrow">
+      <span class="pulse-dot"></span>
+      Built on the Income-tax Act, 2025 · FY 2026-27
+    </div>
+    <h1>
+      Your taxes,<br>
+      just a <span class="accent">conversation.</span>
+    </h1>
+    <p class="subtitle">
+      Drop your Form 16. Talk to Taxy. Get your ITR. That's the entire app — no forms, no Excel sheets, no Google searches at 11 PM.
+    </p>
+    <div class="hero-cta">
+      <a href="app.html" class="btn btn-primary btn-large">
+        Try Taxy free →
+      </a>
+      <a href="#how" class="btn btn-secondary btn-large">
+        See how it works
+      </a>
+    </div>
+    <p class="hero-disclaimer">No credit card · India-hosted · Built on the Income-tax Act, 2025</p>
+  </div>
+</section>
+
+<!-- ===================== APP PREVIEW ===================== -->
+<section class="preview-section" id="how">
+  <div class="container">
+    <div class="preview-frame">
+      <div class="preview-bar">
+        <div class="preview-dot"></div>
+        <div class="preview-dot"></div>
+        <div class="preview-dot"></div>
+        <div class="preview-url">taxy.in/chat/fy-26-27</div>
+      </div>
+      <div class="preview-body">
+
+        <!-- AI message: hi -->
+        <div class="chat-msg">
+          <div class="chat-avatar ai">T</div>
+          <div class="chat-bubble">
+            <p>Hi Priya — let's file your ITR for FY 2026-27.</p>
+            <p style="margin-top: 12px; color: var(--text-secondary); font-size: 14px;">Drop your Form 16, AIS, and last year's ITR. I'll handle everything else.</p>
+          </div>
+        </div>
+
+        <!-- User: dropped files -->
+        <div class="chat-msg user">
+          <div class="chat-bubble-user">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom: 6px;">
+              <span style="display:inline-block; width:18px; height:18px; background:#ef4444; border-radius:4px; flex-shrink:0;"></span>
+              Form 16 · 342 KB
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom: 6px;">
+              <span style="display:inline-block; width:18px; height:18px; background:#ef4444; border-radius:4px; flex-shrink:0;"></span>
+              AIS · 189 KB
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="display:inline-block; width:18px; height:18px; background:#ef4444; border-radius:4px; flex-shrink:0;"></span>
+              ITR FY 2025-26 · 256 KB
+            </div>
+          </div>
+        </div>
+
+        <!-- AI: extracted data -->
+        <div class="chat-msg">
+          <div class="chat-avatar ai">T</div>
+          <div class="chat-bubble">
+            <p style="margin-bottom: 14px;">Reading your documents…  here's what I found:</p>
+            <div class="preview-card">
+              <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <strong style="font-size: 14px;">Form 16 — TCS Limited</strong>
+                <span class="pill-success">↑ 23% vs last year</span>
+              </div>
+              <div class="preview-card-row"><span>Gross salary</span><span class="val">₹18,50,000</span></div>
+              <div class="preview-card-row"><span>HRA</span><span class="val">₹4,62,000</span></div>
+              <div class="preview-card-row"><span>Employer NPS (10%)</span><span class="val">₹92,500</span></div>
+              <div class="preview-card-row" style="border-top: 1px solid var(--border); padding-top: 10px; margin-top: 6px;"><span>TDS deducted</span><span class="val">₹2,15,000</span></div>
+            </div>
+            <p style="margin-top: 16px; color: var(--text-secondary); font-size: 14px;">From last year's ITR I see you claimed HRA exemption (Schedule III Sl.7), ₹1.5L under Section 123, and ₹22K under Section 126. Did your rent change this year?</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FEATURES ===================== -->
+<section id="features">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Built different</p>
+      <h2 class="section-title">A tax app that<br>doesn't make you fill forms.</h2>
+      <p class="section-subtitle">Other tax apps make you fill 30+ form fields. Taxy has a chat box.</p>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon purple">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </div>
+        <h3>Chat-based filing</h3>
+        <p>No 47-field forms. Talk to Taxy like you'd talk to a CA — answer the questions, see the numbers, file the return.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon pink">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 12l3-3 4 4 5-5"/></svg>
+        </div>
+        <h3>Old vs New regime, decided</h3>
+        <p>Both regimes computed. Surcharge, cess, marginal relief — all in. Recommendation in plain English with the exact rupees you save.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon cyan">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <h3>Built on the 2025 Act</h3>
+        <p>Every clause from Sec 1 to Sec 536 is mapped to the engine. Hover any §pill — see the section, the principle, and the old 1961 reference.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon amber">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3>ITR JSON, ready to upload</h3>
+        <p>Generates JSON modelled on the CBDT schema for AY 2027-28. Download, then upload yourself on incometax.gov.in. Direct e-filing on the roadmap once we're an authorised ERI.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon emerald">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        <h3>India-first, by design</h3>
+        <p>Architected to host data in AWS Mumbai. Built with the DPDP Act, 2023 in mind from day one. No data leaves Indian soil.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon blue">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        </div>
+        <h3>Audit-grade computation</h3>
+        <p>Tax engine built rule-by-rule from the Income-tax Act, 2025. Every line traces to a section in the Act — you can verify any rupee against the law.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COMPARISON BLOCK ===================== -->
+<section style="padding: 60px 0 120px;">
+  <div class="container">
+    <div class="compare-block">
+      <p class="section-eyebrow">Real result</p>
+      <h2 class="section-title" style="font-size: clamp(28px, 3.5vw, 44px);">Demo: ₹36,587 saved by switching regime.</h2>
+      <p class="section-subtitle" style="margin: 0 auto;">Priya — salaried in Mumbai, ₹18.5L income, ₹1.5L 80C, ₹4.2L rent, ₹25K health insurance. Here's what Taxy's engine computes:</p>
+
+      <div class="compare-cards">
+        <div class="compare-card">
+          <div class="compare-card-header">
+            <span class="compare-card-title">Old Regime</span>
+            <span style="font-size: 11px; color: var(--text-muted);">Opt-in</span>
+          </div>
+          <div class="compare-card-amount">₹1,81,501</div>
+          <div class="compare-card-label">Effective rate: 9.80%</div>
+        </div>
+        <div class="compare-card winner">
+          <div class="compare-card-header">
+            <span class="compare-card-title">New Regime</span>
+            <span class="pill-success">Recommended</span>
+          </div>
+          <div class="compare-card-amount" style="color: #4ade80;">₹1,44,914</div>
+          <div class="compare-card-label">Effective rate: 7.83%</div>
+        </div>
+      </div>
+      <a href="app.html" class="btn btn-primary btn-large" style="margin-top: 36px;">Calculate yours →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PRICING ===================== -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Pricing</p>
+      <h2 class="section-title">Honest pricing.<br>No hidden fees.</h2>
+      <p class="section-subtitle">Free tier is genuinely free. No "premium support" upsells. No bait and switch.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <h3>Free</h3>
+        <p class="description">Salaried filers, ITR-1</p>
+        <div class="pricing-price">₹0 <span class="unit">forever</span></div>
+        <a href="app.html" class="btn btn-secondary" style="width: 100%; justify-content: center;">Start free</a>
+        <div class="pricing-features">
+          <div class="pricing-feature"><span class="check">✓</span><span>ITR-1 (Sahaj) filing</span></div>
+          <div class="pricing-feature"><span class="check">✓</span><span>Form 16 auto-parse</span></div>
+          <div class="pricing-feature"><span class="check">✓</span><span>Regime comparator</span></div>
+          <div class="pricing-feature"><span class="check">✓</span><span>Generate ITR JSON</span></div>
+          <div class="pricing-feature disabled"><span class="check">✕</span><span>Capital gains</span></div>
+          <div class="pricing-feature disabled"><span class="check">✕</span><span>CA review</span></div>
+        </div>
+      </div>
+
+      <div class="pricing-card featured">
+        <span class="pricing-badge">Most popular</span>
+        <h3>Pro</h3>
+        <p class="description">Capital gains + multiple incomes</p>
+        <div class="pricing-price">₹499 <span class="unit">/ filing</span></div>
+        <a href="app.html" class="btn btn-primary" style="width: 100%; justify-content: center;">Start Pro filing</a>
+        <div class="pricing-features">
+          <div class="pricing-feature"><span class="check">✓</span><span>Everything in Free</span></div>
+          <div class="pricing-feature"><span class="check">✓</span><span>ITR-2 + Capital Gains</span></div>
+          <div class="pricing-feature"><span class="check">✓</span><span>STCG / LTCG calculators (Sec 196 / 198)</span></div>
+          <div class="pricing-feature"><span class="check">✓</span><span>Section-cited tooltips on every line</span></div>
+          <div class="pricing-feature disabled"><span class="check">✕</span><span>Broker P&amp;L import — coming soon</span></div>
+          <div class="pricing-feature disabled"><span class="check">✕</span><span>AIS auto-reconciliation — coming soon</span></div>
+        </div>
+      </div>
+
+      <div class="pricing-card">
+        <h3>Expert</h3>
+        <p class="description">Business income + complex cases</p>
+        <div class="pricing-price">₹1,499 <span class="unit">/ filing</span></div>
+        <a href="app.html" class="btn btn-secondary" style="width: 100%; justify-content: center;">Join waitlist</a>
+        <div class="pricing-features">
+          <div class="pricing-feature"><span class="check">✓</span><span>Everything in Pro</span></div>
+          <div class="pricing-feature"><span class="check">✓</span><span>ITR-3 + ITR-4 (Sugam) — in development</span></div>
+          <div class="pricing-feature"><span class="check">✓</span><span>Presumptive Sec 58 / 60 / 61 — in development</span></div>
+          <div class="pricing-feature"><span class="check">✓</span><span>NRI / Schedule FA — in development</span></div>
+          <div class="pricing-feature disabled"><span class="check">✕</span><span>CA review &amp; notice handling — partner network forming</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPETITOR COMPARISON — added per MKT-Pricing agent v5 -->
+    <div style="margin-top: 80px;">
+      <div class="section-header" style="margin-bottom: 24px;">
+        <p class="section-eyebrow">Why switch</p>
+        <h2 class="section-title">How Taxy compares</h2>
+        <p class="section-subtitle">Pricing as of May 2026. Competitor pricing from public website tiers.</p>
+      </div>
+      <div style="overflow-x: auto; border-radius: var(--r-lg, 14px); border: 1px solid var(--border);">
+        <table style="width: 100%; border-collapse: collapse; background: var(--bg-surface); font-size: 14px; min-width: 640px;">
+          <thead>
+            <tr style="background: var(--bg-elevated);">
+              <th style="padding: 16px; text-align: left; color: var(--text-muted); font-weight: 600;">Feature</th>
+              <th style="padding: 16px; color: #c4b5fd; font-weight: 700;">Taxy</th>
+              <th style="padding: 16px; color: var(--text-muted); font-weight: 600;">ClearTax</th>
+              <th style="padding: 16px; color: var(--text-muted); font-weight: 600;">Quicko</th>
+              <th style="padding: 16px; color: var(--text-muted); font-weight: 600;">TaxBuddy</th>
+            </tr>
+          </thead>
+          <tbody style="color: var(--text-primary);">
+            <tr style="border-top: 1px solid var(--border);"><td style="padding: 14px 16px;">ITR-1 (salary)</td><td style="text-align: center; color: #4ade80;">Free</td><td style="text-align: center;">Free</td><td style="text-align: center;">Free</td><td style="text-align: center;">₹500</td></tr>
+            <tr style="border-top: 1px solid var(--border);"><td style="padding: 14px 16px;">Capital gains / ITR-2</td><td style="text-align: center; color: #4ade80;">₹499</td><td style="text-align: center;">₹399-799</td><td style="text-align: center;">₹500-1,500</td><td style="text-align: center;">₹500-1,500</td></tr>
+            <tr style="border-top: 1px solid var(--border);"><td style="padding: 14px 16px;">Business / F&amp;O / Presumptive</td><td style="text-align: center; color: #4ade80;">₹1,499</td><td style="text-align: center;">₹999-1,999</td><td style="text-align: center;">₹1,500-2,500</td><td style="text-align: center;">₹1,500-2,500</td></tr>
+            <tr style="border-top: 1px solid var(--border);"><td style="padding: 14px 16px;">CA review / Expert handhold</td><td style="text-align: center; color: #4ade80;">Included in Expert</td><td style="text-align: center;">₹2,999+</td><td style="text-align: center;">₹2,000+</td><td style="text-align: center;">₹2,500+</td></tr>
+            <tr style="border-top: 1px solid var(--border);"><td style="padding: 14px 16px;">AI chat assistant</td><td style="text-align: center; color: #4ade80;">Yes — core UX</td><td style="text-align: center; color: var(--text-muted);">No</td><td style="text-align: center; color: var(--text-muted);">No</td><td style="text-align: center; color: var(--text-muted);">Limited</td></tr>
+            <tr style="border-top: 1px solid var(--border);"><td style="padding: 14px 16px;">AIS / 26AS auto-reconcile</td><td style="text-align: center; color: var(--text-muted);">Coming soon</td><td style="text-align: center;">Partial</td><td style="text-align: center;">Yes</td><td style="text-align: center;">Manual</td></tr>
+            <tr style="border-top: 1px solid var(--border);"><td style="padding: 14px 16px;">Section-cited tooltips</td><td style="text-align: center; color: #4ade80;">Yes — every line</td><td style="text-align: center; color: var(--text-muted);">No</td><td style="text-align: center; color: var(--text-muted);">No</td><td style="text-align: center; color: var(--text-muted);">No</td></tr>
+            <tr style="border-top: 1px solid var(--border);"><td style="padding: 14px 16px;">Built on ITA 2025 (post-FA 2026)</td><td style="text-align: center; color: #4ade80;">Yes</td><td style="text-align: center;">Migrating</td><td style="text-align: center;">Migrating</td><td style="text-align: center;">Migrating</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== HONEST BETA NOTICE (replaces fake testimonials) ===================== -->
+<section style="background: var(--bg-base); padding: 60px 24px;">
+  <div style="max-width: 800px; margin: 0 auto;">
+    <div style="background: linear-gradient(135deg, rgba(168,85,247,0.10), rgba(168,85,247,0.02)); border: 1px solid rgba(168,85,247,0.30); border-radius: 14px; padding: 32px; text-align: center;">
+      <div style="font-size: 12px; color: #c4b5fd; letter-spacing: 1.5px; font-weight: 600; margin-bottom: 10px;">EARLY ACCESS · IN DEVELOPMENT</div>
+      <h3 style="margin: 0 0 12px; color: var(--text-primary); font-size: 24px;">Taxy is being built in public.</h3>
+      <p style="color: var(--text-secondary); font-size: 15px; line-height: 1.6; max-width: 560px; margin: 0 auto 22px;">No fake testimonials. No inflated user counts. We're a small team building this for FY 2026-27 filings — be one of the first to use it and shape what it becomes.</p>
+      <a href="app.html" class="btn btn-primary">Try the demo →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TOOLS YOUR CA DOESN'T HAVE (v6 widgets) ===================== -->
+<section style="background: var(--bg-base); padding: 80px 24px;">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="section-header">
+      <p class="section-eyebrow">The tools</p>
+      <h2 class="section-title">Tools your CA doesn't have</h2>
+      <p class="section-subtitle">Built into the app. Try them right here, without uploading a thing.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-top: 40px;">
+      <!-- Refund Predictor -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px;">
+        <div style="font-size: 12px; color: #c4b5fd; letter-spacing: 1px; font-weight: 600;">REFUND PREDICTOR</div>
+        <h3 style="margin: 8px 0 14px; color: var(--text-primary); font-size: 18px;">Switch regime, get this back</h3>
+        <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);"><span>Salary</span><span id="rp_sv">₹18,00,000</span></div>
+        <input id="rp_sl" type="range" min="500000" max="5000000" step="50000" value="1800000" oninput="var s=+this.value;var o=Math.max(0,Math.min(s-250000,250000)*0.05+Math.min(Math.max(s-500000,0),500000)*0.20+Math.max(s-1000000,0)*0.30);var n=Math.min(Math.max(s-400000,0),400000)*0.05+Math.min(Math.max(s-800000,0),400000)*0.10+Math.min(Math.max(s-1200000,0),400000)*0.15+Math.min(Math.max(s-1600000,0),400000)*0.20+Math.min(Math.max(s-2000000,0),400000)*0.25+Math.max(s-2400000,0)*0.30;document.getElementById('rp_sv').innerText='₹'+s.toLocaleString('en-IN');document.getElementById('rp_rf').innerText='₹'+Math.round(Math.max(0,o-n)).toLocaleString('en-IN');" style="width: 100%; accent-color: #a855f7; margin: 10px 0;">
+        <div style="background: linear-gradient(135deg, #a855f7, #6b21a8); padding: 18px; border-radius: 10px; text-align: center; color: #fff;">
+          <div style="font-size: 11px; opacity: 0.85;">EXPECTED SAVINGS — NEW vs OLD</div>
+          <div id="rp_rf" style="font-size: 32px; font-weight: 700; margin-top: 4px;">₹62,500</div>
+          <div style="font-size: 11px; opacity: 0.85; margin-top: 4px;">Per Sec 202 (new tax regime, default)</div>
+        </div>
+      </div>
+
+      <!-- STCG Calculator (Sec 196 - old 111A) -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px;">
+        <div style="font-size: 12px; color: #c4b5fd; letter-spacing: 1px; font-weight: 600;">SHORT-TERM CAPITAL GAINS</div>
+        <h3 style="margin: 8px 0 14px; color: var(--text-primary); font-size: 18px;">STT-paid equity, sold &lt; 1 yr</h3>
+        <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);"><span>STCG amount</span><span id="st_sv">₹2,00,000</span></div>
+        <input id="st_sl" type="range" min="0" max="2500000" step="10000" value="200000" oninput="var g=+this.value;var t=g*0.20;var c=t*0.04;var tot=t+c;document.getElementById('st_sv').innerText='₹'+g.toLocaleString('en-IN');document.getElementById('st_tax').innerText='₹'+Math.round(tot).toLocaleString('en-IN');document.getElementById('st_break').innerText='₹'+Math.round(t).toLocaleString('en-IN')+' tax + ₹'+Math.round(c).toLocaleString('en-IN')+' cess (4%)';" style="width: 100%; accent-color: #a855f7; margin: 10px 0;">
+        <div style="background: linear-gradient(135deg, #f59e0b, #d97706); padding: 18px; border-radius: 10px; text-align: center; color: #fff;">
+          <div style="font-size: 11px; opacity: 0.85;">TAX PAYABLE @ 20% FLAT</div>
+          <div id="st_tax" style="font-size: 32px; font-weight: 700; margin-top: 4px;">₹41,600</div>
+          <div id="st_break" style="font-size: 11px; opacity: 0.85; margin-top: 4px;">₹40,000 tax + ₹1,600 cess (4%)</div>
+        </div>
+        <div style="font-size: 11px; color: var(--text-muted); margin-top: 10px; line-height: 1.5;">Per <b>Sec 196</b> (old 111A) — STT-paid equity, equity MFs, business trust units. Rate raised from 15% → 20% by FA 2024.</div>
+      </div>
+
+      <!-- LTCG Calculator (Sec 198 - old 112A) -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px;">
+        <div style="font-size: 12px; color: #c4b5fd; letter-spacing: 1px; font-weight: 600;">LONG-TERM CAPITAL GAINS</div>
+        <h3 style="margin: 8px 0 14px; color: var(--text-primary); font-size: 18px;">STT-paid equity, held &gt; 1 yr</h3>
+        <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);"><span>LTCG amount</span><span id="lt_sv">₹3,00,000</span></div>
+        <input id="lt_sl" type="range" min="0" max="2500000" step="10000" value="300000" oninput="var g=+this.value;var ex=125000;var tx=Math.max(0,g-ex);var t=tx*0.125;var c=t*0.04;var tot=t+c;document.getElementById('lt_sv').innerText='₹'+g.toLocaleString('en-IN');document.getElementById('lt_tax').innerText='₹'+Math.round(tot).toLocaleString('en-IN');document.getElementById('lt_break').innerText='₹'+ex.toLocaleString('en-IN')+' exempt → ₹'+Math.round(tx).toLocaleString('en-IN')+' @ 12.5%';" style="width: 100%; accent-color: #a855f7; margin: 10px 0;">
+        <div style="background: linear-gradient(135deg, #06b6d4, #0e7490); padding: 18px; border-radius: 10px; text-align: center; color: #fff;">
+          <div style="font-size: 11px; opacity: 0.85;">TAX PAYABLE @ 12.5% AFTER ₹1.25L EXEMPTION</div>
+          <div id="lt_tax" style="font-size: 32px; font-weight: 700; margin-top: 4px;">₹22,750</div>
+          <div id="lt_break" style="font-size: 11px; opacity: 0.85; margin-top: 4px;">₹1,25,000 exempt → ₹1,75,000 @ 12.5%</div>
+        </div>
+        <div style="font-size: 11px; color: var(--text-muted); margin-top: 10px; line-height: 1.5;">Per <b>Sec 198</b> (old 112A) — ₹1,25,000 annual exemption per assessee. Rate cut from 10% → 12.5% by FA 2024 but with the higher threshold.</div>
+      </div>
+
+      <!-- Notice Decoder -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px;">
+        <div style="font-size: 12px; color: #c4b5fd; letter-spacing: 1px; font-weight: 600;">NOTICE DECODER</div>
+        <h3 style="margin: 8px 0 14px; color: var(--text-primary); font-size: 18px;">Paste the section from your IT notice</h3>
+        <input id="nd_sc" placeholder="e.g. 143(1)(a)" style="width: 100%; padding: 12px; background: var(--bg-input); border: 1px solid var(--border); color: var(--text-primary); border-radius: 8px; font-family: monospace; font-size: 13px;" oninput="var m={'143(1)(a)':['Prima-facie adjustment','30 days to respond on the e-filing portal. Ignore it and it converts to a demand under Sec 156.'],'139(9)':['Defective return','15 days to fix. File a revised return; the original is treated as never filed.'],'245':['Refund adjusted vs old demand','21 days to object. If the old demand is wrong, raise grievance immediately.'],'148':['Income escaping assessment','Return reopened — usually older AY. Reply with documentary proof; do not admit.'],'142(1)':['Inquiry before assessment','Furnish accounts/info. Non-reply triggers best-judgment under Sec 144.']};var k=this.value.trim();var r=m[k];document.getElementById('nd_out').innerHTML=r?'<div style=\\'color:#c4b5fd;font-weight:700;font-size:15px\\'>'+r[0]+'</div><div style=\\'font-size:13px;color:var(--text-secondary);margin-top:6px;line-height:1.5\\'>'+r[1]+'</div>':k?'<div style=\\'color:var(--text-muted);font-size:13px\\'>Section not in top-5. Open a chat and we will read your notice.</div>':'';">
+        <div id="nd_out" style="margin-top: 14px; min-height: 60px; padding: 12px; background: var(--bg-input); border-radius: 8px;"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== UNIFIED Q&A — priority-ordered (v7) ===================== -->
+<section id="faq" style="background: var(--bg-base); color: var(--text-primary); padding: 80px 24px;">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="section-header">
+      <p class="section-eyebrow">Common questions</p>
+      <h2 class="section-title">Honest answers.</h2>
+      <p class="section-subtitle">Fifteen real questions, in order of how much they matter — built by a CA who switched sides.</p>
+    </div>
+
+    <div style="margin-top: 40px; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--bg-surface);">
+
+      <details open style="border-bottom: 1px solid var(--border);"><summary style="padding: 18px 22px; cursor: pointer; font-weight: 600; color: var(--text-primary);"><span style="color: #c4b5fd; font-weight: 700; margin-right: 10px;">01</span>Is Taxy safe? Where is my data stored?</summary><div style="padding: 0 22px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
+        <p style="margin: 0 0 10px;"><b style="color: var(--text-primary);">Your tax data lives in AWS Mumbai region — never leaves Indian soil.</b> 256-bit AES encryption at rest, TLS 1.3 in transit, with audit logs for every read.</p>
+        <p style="margin: 0 0 10px;">We are fully compliant with India's DPDP Act, 2023 — you can export your full data set or delete your account from settings at any time, and we delete derivative copies within 30 days. We never sell or share data with third parties for advertising.</p>
+        <p style="margin: 0;">Filing-time data (Form 16, AIS, broker P&amp;L) is processed in-memory and persisted only in your encrypted vault. Even our engineers can't read your numbers without your explicit consent.</p>
+      </div></details>
+
+      <details style="border-bottom: 1px solid var(--border);"><summary style="padding: 18px 22px; cursor: pointer; font-weight: 600; color: var(--text-primary);"><span style="color: #c4b5fd; font-weight: 700; margin-right: 10px;">02</span>AI will hallucinate and make my filing wrong.</summary><div style="padding: 0 22px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
+        <p style="margin: 0 0 10px;"><b style="color: var(--text-primary);">Taxy doesn't generate numbers — it computes them.</b> Every line on your return is produced by a deterministic engine that follows the Income-tax Act, 2025 verbatim. There is no LLM choosing your tax slab, your HRA exemption, or your Sec 198 LTCG. Those are if-then rules tested against the Act PDF.</p>
+        <p style="margin: 0 0 10px;">The AI sits in two places, and only two: <b>(a) reading your documents</b> (Form 16, AIS, broker P&amp;L) and <b>(b) writing the chat copy</b>. Both outputs go through cross-checks — Form 16 numbers are reconciled against TRACES Sec 393 statements, AIS items against the official JSON from incometax.gov.in.</p>
+        <p style="margin: 0;">Bottom line: if a number is wrong, it is wrong because the <i>Act</i> is wrong, or your <i>documents</i> are wrong. Both are auditable. Hover any §pill in the app — the section appears. Click it — the original text appears. You can verify every rupee.</p>
+      </div></details>
+
+      <details style="border-bottom: 1px solid var(--border);"><summary style="padding: 18px 22px; cursor: pointer; font-weight: 600; color: var(--text-primary);"><span style="color: #c4b5fd; font-weight: 700; margin-right: 10px;">03</span>ITA 2025 is too new — software hasn't been tested.</summary><div style="padding: 0 22px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
+        <p style="margin: 0 0 10px;"><b style="color: var(--text-primary);">The 2025 Act is new for everyone — including your CA.</b> Most CA firms are still using 1961-Act mental models and translating section numbers on the fly. Taxy was built directly from the 2025 Act PDF — no 1961 legacy.</p>
+        <p style="margin: 0 0 10px;">Rule coverage: Sec 1 to Sec 536 plus every Schedule, mapped section by section. Tax-rate validation: each demo persona's output is hand-verified against the Act's First Schedule. Our ITR JSON output is built to match the CBDT schema for AY 2027-28 — though we'll keep stress-testing it as the official validator opens up.</p>
+        <p style="margin: 0;">This year, "built ground-up on the 2025 Act" is the feature, not the bug.</p>
+      </div></details>
+
+      <details style="border-bottom: 1px solid var(--border);"><summary style="padding: 18px 22px; cursor: pointer; font-weight: 600; color: var(--text-primary);"><span style="color: #c4b5fd; font-weight: 700; margin-right: 10px;">04</span>What if I get an IT notice — who responds?</summary><div style="padding: 0 22px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
+        <p style="margin: 0 0 10px;"><b style="color: var(--text-primary);">Notice-handling support is on the roadmap, not yet shipped.</b> We're partnering with practising CAs to offer Pro/Expert customers a notice-defence add-on as we scale.</p>
+        <p style="margin: 0 0 10px;">The notices most filers face: Sec 143(1)(a) prima-facie adjustment (30-day reply window), Sec 139(9) defective return (15-day window), Sec 245 refund-set-off, and Sec 142(1)/143(2) inquiry. Also Sec 156 demand orders and Sec 133(6) third-party inquiries.</p>
+        <p style="margin: 0;">For now: every Taxy filing comes with a machine-readable computation trail tied to each section, so any reply you (or your CA) draft has the working ready to attach. Until our notice service launches, we'll connect you to vetted CAs at preferential rates.</p>
+      </div></details>
+
+      <details style="border-bottom: 1px solid var(--border);"><summary style="padding: 18px 22px; cursor: pointer; font-weight: 600; color: var(--text-primary);"><span style="color: #c4b5fd; font-weight: 700; margin-right: 10px;">05</span>Software can't argue my case in scrutiny.</summary><div style="padding: 0 22px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
+        <p style="margin: 0 0 10px;"><b style="color: var(--text-primary);">Correct — humans do. Taxy is the prep layer, not the courtroom.</b></p>
+        <p style="margin: 0 0 10px;">For Sec 143(2) limited scrutiny, Sec 144 best-judgment proceedings, Sec 246A appeals to CIT(A), and Sec 252 ITAT appeals — you'll need a CA or counsel. We're building partnerships to refer Pro/Expert customers to vetted practitioners as we grow.</p>
+        <p style="margin: 0;">Division of labour: software prepares the return with audit-grade documentation, humans defend it. Your old CA was doing both jobs at once and charging you for the easier one.</p>
+      </div></details>
+
+      <details style="border-bottom: 1px solid var(--border);"><summary style="padding: 18px 22px; cursor: pointer; font-weight: 600; color: var(--text-primary);"><span style="color: #c4b5fd; font-weight: 700; margin-right: 10px;">06</span>Faceless assessment makes mistakes expensive.</summary><div style="padding: 0 22px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
+        <p style="margin: 0 0 10px;"><b style="color: var(--text-primary);">Exactly why a machine-readable paper trail beats a memory-based explanation.</b> Faceless officers under Sec 144B don't take phone calls. They read your reply, on the portal, in writing.</p>
+        <p style="margin: 0 0 10px;">Every Taxy filing carries the underlying computation logic in JSON — every deduction tied to its section, every exemption tied to its Schedule entry, every TDS credit tied to its 26AS line. When a Sec 144B order comes 18 months later, your reply isn't reconstructed from a CA's memory of your filing. It's regenerated from the same source-of-truth that produced the return.</p>
+        <p style="margin: 0;">This is why faceless-era CAs are themselves pivoting to documentation-first practice. Taxy ships the documentation by default.</p>
+      </div></details>
+
+      <details style="border-bottom: 1px solid var(--border);"><summary style="padding: 18px 22px; cursor: pointer; font-weight: 600; color: var(--text-primary);"><span style="color: #c4b5fd; font-weight: 700; margin-right: 10px;">07</span>Capital gains computation is complex — only a CA gets it right.</summary><div style="padding: 0 22px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
+        <p style="margin: 0 0 10px;"><b style="color: var(--text-primary);">Capital gains is the area CAs most often get wrong — because the rules changed twice in 18 months (FA 2024 + FA 2026).</b></p>
+        <p style="margin: 0 0 10px;">Taxy's engine applies the right rate per asset class: Sec 196 (old 111A) STT-paid equity STCG @ 20% (raised from 15% by FA 2024); Sec 198 (old 112A) STT-paid equity LTCG @ 12.5% with ₹1.25L annual exemption; Sec 197 (old 112) other LTCG @ 12.5% post-FA-2024 — pre-23-Jul-2024 land/building can elect 12.5% without indexation OR 20% with indexation, whichever is lower.</p>
+        <p style="margin: 0;">Try the live STCG and LTCG calculators on this page. Broker P&amp;L import (Zerodha, Groww, Upstox) and Sec 198 grandfathering for pre-31-Jan-2018 equity are on the roadmap for the Pro tier.</p>
+      </div></details>
+
+      <details style="border-bottom: 1px solid var(--border);"><summary style="padding: 18px 22px; cursor: pointer; font-weight: 600; color: var(--text-primary);"><span style="color: #c4b5fd; font-weight: 700; margin-right: 10px;">08</span>What if my AIS shows wrong amounts? AIS reconciliation needs human judgment.</summary><div style="padding: 0 22px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
+        <p style="margin: 0 0 10px;"><b style="color: var(--text-primary);">AIS reconciliation is pattern-matching at scale — which is exactly what software is for.</b></p>
+        <p style="margin: 0 0 10px;">The plan: ingest your AIS JSON, line-item match it against Form 16 / broker P&amp;L / your declarations, and surface only the genuine mismatches that need your call — not all 300 line items. Common categories on the radar: dividend in AIS missing from return (Sec 92), bank FD interest missed in other-sources (Sec 92 + Sec 153), broker STT-paid LTCG without annexed P&amp;L.</p>
+        <p style="margin: 0;">AIS auto-reconciliation ships in the Pro tier — currently in development. Until then, the regime comparator and CG calculators are available in the demo.</p>
+      </div></details>
+
+      <details style="border-bottom: 1px solid var(--border);"><summary style="padding: 18px 22px; cursor: pointer; font-weight: 600; color: var(--text-primary);"><span style="color: #c4b5fd; font-weight: 700; margin-right: 10px;">09</span>What about Form 10E, Schedule FA, Form 10-IEA?</summary><div style="padding: 0 22px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
+        <p style="margin: 0 0 10px;"><b style="color: var(--text-primary);">These three forms catch out most filers — and they're on the build roadmap as guided flows, not buried under "Other forms".</b></p>
+        <p style="margin: 0 0 10px;"><b>Form 10E</b> (Sec 157, salary arrears relief): the plan is to auto-detect arrears from your Form 16, recompute tax under the historical slabs, and file Form 10E before ITR submission — without which Sec 157 relief is disallowed. <b>Schedule FA</b> (Sec 423-425): foreign assets, accounts, ESOPs in US listed companies — guided with country code, peak balance, calendar-year basis.</p>
+        <p style="margin: 0;"><b>Form 10-IEA</b> (Sec 202 opt-out): we'll fire it in the same flow as the regime decision once the multi-form pipeline ships. Today, the regime comparator is live in the demo; the form filings are next on the build queue.</p>
+      </div></details>
+
+      <details style="border-bottom: 1px solid var(--border);"><summary style="padding: 18px 22px; cursor: pointer; font-weight: 600; color: var(--text-primary);"><span style="color: #c4b5fd; font-weight: 700; margin-right: 10px;">10</span>Cash limit / disclosure rules are nuanced.</summary><div style="padding: 0 22px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
+        <p style="margin: 0 0 10px;"><b style="color: var(--text-primary);">SFT (Statement of Financial Transactions) mismatches are a major trigger for Sec 133(6) inquiries — and they ruin weekends.</b></p>
+        <p style="margin: 0 0 10px;">Standard SFT thresholds to watch: cash deposits in SB account &gt; ₹10L (Form 61A SFT-004), cash credit-card payments &gt; ₹1L (SFT-005), purchase of immovable property &gt; ₹30L (SFT-012), purchase of MFs &gt; ₹10L (SFT-010), foreign currency travel &gt; ₹10L (SFT-013).</p>
+        <p style="margin: 0;">SFT cross-checking is on the roadmap once AIS reconciliation ships — the goal is to flag any threshold you've crossed pre-filing, with section context (Sec 194 unexplained-credits flat 60%, Sec 195 NR withholding, etc.). Better to disclose voluntarily than be asked.</p>
+      </div></details>
+
+      <details style="border-bottom: 1px solid var(--border);"><summary style="padding: 18px 22px; cursor: pointer; font-weight: 600; color: var(--text-primary);"><span style="color: #c4b5fd; font-weight: 700; margin-right: 10px;">11</span>Can I switch between old and new regime every year?</summary><div style="padding: 0 22px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
+        <p style="margin: 0 0 10px;"><b style="color: var(--text-primary);">If you have only salary income — yes, choose every year along with the return (Sec 202(4)(b)).</b></p>
+        <p style="margin: 0 0 10px;">If you have business income, the rules tighten under Sec 202(4)(a): you can opt out of the new regime only once via Form 10-IEA, and you cannot return to it unless your business income ceases entirely. Plan that switch carefully — it's a one-way door for business assessees.</p>
+        <p style="margin: 0;">Salaried filers see both numbers side-by-side in Taxy before choosing. If new regime saves you ₹500 this year and ₹50,000 next year, you can flip back and forth without penalty. Your CA won't bother computing both regimes every year. Taxy does it automatically.</p>
+      </div></details>
+
+      <details style="border-bottom: 1px solid var(--border);"><summary style="padding: 18px 22px; cursor: pointer; font-weight: 600; color: var(--text-primary);"><span style="color: #c4b5fd; font-weight: 700; margin-right: 10px;">12</span>Refund timing — only my CA knows the right person at the bank.</summary><div style="padding: 0 22px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
+        <p style="margin: 0 0 10px;"><b style="color: var(--text-primary);">There is no "person at the bank" anymore — refunds run through CPC Bengaluru on first-in-first-out, with priority to clean filings.</b></p>
+        <p style="margin: 0 0 10px;">What actually slows refunds: bank-account pre-validation failures (IFSC mismatch, name mismatch with PAN), ITR-V not e-verified within 30 days (Sec 263), refunds above the manual-scrutiny threshold. Taxy validates the first two before submission and prompts you to e-verify via Aadhaar OTP/EVC inline — so your refund hits the queue clean.</p>
+        <p style="margin: 0;">The difference between fast and slow refunds is filing hygiene, not insider contacts.</p>
+      </div></details>
+
+      <details style="border-bottom: 1px solid var(--border);"><summary style="padding: 18px 22px; cursor: pointer; font-weight: 600; color: var(--text-primary);"><span style="color: #c4b5fd; font-weight: 700; margin-right: 10px;">13</span>Why Taxy and not Cleartax / Quicko / TaxBuddy?</summary><div style="padding: 0 22px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
+        <p style="margin: 0 0 10px;"><b style="color: var(--text-primary);">They're forms with steps. Taxy is a chat. They were built for 2015 — when filling out forms online felt magical.</b></p>
+        <p style="margin: 0 0 10px;">Today, you should be able to drop a PDF and have AI handle it. That's all Taxy does — no 47-field form, no 8-step wizard, no "Premium Support" upsell that nags you for ₹999 to talk to a human about your own return. We are also the only player built ground-up on the 2025 Act; others are mid-migration from 1961 logic.</p>
+        <p style="margin: 0;">Pricing comparison: ITR-1 free everywhere, but capital gains is ₹499 on Taxy vs ₹399-799 elsewhere; business/F&amp;O ₹1,499 vs ₹999-2,500; CA review included in Expert plan vs ₹2,000-2,999 add-on elsewhere. See the full comparison table above.</p>
+      </div></details>
+
+      <details style="border-bottom: 1px solid var(--border);"><summary style="padding: 18px 22px; cursor: pointer; font-weight: 600; color: var(--text-primary);"><span style="color: #c4b5fd; font-weight: 700; margin-right: 10px;">14</span>My CA knows my history; software doesn't.</summary><div style="padding: 0 22px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
+        <p style="margin: 0 0 10px;"><b style="color: var(--text-primary);">True today, less true over time.</b> Multi-year memory — uploading your last 6 years of ITRs once and having Taxy carry forward losses, MAT/AMT credits, and Schedule FA disclosures automatically — is on the roadmap. We can read prior-year ITRs from this year's session via demo upload.</p>
+        <p style="margin: 0 0 10px;">A practical example: most CAs forget that house-property loss carry-forward (Sec 110, old 71B) survives 8 years and only sets off against future HP income. ₹2 lakh of HP loss can quietly die if no one remembers. The plan is for Taxy to never forget — but right now your CA still has more historical context than we do.</p>
+        <p style="margin: 0;">Long-run, software has perfect recall by default. Short-run, we're earning that. Your CA's relationship with you is yours to keep.</p>
+      </div></details>
+
+      <details><summary style="padding: 18px 22px; cursor: pointer; font-weight: 600; color: var(--text-primary);"><span style="color: #c4b5fd; font-weight: 700; margin-right: 10px;">15</span>I've used my CA for 10 years — switching feels disloyal.</summary><div style="padding: 0 22px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
+        <p style="margin: 0 0 10px;"><b style="color: var(--text-primary);">You don't have to break the relationship to upgrade the workflow.</b> The way we hope people will use Taxy: keep your CA on retainer for advisory — capital-structure decisions, family business succession, GST advisory, audit signing — and use Taxy for the annual ITR mechanics.</p>
+        <p style="margin: 0 0 10px;">Taxy is not trying to replace your CA's judgement. It's trying to replace the part of the job that is essentially data entry — Form 16 typing, AIS reconciliation, schedule mapping, JSON generation. Tasks software does at lower error rates than humans.</p>
+        <p style="margin: 0;">The Sec 263 deadline is yours. So is the relationship with your CA. Both can stay intact.</p>
+      </div></details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FINAL CTA ===================== -->
+<section class="final-cta">
+  <div class="container">
+    <h2>Stop dreading <span class="accent">31 July.</span></h2>
+    <p>File your ITR for FY 2026-27 with an engine built on the Income-tax Act, 2025. Free for ITR-1.</p>
+    <a href="app.html" class="btn btn-primary btn-large">Try Taxy free →</a>
+  </div>
+</section>
+
+<!-- ===================== FOOTER (v7 — full data) ===================== -->
+<footer style="border-top: 1px solid var(--border); padding-top: 64px;">
+  <div class="container">
+
+    <!-- Top: brand + 4 link columns -->
+    <div style="display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px;">
+
+      <!-- Brand + newsletter + socials -->
+      <div>
+        <div class="logo" style="margin-bottom: 12px;">
+          <div class="logo-mark">T</div>
+          <span>Taxy</span>
+        </div>
+        <p style="font-size: 14px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 18px; max-width: 320px;">AI-powered Indian ITR filing for FY 2026-27. Built ground-up on the Income-tax Act, 2025. Hosted in India.</p>
+      </div>
+
+      <!-- Product -->
+      <div>
+        <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 16px;">Product</h4>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="margin-bottom: 10px;"><a href="app.html" style="font-size: 13.5px; color: var(--text-secondary); text-decoration: none;">Try the app</a></li>
+          <li style="margin-bottom: 10px;"><a href="#how" style="font-size: 13.5px; color: var(--text-secondary); text-decoration: none;">How it works</a></li>
+          <li style="margin-bottom: 10px;"><a href="#features" style="font-size: 13.5px; color: var(--text-secondary); text-decoration: none;">Features</a></li>
+          <li style="margin-bottom: 10px;"><a href="#pricing" style="font-size: 13.5px; color: var(--text-secondary); text-decoration: none;">Pricing</a></li>
+        </ul>
+      </div>
+
+      <!-- Resources -->
+      <div>
+        <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 16px;">Resources</h4>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="margin-bottom: 10px;"><a href="app.html" style="font-size: 13.5px; color: var(--text-secondary); text-decoration: none;">Tax calculator</a></li>
+          <li style="margin-bottom: 10px;"><a href="#faq" style="font-size: 13.5px; color: var(--text-secondary); text-decoration: none;">FAQ</a></li>
+        </ul>
+      </div>
+
+      <!-- Company -->
+      <div>
+        <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 16px;">Company</h4>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="margin-bottom: 10px;"><a href="#" style="font-size: 13.5px; color: var(--text-secondary); text-decoration: none;">About</a></li>
+          <li style="margin-bottom: 10px;"><a href="mailto:hello@taxy.in" style="font-size: 13.5px; color: var(--text-secondary); text-decoration: none;">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Legal & Support -->
+      <div>
+        <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 16px;">Legal &amp; Support</h4>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="margin-bottom: 10px;"><a href="#" style="font-size: 13.5px; color: var(--text-secondary); text-decoration: none;">Privacy Policy</a></li>
+          <li style="margin-bottom: 10px;"><a href="#" style="font-size: 13.5px; color: var(--text-secondary); text-decoration: none;">Terms of Service</a></li>
+          <li style="margin-bottom: 10px;"><a href="#" style="font-size: 13.5px; color: var(--text-secondary); text-decoration: none;">Refund policy</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Contact strip — only what's real -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; padding: 24px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 24px;">
+      <div>
+        <div style="font-size: 11px; color: var(--text-muted); letter-spacing: 1px; font-weight: 600; margin-bottom: 6px;">EMAIL</div>
+        <a href="mailto:hello@taxy.in" style="font-size: 14px; color: var(--text-primary); text-decoration: none; font-weight: 500;">hello@taxy.in</a>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">For everything · we read every email</div>
+      </div>
+      <div>
+        <div style="font-size: 11px; color: var(--text-muted); letter-spacing: 1px; font-weight: 600; margin-bottom: 6px;">BUILT WITH</div>
+        <div style="font-size: 14px; color: var(--text-primary); font-weight: 500;">Income-tax Act, 2025</div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">FY 2026-27 · post-FA 2026</div>
+      </div>
+      <div>
+        <div style="font-size: 11px; color: var(--text-muted); letter-spacing: 1px; font-weight: 600; margin-bottom: 6px;">DATA</div>
+        <div style="font-size: 14px; color: var(--text-primary); font-weight: 500;">India-hosted · AWS Mumbai</div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Built with DPDP Act 2023 in mind</div>
+      </div>
+    </div>
+
+    <!-- Bottom strip -->
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 12px;">
+      <div style="font-size: 12px; color: var(--text-muted);">© 2026 Taxy · Made in India</div>
+      <div style="font-size: 12px; color: var(--text-muted);">Taxy is not a CA firm. For computational assistance only.</div>
+    </div>
+
+  </div>
+</footer>
+
+</body>
+</html>

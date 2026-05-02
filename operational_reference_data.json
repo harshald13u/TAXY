@@ -1,0 +1,1189 @@
+{
+  "_metadata": {
+    "title": "Operational Reference Data for AI ITR App",
+    "purpose": "Runtime data feeds the engine needs in addition to the rules JSON",
+    "version": "1.0",
+    "knowledge_cutoff": "2025-05",
+    "verify_annually": true,
+    "disclaimer": "All values must be verified against current CBDT notifications / Finance Act of relevant year before reliance."
+  },
+  "surcharge_rates": {
+    "_note": "Per Finance Act 2026 (assumed continuation of prior pattern). Verify against First Schedule.",
+    "individual_huf_aop_boi_ajp": {
+      "old_regime": [
+        {
+          "income_from": 0,
+          "income_to": 5000000,
+          "rate_pct": 0
+        },
+        {
+          "income_from": 5000000,
+          "income_to": 10000000,
+          "rate_pct": 10
+        },
+        {
+          "income_from": 10000000,
+          "income_to": 20000000,
+          "rate_pct": 15
+        },
+        {
+          "income_from": 20000000,
+          "income_to": 50000000,
+          "rate_pct": 25
+        },
+        {
+          "income_from": 50000000,
+          "income_to": null,
+          "rate_pct": 37
+        }
+      ],
+      "new_regime_section_202": [
+        {
+          "income_from": 0,
+          "income_to": 5000000,
+          "rate_pct": 0
+        },
+        {
+          "income_from": 5000000,
+          "income_to": 10000000,
+          "rate_pct": 10
+        },
+        {
+          "income_from": 10000000,
+          "income_to": 20000000,
+          "rate_pct": 15
+        },
+        {
+          "income_from": 20000000,
+          "income_to": null,
+          "rate_pct": 25
+        }
+      ],
+      "capital_gains_cap": {
+        "applies_to_sections": [
+          "196",
+          "197",
+          "198"
+        ],
+        "max_surcharge_pct": 15,
+        "_note": "Surcharge on capital gains under these sections capped at 15% irrespective of income"
+      },
+      "dividend_cap": {
+        "_note": "Surcharge on dividend income capped at 15% (similar treatment to capital gains)",
+        "max_surcharge_pct": 15
+      },
+      "marginal_relief": {
+        "_note": "Surcharge limited so that (additional tax + surcharge) on additional income above threshold does not exceed the additional income itself"
+      }
+    },
+    "domestic_company": [
+      {
+        "income_from": 0,
+        "income_to": 10000000,
+        "rate_pct": 0
+      },
+      {
+        "income_from": 10000000,
+        "income_to": 100000000,
+        "rate_pct": 7
+      },
+      {
+        "income_from": 100000000,
+        "income_to": null,
+        "rate_pct": 12
+      }
+    ],
+    "domestic_company_section_199_200_201": {
+      "rate_pct": 10,
+      "_note": "Companies opting for concessional rates pay flat 10% surcharge"
+    },
+    "foreign_company": [
+      {
+        "income_from": 0,
+        "income_to": 10000000,
+        "rate_pct": 0
+      },
+      {
+        "income_from": 10000000,
+        "income_to": 100000000,
+        "rate_pct": 2
+      },
+      {
+        "income_from": 100000000,
+        "income_to": null,
+        "rate_pct": 5
+      }
+    ],
+    "firm_llp_local_authority": {
+      "income_above_1cr_pct": 12
+    },
+    "co_operative_society": [
+      {
+        "income_from": 0,
+        "income_to": 10000000,
+        "rate_pct": 0
+      },
+      {
+        "income_from": 10000000,
+        "income_to": 100000000,
+        "rate_pct": 7
+      },
+      {
+        "income_from": 100000000,
+        "income_to": null,
+        "rate_pct": 12
+      }
+    ],
+    "co_op_section_203_204": {
+      "rate_pct": 10
+    }
+  },
+  "cess": {
+    "name": "Health and Education Cess",
+    "rate_pct": 4,
+    "computed_on": "income_tax + surcharge",
+    "applies_to": "ALL assessees including companies, firms, individuals, trusts"
+  },
+  "cost_inflation_index": {
+    "_note": "Cost Inflation Index notified by CBDT under Sec 72(8). Used for indexed cost of acquisition / improvement.",
+    "_base_year": "2001-02 = 100",
+    "values": {
+      "2001-02": 100,
+      "2002-03": 105,
+      "2003-04": 109,
+      "2004-05": 113,
+      "2005-06": 117,
+      "2006-07": 122,
+      "2007-08": 129,
+      "2008-09": 137,
+      "2009-10": 148,
+      "2010-11": 167,
+      "2011-12": 184,
+      "2012-13": 200,
+      "2013-14": 220,
+      "2014-15": 240,
+      "2015-16": 254,
+      "2016-17": 264,
+      "2017-18": 272,
+      "2018-19": 280,
+      "2019-20": 289,
+      "2020-21": 301,
+      "2021-22": 317,
+      "2022-23": 331,
+      "2023-24": 348,
+      "2024-25": 363,
+      "2025-26": "TBD - verify CBDT notification",
+      "2026-27": "TBD"
+    },
+    "_indexation_note_post_jul2024": "FA 2024 amendment: indexation REMOVED for most assets transferred on/after 23 Jul 2024. Retained for resident individuals/HUFs on land/buildings acquired before that date (Sec 197(3) — option of 12.5% no-indexation OR 20% with-indexation, whichever lower)."
+  },
+  "compliance_calendar_2026_27": {
+    "_note": "All dates assume FY 2026-27 / Tax Year 2026-27. Verify each year as dates shift.",
+    "advance_tax_instalments": [
+      {
+        "due": "2026-06-15",
+        "cumulative_pct": 15,
+        "applies_to": "Non-presumptive assessees (individuals, firms, companies)"
+      },
+      {
+        "due": "2026-09-15",
+        "cumulative_pct": 45,
+        "applies_to": "Same"
+      },
+      {
+        "due": "2026-12-15",
+        "cumulative_pct": 75,
+        "applies_to": "Same"
+      },
+      {
+        "due": "2027-03-15",
+        "cumulative_pct": 100,
+        "applies_to": "All including presumptive (Sec 58/59) assessees"
+      }
+    ],
+    "tds_monthly_deposit": {
+      "due": "7th of following month",
+      "march_exception": "30 April for March deductions",
+      "applies_to": "All deductors"
+    },
+    "tds_quarterly_statements": [
+      {
+        "quarter": "Q1 (Apr-Jun)",
+        "due": "2026-07-31",
+        "form": "24Q (salary) / 26Q (non-salary) / 27Q (NR) / 27EQ (TCS)"
+      },
+      {
+        "quarter": "Q2 (Jul-Sep)",
+        "due": "2026-10-31"
+      },
+      {
+        "quarter": "Q3 (Oct-Dec)",
+        "due": "2027-01-31"
+      },
+      {
+        "quarter": "Q4 (Jan-Mar)",
+        "due": "2027-05-31"
+      }
+    ],
+    "tds_certificates_issuance": [
+      {
+        "certificate": "Form 16 (annual salary)",
+        "due": "2027-05-31",
+        "issued_by": "Employer"
+      },
+      {
+        "certificate": "Form 16A (non-salary)",
+        "due": "2027-06-15",
+        "issued_by": "Deductor"
+      },
+      {
+        "certificate": "Form 16B (property TDS)",
+        "due": "Within 15 days of furnishing 26QB challan"
+      }
+    ],
+    "return_due_dates": [
+      {
+        "category": "Sec 172 TP-applicable + partner/spouse",
+        "due": "2026-11-30"
+      },
+      {
+        "category": "Company / auditable assessee / partner of audited firm",
+        "due": "2026-10-31"
+      },
+      {
+        "category": "PGBP non-audit individual/HUF + partner",
+        "due": "2026-08-31"
+      },
+      {
+        "category": "Any other assessee (typical individual)",
+        "due": "2026-07-31"
+      }
+    ],
+    "tax_audit_report_due": {
+      "due": "30 September 2026 (1 month before return due date for audit assessees)",
+      "section": "Sec 63"
+    },
+    "other_key_dates": {
+      "belated_revised_return_for_FY_2025_26": "2026-12-31",
+      "updated_return_for_TY_2026_27_max": "2031-03-31",
+      "form_10E_due": "Before filing return for the year of arrears",
+      "form_10F_validity": "1 year from issue (DTAA TRC requirement)"
+    }
+  },
+  "itr_form_selector": {
+    "decision_tree": [
+      {
+        "step": 1,
+        "question": "Is the assessee a Company?",
+        "yes": "ITR-6 (or ITR-7 if claiming Sec 11 / charitable)",
+        "no": "Continue"
+      },
+      {
+        "step": 2,
+        "question": "Is the assessee a Charitable Trust / Political Party / RNPO?",
+        "yes": "ITR-7",
+        "no": "Continue"
+      },
+      {
+        "step": 3,
+        "question": "Is the assessee a Firm / LLP / AOP / BOI?",
+        "yes": "ITR-5",
+        "no": "Continue"
+      },
+      {
+        "step": 4,
+        "question": "Individual or HUF? Does the assessee have PGBP income?",
+        "yes_full_books": "ITR-3",
+        "yes_presumptive_section_58": "ITR-4 (Sugam) — but check ITR-4 exclusions",
+        "no": "Continue"
+      },
+      {
+        "step": 5,
+        "question": "Capital gains / foreign income / foreign assets / >1 HP / TI > ₹50 lakh / unlisted equity / director?",
+        "yes": "ITR-2",
+        "no": "Continue"
+      },
+      {
+        "step": 6,
+        "question": "Resident, salary/pension/single HP/IFOS, agri ≤ ₹5,000, TI ≤ ₹50 lakh?",
+        "yes": "ITR-1 (Sahaj)",
+        "no": "Default to ITR-2 (most flexible for individuals without PGBP)"
+      }
+    ],
+    "itr_1_disqualifiers": [
+      "Total income > ₹50 lakh",
+      "Income from more than one house property",
+      "Capital gains income",
+      "Foreign assets, foreign income, or signing authority abroad",
+      "Director in any company (verify under 2025 Act)",
+      "Held unlisted equity shares at any time during year",
+      "Has business or professional income",
+      "Income other than salary/one HP/IFOS",
+      "Agricultural income > ₹5,000",
+      "Has TDS u/s Sec 393 Sl.18 cash withdrawal (old 194N)"
+    ],
+    "itr_4_disqualifiers": [
+      "Total income > ₹50 lakh",
+      "More than one house property",
+      "Foreign assets / foreign income",
+      "Agricultural income > ₹5,000",
+      "Held unlisted equity at any time",
+      "TDS u/s Sec 393 Sl.18 (cash withdrawal)",
+      "Business turnover > ₹2 crore (₹3 crore if cash receipts ≤ 5%)",
+      "Profession gross receipts > ₹50 lakh (₹75 lakh if cash ≤ 5%)"
+    ]
+  },
+  "dtaa_top_10_summary": {
+    "_note": "Simplified summary of withholding rates under top DTAAs. Always verify against the actual treaty text and any MLI modifications.",
+    "_caveat": "Royalty/FTS rates here are TREATY rates. Domestic Sec 9 rate (often 10% gross) may apply if more beneficial. Sec 159(4) gives benefit of more favourable.",
+    "treaties": [
+      {
+        "country": "USA",
+        "treaty_year": 1990,
+        "dividend_pct": 25,
+        "dividend_qualifying_pct": 15,
+        "interest_pct": 15,
+        "royalty_pct": 15,
+        "fts_pct": 15,
+        "capital_gains": "Article 13 — most CG taxable in source State",
+        "notes": "Limitation on Benefits (LOB) clause; needs TRC + Form 10F + 8233 if applicable"
+      },
+      {
+        "country": "UK",
+        "treaty_year": 1993,
+        "dividend_pct": 15,
+        "interest_pct": 15,
+        "royalty_pct": 15,
+        "fts_pct": 15,
+        "capital_gains": "Article 14 — depends on type",
+        "notes": "MLI signatory — covered by minimum standard PPT"
+      },
+      {
+        "country": "UAE",
+        "treaty_year": 1992,
+        "dividend_pct": 10,
+        "interest_pct": 12.5,
+        "royalty_pct": 10,
+        "fts_pct": "Not specifically defined — treaty silent",
+        "capital_gains": "Article 13 — alienation of property in India taxable in India",
+        "notes": "Popular for Indian outbound investments. Treaty does NOT have specific FTS article."
+      },
+      {
+        "country": "Singapore",
+        "treaty_year": 1994,
+        "dividend_pct": 15,
+        "dividend_qualifying_pct": 10,
+        "interest_pct": 15,
+        "royalty_pct": 10,
+        "fts_pct": 10,
+        "capital_gains": "Article 13 — partial exemption for shares acquired pre-1.4.2017 (grandfathering)",
+        "notes": "Heavily amended via MLI; LOB-style limitation"
+      },
+      {
+        "country": "Mauritius",
+        "treaty_year": 1983,
+        "dividend_pct": 15,
+        "dividend_qualifying_pct": 5,
+        "interest_pct": 7.5,
+        "royalty_pct": 15,
+        "fts_pct": "Not defined",
+        "capital_gains": "Article 13 — partial source-state taxation post-2017 amendment for shares acquired post 1.4.2017",
+        "notes": "Once popular for share investments — significantly diluted by 2016 protocol"
+      },
+      {
+        "country": "Canada",
+        "treaty_year": 1996,
+        "dividend_pct": 25,
+        "dividend_qualifying_pct": 15,
+        "interest_pct": 15,
+        "royalty_pct": 20,
+        "fts_pct": 20,
+        "capital_gains": "Article 13"
+      },
+      {
+        "country": "Australia",
+        "treaty_year": 1991,
+        "dividend_pct": 15,
+        "interest_pct": 15,
+        "royalty_pct": 15,
+        "fts_pct": 15
+      },
+      {
+        "country": "Germany",
+        "treaty_year": 1995,
+        "dividend_pct": 10,
+        "interest_pct": 10,
+        "royalty_pct": 10,
+        "fts_pct": 10
+      },
+      {
+        "country": "Netherlands",
+        "treaty_year": 1988,
+        "dividend_pct": 10,
+        "interest_pct": 10,
+        "royalty_pct": 10,
+        "fts_pct": 10,
+        "notes": "MFN clause — rates may be lower if India agrees lower with another country"
+      },
+      {
+        "country": "Japan",
+        "treaty_year": 1989,
+        "dividend_pct": 10,
+        "interest_pct": 10,
+        "royalty_pct": 10,
+        "fts_pct": 10
+      }
+    ]
+  },
+  "regime_comparison_engine": {
+    "algorithm": [
+      "1. Extract data from documents",
+      "2. Compute gross income (same in both regimes)",
+      "3. Apply head-wise deductions (different — old allows HRA/LTC/etc; new doesn't)",
+      "4. Apply Chapter VIII (different — old allows all 80C-80U class; new only 124(2)/125/146)",
+      "5. Apply slabs (different — old standard slabs; new Sec 202 slabs)",
+      "6. Apply rebate u/s 156 (different thresholds)",
+      "7. Apply surcharge (new caps at 25%; old has 37%)",
+      "8. Apply 4% cess",
+      "9. Compare net tax; recommend lower"
+    ],
+    "user_facing_explanation_template": "Under OLD regime your tax is ₹{old_tax}. Under NEW regime your tax is ₹{new_tax}. {recommendation} regime saves you ₹{savings} for FY {year}. Reason: {explanation}.",
+    "switching_rules": {
+      "individual_with_business_income": "Can opt out only via Form before due date u/s 263(1); applies to subsequent years; ONE withdrawal lifetime; never again unless business income ceases",
+      "individual_without_business_income": "Annual choice along with return — flexible"
+    }
+  },
+  "hra_exemption_formula": {
+    "applicable_in": "Old regime only (Schedule III Sl.7)",
+    "formula": "MIN of three amounts",
+    "amounts": [
+      {
+        "name": "Actual HRA received",
+        "computation": "HRA received during period of stay in rented accommodation"
+      },
+      {
+        "name": "Rent − 10% of salary",
+        "computation": "Annual rent paid MINUS 10% of (Basic + DA forming part)"
+      },
+      {
+        "name": "% of salary",
+        "computation": "50% of salary if metro (Mumbai/Delhi/Kolkata/Chennai); 40% otherwise"
+      }
+    ],
+    "salary_for_HRA": "Basic + DA (forming part of retirement benefits) + commission as % of turnover",
+    "rent_proof_threshold": "If rent > ₹1 lakh/year, landlord PAN MUST be provided (Form 12BB)"
+  },
+  "section_157_relief_algorithm": {
+    "applicability": "Salary/family pension arrears or advance pushing assessee into higher slab",
+    "form": "Form 10E (filed before/with return)",
+    "steps": [
+      {
+        "step": 1,
+        "compute": "Tax on TI INCLUDING arrears in current year",
+        "result": "T1"
+      },
+      {
+        "step": 2,
+        "compute": "Tax on TI EXCLUDING arrears in current year",
+        "result": "T2"
+      },
+      {
+        "step": 3,
+        "compute": "Incremental tax due to arrears: T1 - T2",
+        "result": "A"
+      },
+      {
+        "step": 4,
+        "identify": "Year(s) to which arrears actually relate"
+      },
+      {
+        "step": 5,
+        "compute": "For each relating year: hypothetical incremental tax if arrear had been received then (using THAT year's slabs)"
+      },
+      {
+        "step": 6,
+        "compute": "Sum of step 5 across all relating years",
+        "result": "B"
+      },
+      {
+        "step": 7,
+        "result": "Sec 157 relief = A - B (claim in current year's return)"
+      }
+    ]
+  },
+  "tds_consolidated_lookup": {
+    "_note": "Consolidated for Sec 393 (resident TDS). Verify thresholds annually.",
+    "salary_section_392": {
+      "deduction_method": "Average rate on estimated annual income",
+      "monthly_basis": true
+    },
+    "common_thresholds_resident": {
+      "interest_securities": {
+        "rate_pct": 10,
+        "threshold": 10000
+      },
+      "interest_bank_post_office": {
+        "rate_pct": 10,
+        "threshold_individual_huf": 40000,
+        "threshold_senior_citizen": 50000
+      },
+      "dividend_company": {
+        "rate_pct": 10,
+        "threshold": 5000
+      },
+      "rent_immovable": {
+        "rate_pct": 10,
+        "threshold": 240000
+      },
+      "rent_machinery": {
+        "rate_pct": 2,
+        "threshold": 240000
+      },
+      "professional_fees": {
+        "rate_pct": 10,
+        "threshold": 30000
+      },
+      "fts": {
+        "rate_pct": 2,
+        "threshold": 30000
+      },
+      "commission_brokerage": {
+        "rate_pct": 2,
+        "threshold": 15000
+      },
+      "insurance_commission": {
+        "rate_pct": 5,
+        "threshold": 15000
+      },
+      "lottery_winnings": {
+        "rate_pct": 30,
+        "threshold": 10000
+      },
+      "online_game_winnings": {
+        "rate_pct": 30,
+        "threshold": 0
+      },
+      "compulsory_acquisition_compensation": {
+        "rate_pct": 10,
+        "threshold": 250000
+      },
+      "immovable_property_purchase": {
+        "rate_pct": 1,
+        "threshold": 5000000
+      },
+      "cash_withdrawal_filer": {
+        "rate_pct": 2,
+        "threshold": 30000000
+      },
+      "cash_withdrawal_non_filer": {
+        "rate_pct": 5,
+        "threshold": 10000000
+      },
+      "ecommerce_individual_huf": {
+        "rate_pct": 0.1,
+        "threshold": 500000
+      },
+      "vda_individual_huf_specified": {
+        "rate_pct": 1,
+        "threshold": 50000
+      },
+      "vda_other": {
+        "rate_pct": 1,
+        "threshold": 10000
+      },
+      "epf_pre_5yrs": {
+        "rate_pct": 10,
+        "threshold": 50000
+      },
+      "benefits_business": {
+        "rate_pct": 10,
+        "threshold": 20000
+      }
+    },
+    "non_pan_higher_rate": {
+      "rate_pct": 20,
+      "or_specified_rate_whichever_higher": true
+    },
+    "non_filer_higher_rate_section_206ab_equivalent": {
+      "rate_pct_factor": 2,
+      "minimum_pct": 5
+    }
+  },
+  "stamp_duty_value_sample": {
+    "_note": "Stamp duty value (SDV) is the value adopted by State Govt for stamp duty. Updates by State revenue/registration department. Sample data only — integrate with state APIs where available.",
+    "sources": {
+      "Maharashtra": "ighrigistration.maharashtra.gov.in (Annual Statement of Rates)",
+      "Karnataka": "kaverionline.karnataka.gov.in",
+      "Tamil Nadu": "tnreginet.gov.in (Guideline Value)",
+      "Delhi": "doris.delhigovt.nic.in (Circle Rate)",
+      "Uttar Pradesh": "igrsup.gov.in",
+      "Gujarat": "garvi.gujarat.gov.in",
+      "Telangana": "registration.telangana.gov.in (Market Value)"
+    },
+    "ai_app_strategy": "For MVP, ask user to enter SDV manually with link to state portal. For Phase-2, integrate top-3 state APIs."
+  },
+  "equity_grandfathering_31jan2018": {
+    "_purpose": "Sec 90(7) grandfathering for STT-paid LTCG equity acquired before 1 Feb 2018",
+    "_calculation": "COA = MAX(actual cost, MIN(FMV on 31 Jan 2018, sale consideration))",
+    "_data_source": "NSE/BSE archives — highest price quoted on 31 January 2018 (or most recent prior trading date)",
+    "_app_strategy": "Build a lookup table with ISIN → 31jan2018 highest price for top 5000 equity scrips. For MFs, use 31 Jan 2018 NAV from AMFI archives. For unlisted, ask user."
+  },
+  "common_section_80g_institutions": {
+    "_note": "Sample list. Full list at incometaxindia.gov.in. App should build a search-enabled DB.",
+    "100_percent_no_limit": [
+      "PM National Relief Fund (PMNRF)",
+      "PM CARES Fund",
+      "National Defence Fund (Govt of India)",
+      "CM Relief Fund (each State — single fund)",
+      "Swachh Bharat Kosh",
+      "Clean Ganga Fund",
+      "Various notified funds — see Sec 133(1)(a) list"
+    ],
+    "100_percent_with_qualifying_limit": [
+      "Government / Local authority for promoting family planning (Sec 133(1)(a)(xxiii))",
+      "Indian Olympic Association / sports infrastructure (Sec 133(1)(a)(xxiv) — for companies)"
+    ],
+    "50_percent_no_limit": [
+      "PM Drought Relief Fund (Sec 133(1)(b)(i))"
+    ],
+    "50_percent_with_qualifying_limit": [
+      "Approved charitable institutions (Sec 133(1)(b)(ii))",
+      "Most NGOs registered under Sec 354"
+    ],
+    "qualifying_limit_pct": 10,
+    "qualifying_limit_base": "adjusted gross total income"
+  },
+  "scope_limitations": {
+    "app_cannot_do": [
+      "Provide GAAR (Sec 178-184) opinions",
+      "Draft scrutiny responses or written submissions",
+      "Do transfer pricing documentation (Form 3CEB requires CA)",
+      "Handle search/seizure/block assessment (Sec 247, 292-298)",
+      "Certify accounts (Sec 63 tax audit — CA only)",
+      "Opine on M&A / business reorganisation tax effects",
+      "Certify Form 15CA/15CB for foreign remittances",
+      "File revision applications (Sec 377/378)",
+      "Give investment advice (SEBI-regulated)",
+      "Represent users before tax authorities (only authorised reps under Sec 515)",
+      "Handle complex derivative / structured product tax effects",
+      "Respond to TDS/TCS notices on behalf of users"
+    ],
+    "always_escalate_to_CA_when": [
+      "User receives a scrutiny notice u/s 270",
+      "Reassessment notice u/s 280/281",
+      "Penalty proceedings u/s 471",
+      "Search/survey conducted at user's premises",
+      "User has TP applicability (Sec 161-172)",
+      "Cross-border employment / deputation cases",
+      "Cryptocurrency taxation > ₹10 lakh exposure (still emerging area)",
+      "Capital gains > ₹1 crore (review by CA recommended)"
+    ]
+  },
+  "pending_review": {
+    "analysis": [
+      {
+        "item_id": "fa3a88d5548cc190",
+        "title": "Section 234E TDS Late Fee Invalid for Pre-2015 Period Due to Lack of Legal Provision",
+        "url": "https://taxguru.in/income-tax/section-234e-tds-late-fee-invalid-pre-2015-period-due-lack-legal-provision.html",
+        "date": "Sat, 02 May 2026 05:10:06 +0000",
+        "summary": "<p>The tribunal held that no late fee under Section 234E can be imposed for periods prior to 1 June 2015 due to absence of enabling provisions in Section 200A. The levy was deleted following consistent judicial precedents.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/section-234e-tds-late-fee-invalid-pre-2015-period-due-lack-legal-provision.html\">Section 234E TDS Late Fee Invalid for Pre-2015 Period Due to Lack of Legal Provision</a> appeared first on <a href=\"https://taxguru.in\">TaxGu",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352057+00:00"
+      },
+      {
+        "item_id": "7421f7c949a0c07c",
+        "title": "ITAT Delhi Restores Appeal as Hyper-Technical View on Delay Defeated Justice",
+        "url": "https://taxguru.in/income-tax/itat-delhi-restores-appeal-hyper-technical-view-delay-defeated-justice.html",
+        "date": "Sat, 02 May 2026 04:27:00 +0000",
+        "summary": "<p>The Tribunal held that dismissal of appeal solely on limitation without considering bona fide reasons was unjustified. It restored the matter for adjudication on merits, emphasizing a liberal approach.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/itat-delhi-restores-appeal-hyper-technical-view-delay-defeated-justice.html\">ITAT Delhi Restores Appeal as Hyper-Technical View on Delay Defeated Justice</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352059+00:00"
+      },
+      {
+        "item_id": "03808681ddc80b9e",
+        "title": "Assessment Set Aside Due to Need for Fresh Examination of Books & Fair Hearing: ITAT Delhi",
+        "url": "https://taxguru.in/income-tax/assessment-set-due-fresh-examination-books-fair-hearing-itat-delhi.html",
+        "date": "Sat, 02 May 2026 04:14:38 +0000",
+        "summary": "<p>The Tribunal set aside the assessment after noting that books of accounts were not produced and required reconsideration. It directed a fresh decision with proper opportunity, emphasizing procedural fairness.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/assessment-set-due-fresh-examination-books-fair-hearing-itat-delhi.html\">Assessment Set Aside Due to Need for Fresh Examination of Books &#038; Fair Hearing: ITAT Delhi</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.<",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352061+00:00"
+      },
+      {
+        "item_id": "d523ec570b0bd0b5",
+        "title": "Section 194T: TDS Rules for Partnership Firms and LLP Partners",
+        "url": "https://taxguru.in/income-tax/section-194t-tds-rules-partnership-firms-llp-partners.html",
+        "date": "Fri, 01 May 2026 08:38:18 +0000",
+        "summary": "<p>The Finance Act, 2024 has inserted a new section, 194T, for TDS deduction by partnership firms/Limited Liability Partnerships (LLPs). Section 194T takes effect from 1st April, 2025 (AY 2026-27), to bring payments such as salary, remuneration, commission, bonus and interest (whether on capital or on loan) by a partnership firm/LLP to its partners under the [&#8230;]</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/section-194t-tds-rules-partnership-firms-llp-partners.html\">Section 194T: ",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352062+00:00"
+      },
+      {
+        "item_id": "a41ce7fb40fc8757",
+        "title": "Safe Harbour Rules under New Income Tax Act, 2025 & Rules, 2026- Part II",
+        "url": "https://taxguru.in/income-tax/safe-harbour-rules-income-tax-act-2025-income-tax-rules-2026-part-ii.html",
+        "date": "Fri, 01 May 2026 06:14:22 +0000",
+        "summary": "<p>The framework outlines mandatory disclosures and timelines for opting into safe harbour. Key takeaway: strict compliance is essential to gain tax certainty.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/safe-harbour-rules-income-tax-act-2025-income-tax-rules-2026-part-ii.html\">Safe Harbour Rules under New Income Tax Act, 2025 &#038; Rules, 2026- Part II</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352064+00:00"
+      },
+      {
+        "item_id": "65da346ab98814af",
+        "title": "Form 122 : One Declaration, Complete Salary TDS Control",
+        "url": "https://taxguru.in/income-tax/form-122-declaration-complete-salary-tds-control.html",
+        "date": "Fri, 01 May 2026 05:06:11 +0000",
+        "summary": "<p>The new form consolidates multiple income disclosures into one, enabling accurate TDS deduction. Key takeaway: unified reporting reduces excess tax deduction and refunds.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/form-122-declaration-complete-salary-tds-control.html\">Form 122 : One Declaration, Complete Salary TDS Control</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352065+00:00"
+      },
+      {
+        "item_id": "b5498d26c6a6a3b0",
+        "title": "Bombay HC Quashes Section 270A Penalty Due to Absence of Under-Reported Income",
+        "url": "https://taxguru.in/income-tax/bombay-hc-quashes-section-270a-penalty-due-absence-under-reported-income.html",
+        "date": "Fri, 01 May 2026 04:48:31 +0000",
+        "summary": "<p>Court held that penalty under Section 270A cannot apply where assessed income does not exceed processed income. Key takeaway: statutory conditions must be strictly met.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/bombay-hc-quashes-section-270a-penalty-due-absence-under-reported-income.html\">Bombay HC Quashes Section 270A Penalty Due to Absence of Under-Reported Income</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352067+00:00"
+      },
+      {
+        "item_id": "2bb45086ebe48a90",
+        "title": "No Section 69A Cash Deposit Addition Without Proper Inquiry & Evidence: ITAT Mumbai",
+        "url": "https://taxguru.in/income-tax/section-69a-cash-deposit-addition-proper-inquiry-evidence-itat-mumbai.html",
+        "date": "Fri, 01 May 2026 04:42:32 +0000",
+        "summary": "<p>The Tribunal held that the assessee had adequately explained the source of cash deposits with supporting evidence. Addition under Section 69A was deleted as the AO failed to rebut the explanation.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/section-69a-cash-deposit-addition-proper-inquiry-evidence-itat-mumbai.html\">No Section 69A Cash Deposit Addition Without Proper Inquiry &#038; Evidence: ITAT Mumbai</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352068+00:00"
+      },
+      {
+        "item_id": "ebf4f25cf66cfd03",
+        "title": "Penny Stock Allegation Rejected Due to Lack of Evidence Against Share Transactions",
+        "url": "https://taxguru.in/income-tax/penny-stock-allegation-rejected-due-lack-evidence-share-transactions.html",
+        "date": "Fri, 01 May 2026 04:39:54 +0000",
+        "summary": "<p>The tribunal ruled that reliance only on an investigation report without independent evidence cannot justify treating LTCG as bogus. Additions under Section 68 and commission were deleted.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/penny-stock-allegation-rejected-due-lack-evidence-share-transactions.html\">Penny Stock Allegation Rejected Due to Lack of Evidence Against Share Transactions</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352070+00:00"
+      },
+      {
+        "item_id": "5bf88c423d550c49",
+        "title": "ITAT Rejects TP Adjustment Due to Incorrect Benchmarking of Power Tariff",
+        "url": "https://taxguru.in/income-tax/itat-rejects-tp-adjustment-due-incorrect-benchmarking-power-tariff.html",
+        "date": "Fri, 01 May 2026 04:37:00 +0000",
+        "summary": "<p>The Tribunal held that industrial tariff charged by electricity boards is the correct benchmark for CPP transactions. It rejected the use of generator procurement rates adopted by the TPO.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/itat-rejects-tp-adjustment-due-incorrect-benchmarking-power-tariff.html\">ITAT Rejects TP Adjustment Due to Incorrect Benchmarking of Power Tariff</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352071+00:00"
+      },
+      {
+        "item_id": "719e10fd101d47fb",
+        "title": "Reassessment Notice Time-Barred as Issued Beyond Limitation Period: Karnataka HC",
+        "url": "https://taxguru.in/income-tax/reassessment-notice-time-barred-issued-limitation-period-karnataka-hc.html",
+        "date": "Fri, 01 May 2026 04:02:15 +0000",
+        "summary": "<p>The Court held that reassessment proceedings must be initiated within the statutory time limit. It found the notice issued after the deadline to be invalid.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/reassessment-notice-time-barred-issued-limitation-period-karnataka-hc.html\">Reassessment Notice Time-Barred as Issued Beyond Limitation Period: Karnataka HC</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352073+00:00"
+      },
+      {
+        "item_id": "96a0f62caa1ce825",
+        "title": "Complete TDS Rate Chart for FY 2026-27 with Section-Wise Breakdown",
+        "url": "https://taxguru.in/income-tax/complete-tds-rate-chart-fy-2026-27-section-wise-breakdown.html",
+        "date": "Fri, 01 May 2026 03:39:12 +0000",
+        "summary": "<p>A detailed overview of updated TDS provisions mapping old and new sections, rates, and thresholds. Helps taxpayers understand compliance requirements across all payment categories.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/complete-tds-rate-chart-fy-2026-27-section-wise-breakdown.html\">Complete TDS Rate Chart for FY 2026-27 with Section-Wise Breakdown</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352074+00:00"
+      },
+      {
+        "item_id": "5958243ae9572159",
+        "title": "Loose Sheets and Digital Data Not Enough: ITAT Quashes Additions for Lack of Evidence",
+        "url": "https://taxguru.in/income-tax/loose-sheets-digital-data-enough-itat-quashes-additions-lack-evidence.html",
+        "date": "Fri, 01 May 2026 02:53:58 +0000",
+        "summary": "<p>The Tribunal held that additions cannot stand without a clear link between seized material and the assessee. It ruled that third-party documents without corroboration lack evidentiary value.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/loose-sheets-digital-data-enough-itat-quashes-additions-lack-evidence.html\">Loose Sheets and Digital Data Not Enough: ITAT Quashes Additions for Lack of Evidence</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352076+00:00"
+      },
+      {
+        "item_id": "7f3fdbfbfd166e4b",
+        "title": "Human Rights Commissions Ignore Lynching of Muslims: Hon’ble Mr Justice Atul Sreedharan",
+        "url": "https://taxguru.in/income-tax/human-rights-commissions-ignore-lynching-muslims-justice-atul-sreedharan.html",
+        "date": "Fri, 01 May 2026 02:46:33 +0000",
+        "summary": "<p>The court examined whether NHRC can direct investigations unrelated to human rights violations. It held that such actions may exceed statutory limits under existing law.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/human-rights-commissions-ignore-lynching-muslims-justice-atul-sreedharan.html\">Human Rights Commissions Ignore Lynching of Muslims: Hon’ble Mr Justice Atul Sreedharan</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352078+00:00"
+      },
+      {
+        "item_id": "cf24611d8ab4c7e6",
+        "title": "Channel owners cannot be taken as comparables for distributors for transfer pricing purpose",
+        "url": "https://taxguru.in/income-tax/channel-owners-comparables-distributors-transfer-pricing-purpose.html",
+        "date": "Thu, 30 Apr 2026 13:15:28 +0000",
+        "summary": "<p>ITAT Delhi held that companies owning and operating channels cannot be compared with distribution company for the purpose of transfer pricing. Accordingly, directs TPO to exclude such comparables for benchmarking distribution segment and determination of ALP.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/channel-owners-comparables-distributors-transfer-pricing-purpose.html\">Channel owners cannot be taken as comparables for distributors for transfer pricing purpose</a> appeared first ",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352081+00:00"
+      },
+      {
+        "item_id": "85944f5b89d11392",
+        "title": "Gold Monetisation Scheme 2026: Earn Interest on Idle Gold at Home",
+        "url": "https://taxguru.in/income-tax/gold-monetisation-scheme-2026-earn-interest-idle-gold-home.html",
+        "date": "Thu, 30 Apr 2026 09:55:49 +0000",
+        "summary": "<p>The scheme allows households to deposit gold and earn interest without selling it. The key takeaway is that both interest and capital gains are fully tax-exempt.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/gold-monetisation-scheme-2026-earn-interest-idle-gold-home.html\">Gold Monetisation Scheme 2026: Earn Interest on Idle Gold at Home</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352083+00:00"
+      },
+      {
+        "item_id": "6773b90a47c7f686",
+        "title": "ITAT Deletes PF/ESI Disallowance as Section 143(1) Adjustment Held Beyond Scope",
+        "url": "https://taxguru.in/income-tax/itat-deletes-pf-esi-disallowance-section-1431-adjustment-held-scope.html",
+        "date": "Thu, 30 Apr 2026 08:36:21 +0000",
+        "summary": "<p>The Tribunal examined disallowance made for delayed employee contributions under Section 143(1). It held that debatable issues cannot be adjusted at the processing stage, resulting in relief to the assessee. The ruling clarifies procedural boundaries.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/itat-deletes-pf-esi-disallowance-section-1431-adjustment-held-scope.html\">ITAT Deletes PF/ESI Disallowance as Section 143(1) Adjustment Held Beyond Scope</a> appeared first on <a href=\"https",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352085+00:00"
+      },
+      {
+        "item_id": "a2e4ec03374dd845",
+        "title": "ITAT Quashes Section 271(1)(c Penalty as Unsigned SCN Held Void in Law",
+        "url": "https://taxguru.in/income-tax/itat-quashes-section-2711c-penalty-unsigned-scn-held-void-law.html",
+        "date": "Thu, 30 Apr 2026 07:44:12 +0000",
+        "summary": "<p>The issue involved validity of penalty proceedings initiated through an unsigned notice. The Tribunal ruled that such a notice is invalid and cannot confer jurisdiction. The decision highlights the mandatory requirement of proper authentication.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/itat-quashes-section-2711c-penalty-unsigned-scn-held-void-law.html\">ITAT Quashes Section 271(1)(c Penalty as Unsigned SCN Held Void in Law</a> appeared first on <a href=\"https://taxguru.in\">TaxGur",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352086+00:00"
+      },
+      {
+        "item_id": "8fd80f76ecb4e669",
+        "title": "Section 11 Exemption Allowed as Property in Trustees’ Names Held Not Beneficial to Them",
+        "url": "https://taxguru.in/income-tax/section-11-exemption-allowed-property-trusteesaenames-held-beneficial.html",
+        "date": "Thu, 30 Apr 2026 07:37:15 +0000",
+        "summary": "<p>The case examined whether property registered in trustees’ names violated Section 13(1)(c). The Tribunal held no violation as no benefit accrued to trustees, allowing exemption under Section 11.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/section-11-exemption-allowed-property-trusteesaenames-held-beneficial.html\">Section 11 Exemption Allowed as Property in Trustees’ Names Held Not Beneficial to Them</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352088+00:00"
+      },
+      {
+        "item_id": "5d79a3fd4e880443",
+        "title": "TDS Default Not Applicable as Section 197 Certificate Covers Entire Assessment Year",
+        "url": "https://taxguru.in/income-tax/tds-default-applicable-section-197-certificate-covers-entire-assessment-year.html",
+        "date": "Thu, 30 Apr 2026 07:34:34 +0000",
+        "summary": "<p>The case examined whether a lower TDS certificate applies prospectively or for the full year. The Court held it applies to the entire assessment year, negating default and interest liability.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/tds-default-applicable-section-197-certificate-covers-entire-assessment-year.html\">TDS Default Not Applicable as Section 197 Certificate Covers Entire Assessment Year</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352089+00:00"
+      },
+      {
+        "item_id": "5703deb85e76577c",
+        "title": "Pass-Through Costs Excluded From Transfer Pricing PLI as No Value Addition Was Performed: ITAT Mumbai",
+        "url": "https://taxguru.in/income-tax/pass-through-costs-excluded-transfer-pricing-pli-addition-performed-itat-mumbai.html",
+        "date": "Wed, 29 Apr 2026 15:19:08 +0000",
+        "summary": "<p>ITAT Mumbai held that payments made to third-party vendors on a cost-to-cost basis, without any value addition by the assessee, should be treated as pass-through costs and excluded from PLI computation.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/pass-through-costs-excluded-transfer-pricing-pli-addition-performed-itat-mumbai.html\">Pass-Through Costs Excluded From Transfer Pricing PLI as No Value Addition Was Performed: ITAT Mumbai</a> appeared first on <a href=\"https://taxguru.in\">",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352093+00:00"
+      },
+      {
+        "item_id": "7400758c8a5e5280",
+        "title": "Section 269ST Penalty Deleted as Seized Excel Sheets Did Not Prove Single Cash Transaction Above ₹2 Lakh",
+        "url": "https://taxguru.in/income-tax/section-269st-penalty-deleted-seized-excel-sheets-prove-single-cash-transaction-%e2%82%b92-lakh.html",
+        "date": "Wed, 29 Apr 2026 15:17:05 +0000",
+        "summary": "<p>The Tribunal held that consolidated Excel entries showing aggregate cash sales were insufficient to establish receipt of ₹2 lakh or more in a single transaction, and penalty under Section 271DA could not be sustained.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/section-269st-penalty-deleted-seized-excel-sheets-prove-single-cash-transaction-%e2%82%b92-lakh.html\">Section 269ST Penalty Deleted as Seized Excel Sheets Did Not Prove Single Cash Transaction Above ₹2 Lakh</a> appeared firs",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352095+00:00"
+      },
+      {
+        "item_id": "85bbd11e279ce9a6",
+        "title": "Bogus Purchase Addition Deleted Because Material Movement, Site Records & Banking Proof Established Genuineness: ITAT",
+        "url": "https://taxguru.in/income-tax/bogus-purchase-addition-deleted-material-movement-site-records-banking-proof-established-genuineness-itat.html",
+        "date": "Wed, 29 Apr 2026 14:48:51 +0000",
+        "summary": "<p>The Tribunal deleted purchase disallowances after noting invoices, transport records, weighbridge slips, tax returns and bank payments supported actual procurement and use of materials in infrastructure projects.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/bogus-purchase-addition-deleted-material-movement-site-records-banking-proof-established-genuineness-itat.html\">Bogus Purchase Addition Deleted Because Material Movement, Site Records &#038; Banking Proof Established Genuineness:",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352097+00:00"
+      },
+      {
+        "item_id": "7cdb12c34456f221",
+        "title": "Share Transfer in Family Arrangement Not Taxable: ITAT Deletes ₹489 Crore Addition",
+        "url": "https://taxguru.in/income-tax/share-transfer-family-arrangement-taxable-itat-deletes-rs-489-crore-addition.html",
+        "date": "Wed, 29 Apr 2026 14:46:11 +0000",
+        "summary": "<p>The issue was whether a share transfer without consideration constituted taxable capital gains. The Tribunal held that genuine family realignment is not taxable.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/share-transfer-family-arrangement-taxable-itat-deletes-rs-489-crore-addition.html\">Share Transfer in Family Arrangement Not Taxable: ITAT Deletes ₹489 Crore Addition</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352098+00:00"
+      },
+      {
+        "item_id": "92adc495b6e7ff49",
+        "title": "ITAT Rejects Appeal Where Declared Capital Gains Accepted Without Adjustment",
+        "url": "https://taxguru.in/income-tax/itat-rejects-appeal-declared-capital-gains-accepted-adjustment.html",
+        "date": "Wed, 29 Apr 2026 14:27:18 +0000",
+        "summary": "<p>The Tribunal held that since the Assessing Officer made no addition after verifying disclosures, the grievance lacked merit. Grounds were rightly treated as infructuous due to absence of tax impact.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/itat-rejects-appeal-declared-capital-gains-accepted-adjustment.html\">ITAT Rejects Appeal Where Declared Capital Gains Accepted Without Adjustment</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352099+00:00"
+      },
+      {
+        "item_id": "b425fee351bda451",
+        "title": "Mandatory PAN Requirement Introduced for Post Office Transactions Under Income Tax Rules 2026",
+        "url": "https://taxguru.in/income-tax/mandatory-pan-requirement-introduced-post-office-transactions-income-tax-rules-2026.html",
+        "date": "Wed, 29 Apr 2026 14:13:03 +0000",
+        "summary": "<p>The consolidation into Form 121 introduces stricter documentation and reporting obligations. The decision emphasizes accountability and structured tax reporting mechanisms.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/mandatory-pan-requirement-introduced-post-office-transactions-income-tax-rules-2026.html\">Mandatory PAN Requirement Introduced for Post Office Transactions Under Income Tax Rules 2026</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352101+00:00"
+      },
+      {
+        "item_id": "4b06e7b86db93feb",
+        "title": "As a Foreign Company, Do I Need to File Annual CIT in China?",
+        "url": "https://taxguru.in/income-tax/foreign-company-file-annual-cit-china.html",
+        "date": "Wed, 29 Apr 2026 13:41:03 +0000",
+        "summary": "<p>The issue is whether foreign businesses without offices in China must comply with tax laws. The key takeaway is that activities and income sources can trigger CIT obligations even without physical presence.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/foreign-company-file-annual-cit-china.html\">As a Foreign Company, Do I Need to File Annual CIT in China?</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352103+00:00"
+      },
+      {
+        "item_id": "0cb1264baa922318",
+        "title": "Reopening Invalid as Notice Issued Beyond Six-Year Limitation Period: SC",
+        "url": "https://taxguru.in/income-tax/reopening-invalid-notice-issued-six-year-limitation-period-sc.html",
+        "date": "Wed, 29 Apr 2026 13:24:11 +0000",
+        "summary": "<p>The issue was whether reassessment notice issued after six years was valid. The Court upheld that such notices are time-barred and cannot be sustained under law.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/reopening-invalid-notice-issued-six-year-limitation-period-sc.html\">Reopening Invalid as Notice Issued Beyond Six-Year Limitation Period: SC</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352106+00:00"
+      },
+      {
+        "item_id": "66309762ed935da8",
+        "title": "Delhi HC Quashed Reopening Notice as Issued Beyond Six-Year Limitation",
+        "url": "https://taxguru.in/income-tax/delhi-hc-quashed-reopening-notice-issued-six-year-limitation.html",
+        "date": "Wed, 29 Apr 2026 13:22:55 +0000",
+        "summary": "<p>The Court examined whether reassessment notice issued beyond limitation was valid. It held that notices issued after expiry of the six-year limit under the old regime are barred and liable to be set aside.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/delhi-hc-quashed-reopening-notice-issued-six-year-limitation.html\">Delhi HC Quashed Reopening Notice as Issued Beyond Six-Year Limitation</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352108+00:00"
+      },
+      {
+        "item_id": "98a49e146696e35c",
+        "title": "Reopening Invalid Without Independent Material Showing Escapement: Gujarat HC",
+        "url": "https://taxguru.in/income-tax/reopening-invalid-independent-material-showing-escapement-gujarat-hc.html",
+        "date": "Wed, 29 Apr 2026 12:51:54 +0000",
+        "summary": "<p>The Court held that reassessment under Sections 147/148 cannot be initiated solely on third-party data without independent evidence of income escapement. It ruled that such reopening amounts to suspicion and lacks the required “reason to believe.”</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/reopening-invalid-independent-material-showing-escapement-gujarat-hc.html\">Reopening Invalid Without Independent Material Showing Escapement: Gujarat HC</a> appeared first on <a href=\"https://ta",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352110+00:00"
+      },
+      {
+        "item_id": "fab0cd14e0494447",
+        "title": "Section 80GGC Deduction Denied as Donation Linked to Bogus Political Party Activities",
+        "url": "https://taxguru.in/income-tax/section-80ggc-deduction-denied-donation-linked-bogus-political-party-activities.html",
+        "date": "Wed, 29 Apr 2026 12:43:07 +0000",
+        "summary": "<p>The Tribunal upheld disallowance of deduction where donations were routed back to donors through layered transactions. The key takeaway is that non-genuine donations do not qualify for tax deduction.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/section-80ggc-deduction-denied-donation-linked-bogus-political-party-activities.html\">Section 80GGC Deduction Denied as Donation Linked to Bogus Political Party Activities</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352111+00:00"
+      },
+      {
+        "item_id": "c8503eb3e94d370d",
+        "title": "Philosophy of Income Tax Act 2025: Perspectives from Great Thinkers",
+        "url": "https://taxguru.in/income-tax/philosophy-income-tax-act-2025-perspectives-great-thinkers.html",
+        "date": "Wed, 29 Apr 2026 12:01:06 +0000",
+        "summary": "<p>The new tax law addresses long-standing concerns over complexity by reducing provisions and simplifying language. It introduces structural clarity and digital tools to improve compliance while reducing taxpayer burden. </p>\n<p>The post <a href=\"https://taxguru.in/income-tax/philosophy-income-tax-act-2025-perspectives-great-thinkers.html\">Philosophy of Income Tax Act 2025: Perspectives from Great Thinkers</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352117+00:00"
+      },
+      {
+        "item_id": "ef73398390d647fd",
+        "title": "Cloud Service Payments Not Taxable as Royalty Due to No Transfer of IP Rights: SC",
+        "url": "https://taxguru.in/income-tax/cloud-service-payments-taxable-royalty-due-transfer-ip-rights-sc.html",
+        "date": "Wed, 29 Apr 2026 11:52:58 +0000",
+        "summary": "<p>The Supreme Court affirmed that payments for cloud computing services are not royalty where no intellectual property rights are transferred. It held that mere access to services does not amount to use of equipment or technology under tax law.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/cloud-service-payments-taxable-royalty-due-transfer-ip-rights-sc.html\">Cloud Service Payments Not Taxable as Royalty Due to No Transfer of IP Rights: SC</a> appeared first on <a href=\"https://taxguru",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352119+00:00"
+      },
+      {
+        "item_id": "fab68c806394a1bd",
+        "title": "Date of DRP Upload, Not Visibility in AO Module, Determines Receipt: Telangana HC",
+        "url": "https://taxguru.in/income-tax/date-drp-upload-visibility-ao-module-determines-receipt-telangana-hc.html",
+        "date": "Wed, 29 Apr 2026 11:50:54 +0000",
+        "summary": "<p>The Court held that the issue of treating DRP upload as receipt was already settled by earlier rulings. It dismissed the Revenue’s appeals while making the decision subject to the Supreme Court’s final outcome.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/date-drp-upload-visibility-ao-module-determines-receipt-telangana-hc.html\">Date of DRP Upload, Not Visibility in AO Module, Determines Receipt: Telangana HC</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352121+00:00"
+      },
+      {
+        "item_id": "8bfacc5230f605e6",
+        "title": "TP Segment Split Rejected as Trading & After-Sales Services Are Inextricably Linked; TNMM at Entity Level Upheld: ITAT Delhi",
+        "url": "https://taxguru.in/income-tax/tp-segment-split-rejected-trading-tnmm-entity-level-upheld-itat-delhi.html",
+        "date": "Wed, 29 Apr 2026 11:47:51 +0000",
+        "summary": "<p>The Tribunal held that trading and service activities were inextricably linked and could not be segmented. It accepted entity-level TNMM, rendering TP adjustments unsustainable.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/tp-segment-split-rejected-trading-tnmm-entity-level-upheld-itat-delhi.html\">TP Segment Split Rejected as Trading &#038; After-Sales Services Are Inextricably Linked; TNMM at Entity Level Upheld: ITAT Delhi</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352122+00:00"
+      },
+      {
+        "item_id": "a79530293978e16e",
+        "title": "TDS Credit Can’t Be Denied Merely Because It Appears in Sister Concern’s 26AS: ITAT Delhi",
+        "url": "https://taxguru.in/income-tax/tds-credit-cant-denied-appears-sister-concerns-26as-itat-delhi.html",
+        "date": "Wed, 29 Apr 2026 11:45:01 +0000",
+        "summary": "<p>The Tribunal held that TDS credit cannot be denied merely because it does not appear under the assessee’s PAN. It ruled that the assessee cannot be forced to ensure revision of TDS returns by the deductor.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/tds-credit-cant-denied-appears-sister-concerns-26as-itat-delhi.html\">TDS Credit Can’t Be Denied Merely Because It Appears in Sister Concern’s 26AS: ITAT Delhi</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352124+00:00"
+      },
+      {
+        "item_id": "66143b0f0dc49f88",
+        "title": "Only Legitimate Tax Can Be Collected; ITAT Restores BBC Distribution Fee Royalty Taxability Issue",
+        "url": "https://taxguru.in/income-tax/legitimate-tax-collected-itat-restores-bbc-distribution-fee-royalty-taxability-issue.html",
+        "date": "Wed, 29 Apr 2026 11:43:01 +0000",
+        "summary": "<p>The Tribunal set aside the dismissal of a delayed appeal, holding that the issue of distribution fee taxability requires fresh examination on merits. The case was remanded to the Assessing Officer for reconsideration with proper hearing.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/legitimate-tax-collected-itat-restores-bbc-distribution-fee-royalty-taxability-issue.html\">Only Legitimate Tax Can Be Collected; ITAT Restores BBC Distribution Fee Royalty Taxability Issue</a> appeared fi",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352125+00:00"
+      },
+      {
+        "item_id": "845ae1fb4b47de44",
+        "title": "Refund of Earlier Advance Can’t Be Taxed as Accommodation Entry U/s 68: ITAT Delhi",
+        "url": "https://taxguru.in/income-tax/refund-earlier-advance-cant-taxed-accommodation-entry-section-68-itat-delhi.html",
+        "date": "Wed, 29 Apr 2026 11:40:53 +0000",
+        "summary": "<p>The Tribunal held that return of advances cannot be taxed under Section 68. The key takeaway is that explained transactions supported by records cannot be treated as unexplained income.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/refund-earlier-advance-cant-taxed-accommodation-entry-section-68-itat-delhi.html\">Refund of Earlier Advance Can’t Be Taxed as Accommodation Entry U/s 68: ITAT Delhi</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352127+00:00"
+      },
+      {
+        "item_id": "56d22f8dba7f254f",
+        "title": "No Penalty Where Return Filed After Probate Grant and Income Fully Disclosed in Form 26AS",
+        "url": "https://taxguru.in/income-tax/penalty-return-filed-probate-grant-income-fully-disclosed-form-26as.html",
+        "date": "Wed, 29 Apr 2026 11:36:36 +0000",
+        "summary": "<p>The Tribunal held that delay in filing the return due to pending probate proceedings was beyond the control of executors. It ruled that such delay constituted a bona fide explanation, leading to deletion of penalty under Section 270A.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/penalty-return-filed-probate-grant-income-fully-disclosed-form-26as.html\">No Penalty Where Return Filed After Probate Grant and Income Fully Disclosed in Form 26AS</a> appeared first on <a href=\"https://taxg",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352128+00:00"
+      },
+      {
+        "item_id": "be000b6904335508",
+        "title": "No TDS on Foreign Agent Commission for Services Rendered Abroad; ITAT Deletes Section 40(a)(i) Disallowance",
+        "url": "https://taxguru.in/income-tax/tds-foreign-agent-commission-services-rendered-abroad-itat-deletes-section-40ai-disallowance.html",
+        "date": "Wed, 29 Apr 2026 11:31:39 +0000",
+        "summary": "<p>The Tribunal held that commission paid to foreign agents for services rendered outside India is not taxable in India. Consequently, no TDS obligation arises, and disallowance under section 40(a)(i) was deleted.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/tds-foreign-agent-commission-services-rendered-abroad-itat-deletes-section-40ai-disallowance.html\">No TDS on Foreign Agent Commission for Services Rendered Abroad; ITAT Deletes Section 40(a)(i) Disallowance</a> appeared first on <a",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352130+00:00"
+      },
+      {
+        "item_id": "d0958509518a6d81",
+        "title": "No Section 43B Disallowance as Service Tax Not Claimed in P&L: ITAT Dehradun",
+        "url": "https://taxguru.in/income-tax/section-43b-disallowance-service-tax-claimed-pl-itat-dehradun.html",
+        "date": "Wed, 29 Apr 2026 11:28:54 +0000",
+        "summary": "<p>The tribunal recalled its earlier order after finding it addressed an incorrect issue. It ultimately upheld that no disallowance applies when no expense is claimed.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/section-43b-disallowance-service-tax-claimed-pl-itat-dehradun.html\">No Section 43B Disallowance as Service Tax Not Claimed in P&#038;L: ITAT Dehradun</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352134+00:00"
+      },
+      {
+        "item_id": "3edcd377b13284b0",
+        "title": "No Adhoc Disallowance of Commission on Assumptions Without Specific Defects: ITAT Delhi",
+        "url": "https://taxguru.in/income-tax/adhoc-disallowance-commission-assumptions-specific-defects-itat-delhi.html",
+        "date": "Wed, 29 Apr 2026 11:12:04 +0000",
+        "summary": "<p>The issue was whether commission payments were genuine business expenses. The Tribunal held that disallowance based on non-response and suspicion was not justified. The key takeaway is that conjectures cannot replace evidence in tax assessments.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/adhoc-disallowance-commission-assumptions-specific-defects-itat-delhi.html\">No Adhoc Disallowance of Commission on Assumptions Without Specific Defects: ITAT Delhi</a> appeared first on <a href=\"h",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352135+00:00"
+      },
+      {
+        "item_id": "628f088134ccf594",
+        "title": "Foreign Tax Credit Cannot Be Denied for Partial Overseas Return Filing: ITAT Mumbai",
+        "url": "https://taxguru.in/income-tax/foreign-tax-credit-denied-partial-overseas-return-filing-itat-mumbai.html",
+        "date": "Wed, 29 Apr 2026 11:10:32 +0000",
+        "summary": "<p>The Tribunal held that FTC claims cannot be rejected solely due to incomplete foreign tax return filing. The key takeaway is that authorities must verify available and subsequent evidence before denying relief.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/foreign-tax-credit-denied-partial-overseas-return-filing-itat-mumbai.html\">Foreign Tax Credit Cannot Be Denied for Partial Overseas Return Filing: ITAT Mumbai</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352137+00:00"
+      },
+      {
+        "item_id": "b483c7c61a30cce3",
+        "title": "Search on Third Party Cannot Extend Reassessment Time Without Assessee Link: SC",
+        "url": "https://taxguru.in/income-tax/search-party-extend-reassessment-time-assessee-link-sc.html",
+        "date": "Wed, 29 Apr 2026 11:01:09 +0000",
+        "summary": "<p>The Supreme Court held that reassessment notices issued after the six-year limit are barred. It affirmed that expired cases cannot be revived under later provisions.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/search-party-extend-reassessment-time-assessee-link-sc.html\">Search on Third Party Cannot Extend Reassessment Time Without Assessee Link: SC</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352138+00:00"
+      },
+      {
+        "item_id": "ceb2e2777d505e31",
+        "title": "Captive Power Valuation Must Include Electricity Duty for 80-IA Deduction: Calcutta HC",
+        "url": "https://taxguru.in/income-tax/captive-power-valuation-include-electricity-duty-80-ia-deduction-calcutta-hc.html",
+        "date": "Wed, 29 Apr 2026 10:59:38 +0000",
+        "summary": "<p>The issue concerned overlap of deductions under Sections 80-IA and 80HHC. The Court held that 80HHC profits cannot be reduced by 80-IA deduction, ensuring independent computation.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/captive-power-valuation-include-electricity-duty-80-ia-deduction-calcutta-hc.html\">Captive Power Valuation Must Include Electricity Duty for 80-IA Deduction: Calcutta HC</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352140+00:00"
+      },
+      {
+        "item_id": "39cbf26cc25b3777",
+        "title": "Cash Deposits from Tractor Sales Can’t Be Taxed as Unexplained Income: ITAT Ahmedabad",
+        "url": "https://taxguru.in/income-tax/cash-deposits-tractor-sales-cant-taxed-unexplained-income-itat-ahmedabad.html",
+        "date": "Wed, 29 Apr 2026 10:55:42 +0000",
+        "summary": "<p>The tribunal held that cash deposits backed by sales records cannot be treated as unexplained income. It upheld deletion of addition where transactions were properly documented.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/cash-deposits-tractor-sales-cant-taxed-unexplained-income-itat-ahmedabad.html\">Cash Deposits from Tractor Sales Can’t Be Taxed as Unexplained Income: ITAT Ahmedabad</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352141+00:00"
+      },
+      {
+        "item_id": "b0dfc1880f7c2726",
+        "title": "Bogus Purchase Addition Remanded as Fresh Evidence Warrants Verification: ITAT Surat",
+        "url": "https://taxguru.in/income-tax/bogus-purchase-addition-remanded-fresh-evidence-warrants-verification-itat-surat.html",
+        "date": "Wed, 29 Apr 2026 10:53:21 +0000",
+        "summary": "<p>The assessee produced new evidence including invoices and tax returns of suppliers. The Tribunal held that these documents must be examined before deciding the issue.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/bogus-purchase-addition-remanded-fresh-evidence-warrants-verification-itat-surat.html\">Bogus Purchase Addition Remanded as Fresh Evidence Warrants Verification: ITAT Surat</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352143+00:00"
+      },
+      {
+        "item_id": "c53fa0f797a37130",
+        "title": "No Capital Gains Tax on Void Sale Deed Executed Through Forged POA: ITAT Ahmedabad",
+        "url": "https://taxguru.in/income-tax/capital-gains-tax-void-sale-deed-executed-forged-poa-itat-ahmedabad.html",
+        "date": "Wed, 29 Apr 2026 10:51:58 +0000",
+        "summary": "<p>The issue involved taxation of capital gains based on a disputed land sale. The Tribunal held that once the sale deed was declared void, no capital gains could arise.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/capital-gains-tax-void-sale-deed-executed-forged-poa-itat-ahmedabad.html\">No Capital Gains Tax on Void Sale Deed Executed Through Forged POA: ITAT Ahmedabad</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352145+00:00"
+      },
+      {
+        "item_id": "5934542da4fed607",
+        "title": "Commission Agent Not Eligible for TDS Credit on Farmers’ Income: ITAT Ahmedabad",
+        "url": "https://taxguru.in/income-tax/commission-agent-eligible-tds-credit-farmersaeincome-itat-ahmedabad.html",
+        "date": "Wed, 29 Apr 2026 10:43:28 +0000",
+        "summary": "<p>The tribunal held that TDS credit cannot be claimed by an agent when the underlying income belongs to farmers. It ruled that credit must align with the person offering the income to tax.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/commission-agent-eligible-tds-credit-farmersaeincome-itat-ahmedabad.html\">Commission Agent Not Eligible for TDS Credit on Farmers’ Income: ITAT Ahmedabad</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352146+00:00"
+      },
+      {
+        "item_id": "d24494d506dd4115",
+        "title": "SC Dismisses Revenue Appeal as Assessment Based on Guesswork Without Proof",
+        "url": "https://taxguru.in/income-tax/sc-dismisses-revenue-appeal-assessment-based-guesswork-proof.html",
+        "date": "Wed, 29 Apr 2026 10:24:35 +0000",
+        "summary": "<p>The issue was whether addition based on estimated yield was valid. The SC upheld that without material evidence, such additions are unsustainable and cannot be based on suspicion.</p>\n<p>The post <a href=\"https://taxguru.in/income-tax/sc-dismisses-revenue-appeal-assessment-based-guesswork-proof.html\">SC Dismisses Revenue Appeal as Assessment Based on Guesswork Without Proof</a> appeared first on <a href=\"https://taxguru.in\">TaxGuru</a>.</p>",
+        "ref_no": null,
+        "source": "taxguru",
+        "added_at": "2026-05-02T07:35:59.352148+00:00"
+      }
+    ]
+  },
+  "metadata": {
+    "last_auto_update": "2026-05-02T07:35:59.360119+00:00"
+  }
+}

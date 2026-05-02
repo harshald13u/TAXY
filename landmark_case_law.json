@@ -1,0 +1,1185 @@
+{
+  "_metadata": {
+    "title": "Landmark Indian Income Tax Case Law for AI ITR App",
+    "scope": "Curated landmark Supreme Court, High Court & ITAT decisions",
+    "knowledge_cutoff": "2025-05",
+    "total_cases": 75,
+    "version": "1.0",
+    "disclaimer": "All case status MUST be verified against current case-law databases before reliance. Tax law evolves; cases may be distinguished or overruled.",
+    "citation_format": "(YYYY) NNN ITR PPP (Court) — Indian Tax Reports standard"
+  },
+  "citation_conventions": {
+    "ITR": "Income Tax Reports",
+    "SCC": "Supreme Court Cases",
+    "AIR": "All India Reporter",
+    "SCR": "Supreme Court Reports",
+    "ITD": "Income Tax Decisions (ITAT)",
+    "TTJ": "Tax Tribunal Judgments",
+    "SOT": "Selected Orders of Tribunal",
+    "Taxmann": "Taxmann Citation",
+    "courts": {
+      "SC": "Supreme Court",
+      "HC": "High Court",
+      "ITAT": "Income Tax Appellate Tribunal",
+      "AAR": "Authority for Advance Rulings"
+    }
+  },
+  "cases_by_topic": {
+    "foundational_principles": {
+      "statutory_interpretation": [
+        {
+          "id": "vatika_township",
+          "name": "CIT v. Vatika Township Pvt. Ltd.",
+          "citation": "(2014) 367 ITR 466 (SC)",
+          "court": "SC",
+          "year": 2014,
+          "principle": "Tax provisions strictly construed; ambiguity favours taxpayer. Beneficial provisions construed liberally.",
+          "section_2025": [
+            "4"
+          ],
+          "section_1961": [
+            "all"
+          ],
+          "reliance": "high",
+          "overruled": false
+        },
+        {
+          "id": "mathuram_agrawal",
+          "name": "Mathuram Agrawal v. State of M.P.",
+          "citation": "(1999) 8 SCC 667",
+          "court": "SC",
+          "year": 1999,
+          "principle": "Three components of tax: subject, person, rate — all must be clearly fixed by statute.",
+          "section_2025": [
+            "4"
+          ],
+          "section_1961": [
+            "4"
+          ],
+          "reliance": "high"
+        }
+      ],
+      "capital_vs_revenue": [
+        {
+          "id": "empire_jute",
+          "name": "Empire Jute Co. Ltd. v. CIT",
+          "citation": "(1980) 124 ITR 1 (SC)",
+          "court": "SC",
+          "year": 1980,
+          "principle": "Test: enduring benefit + capital field. Loom hours = revenue.",
+          "section_2025": [
+            "34"
+          ],
+          "section_1961": [
+            "37"
+          ],
+          "reliance": "high",
+          "topic_tags": [
+            "pgbp",
+            "deduction",
+            "capital_revenue"
+          ]
+        },
+        {
+          "id": "sutlej_cotton",
+          "name": "Sutlej Cotton Mills Ltd. v. CIT",
+          "citation": "(1979) 116 ITR 1 (SC)",
+          "court": "SC",
+          "year": 1979,
+          "principle": "Forex impact on capital account = capital; on revenue = revenue. Source test.",
+          "section_2025": [
+            "42",
+            "43"
+          ],
+          "section_1961": [
+            "43A"
+          ],
+          "reliance": "high"
+        },
+        {
+          "id": "saurashtra_cement",
+          "name": "Saurashtra Cement Ltd. v. CIT",
+          "citation": "(2010) 325 ITR 422 (SC)",
+          "court": "SC",
+          "year": 2010,
+          "principle": "Liquidated damages for delayed plant delivery = capital receipt; reduces cost.",
+          "section_2025": [
+            "39"
+          ],
+          "section_1961": [
+            "43"
+          ],
+          "reliance": "high"
+        },
+        {
+          "id": "brooke_bond",
+          "name": "Brooke Bond India Ltd. v. CIT",
+          "citation": "(1997) 225 ITR 798 (SC)",
+          "court": "SC",
+          "year": 1997,
+          "principle": "Share-issue costs (underwriting, brokerage, prospectus) = capital expenditure.",
+          "section_2025": [
+            "44"
+          ],
+          "section_1961": [
+            "35D"
+          ],
+          "reliance": "high"
+        },
+        {
+          "id": "madras_industrial",
+          "name": "Madras Industrial Investment Corp. v. CIT",
+          "citation": "(1997) 225 ITR 802 (SC)",
+          "court": "SC",
+          "year": 1997,
+          "principle": "Discount on debenture issue = deferred revenue, deductible over debenture life.",
+          "section_2025": [
+            "34"
+          ],
+          "reliance": "high"
+        },
+        {
+          "id": "walchand",
+          "name": "CIT v. Walchand & Co.",
+          "citation": "(1967) 65 ITR 381 (SC)",
+          "court": "SC",
+          "year": 1967,
+          "principle": "Reasonableness judged from businessman's perspective, not Revenue's.",
+          "section_2025": [
+            "34",
+            "36"
+          ],
+          "section_1961": [
+            "37",
+            "40A"
+          ],
+          "reliance": "high"
+        },
+        {
+          "id": "mahalakshmi_textile",
+          "name": "CIT v. Mahalakshmi Textile Mills",
+          "citation": "(1967) 66 ITR 710 (SC)",
+          "court": "SC",
+          "year": 1967,
+          "principle": "Loom replacement = current repair (revenue), not capital.",
+          "section_2025": [
+            "28(1)(f)"
+          ],
+          "section_1961": [
+            "31(i)"
+          ],
+          "reliance": "high"
+        }
+      ]
+    },
+    "residence_and_scope": [
+      {
+        "id": "vodafone",
+        "name": "Vodafone International Holdings v. UOI",
+        "citation": "(2012) 341 ITR 1 (SC)",
+        "court": "SC",
+        "year": 2012,
+        "principle": "Offshore share transfer pre-2012-amendment NOT taxable in India. Look-through rejected.",
+        "section_2025": [
+          "9(10)"
+        ],
+        "section_1961": [
+          "9(1)(i)"
+        ],
+        "reliance": "medium",
+        "note": "Now distinguishable due to FA 2012 retrospective amendment + Sec 9(10) of 2025 Act"
+      },
+      {
+        "id": "azadi_bachao",
+        "name": "Azadi Bachao Andolan v. UOI",
+        "citation": "(2003) 263 ITR 706 (SC)",
+        "court": "SC",
+        "year": 2003,
+        "principle": "Tax planning via DTAA legitimate; Mauritius treaty benefits available without 'beneficial ownership' inquiry.",
+        "section_2025": [
+          "159"
+        ],
+        "section_1961": [
+          "90"
+        ],
+        "reliance": "medium",
+        "note": "Diluted by GAAR (Sec 178-184)"
+      },
+      {
+        "id": "mcdowell",
+        "name": "McDowell & Co. Ltd. v. CTO",
+        "citation": "(1985) 154 ITR 148 (SC)",
+        "court": "SC",
+        "year": 1985,
+        "principle": "Tax avoidance via colourable devices not permissible. Substance over form.",
+        "section_2025": [
+          "178-184"
+        ],
+        "reliance": "high",
+        "topic_tags": [
+          "gaar",
+          "anti_avoidance"
+        ]
+      },
+      {
+        "id": "ishikawajima",
+        "name": "Ishikawajima-Harima Heavy Industries v. DCIT",
+        "citation": "(2007) 288 ITR 408 (SC)",
+        "court": "SC",
+        "year": 2007,
+        "principle": "Offshore services not FTS unless rendered in India + utilised in India.",
+        "section_2025": [
+          "9(7)"
+        ],
+        "section_1961": [
+          "9(1)(vii)"
+        ],
+        "reliance": "medium",
+        "note": "Diluted by FA 2010 explanation"
+      },
+      {
+        "id": "engineering_analysis",
+        "name": "Engineering Analysis Centre of Excellence v. CIT",
+        "citation": "(2021) 432 ITR 471 (SC)",
+        "court": "SC",
+        "year": 2021,
+        "principle": "Standard software payments NOT royalty under DTAA.",
+        "section_2025": [
+          "9(6)"
+        ],
+        "section_1961": [
+          "9(1)(vi)"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "formula_one",
+        "name": "Formula One World Championship v. CIT",
+        "citation": "(2017) 394 ITR 80 (SC)",
+        "court": "SC",
+        "year": 2017,
+        "principle": "Short-term exclusive use of premises can constitute fixed-place PE.",
+        "section_2025": [
+          "9(9)",
+          "173"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "morgan_stanley",
+        "name": "DIT v. Morgan Stanley & Co.",
+        "citation": "(2007) 292 ITR 416 (SC)",
+        "court": "SC",
+        "year": 2007,
+        "principle": "Captive back-office paid ALP doesn't constitute PE for further attribution.",
+        "section_2025": [
+          "165",
+          "9(9)"
+        ],
+        "reliance": "high"
+      }
+    ],
+    "salaries": [
+      {
+        "id": "lw_russel",
+        "name": "CIT v. L.W. Russel",
+        "citation": "(1964) 53 ITR 91 (SC)",
+        "court": "SC",
+        "year": 1964,
+        "principle": "Employer PF contribution taxable only if exceeds prescribed limit.",
+        "section_2025": [
+          "17(1)(h)"
+        ],
+        "section_1961": [
+          "17(2)(vii)"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "karamchari_union",
+        "name": "Karamchari Union v. UOI",
+        "citation": "(2000) 243 ITR 143 (SC)",
+        "court": "SC",
+        "year": 2000,
+        "principle": "Allowance exemption depends on actual expenditure for official purpose.",
+        "section_2025": [
+          "Schedule III"
+        ],
+        "section_1961": [
+          "10(14)"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "p_krishna_menon",
+        "name": "CIT v. P. Krishna Menon",
+        "citation": "(1959) 35 ITR 48 (SC)",
+        "court": "SC",
+        "year": 1959,
+        "principle": "Voluntary payments from employer for past services = profits in lieu of salary.",
+        "section_2025": [
+          "18"
+        ],
+        "section_1961": [
+          "17(3)"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "ed_sheppard",
+        "name": "CIT v. E.D. Sheppard",
+        "citation": "(1963) 48 ITR 237 (SC)",
+        "court": "SC",
+        "year": 1963,
+        "principle": "Compensation for loss of employment is capital unless for services rendered.",
+        "section_2025": [
+          "18",
+          "19"
+        ],
+        "section_1961": [
+          "17(3)"
+        ],
+        "reliance": "high"
+      }
+    ],
+    "house_property": [
+      {
+        "id": "podar_cement",
+        "name": "CIT v. Podar Cement Pvt. Ltd.",
+        "citation": "(1997) 226 ITR 625 (SC)",
+        "court": "SC",
+        "year": 1997,
+        "principle": "Beneficial owner taxable for HP income, even without legal title.",
+        "section_2025": [
+          "25"
+        ],
+        "section_1961": [
+          "27"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "bhagwan_dass_jain",
+        "name": "Bhagwan Dass Jain v. UOI",
+        "citation": "(1981) 128 ITR 315 (SC)",
+        "court": "SC",
+        "year": 1981,
+        "principle": "Notional rent for self-occupied house constitutional.",
+        "section_2025": [
+          "21(6)"
+        ],
+        "section_1961": [
+          "23(2)"
+        ],
+        "reliance": "medium",
+        "note": "NIL annual value treatment now allowed for 2 SOPs"
+      }
+    ],
+    "pgbp": {
+      "subsidies_and_incentives": [
+        {
+          "id": "pj_chemicals",
+          "name": "CIT v. P.J. Chemicals Ltd.",
+          "citation": "(1994) 210 ITR 830 (SC)",
+          "court": "SC",
+          "year": 1994,
+          "principle": "Subsidy not connected to fixed asset cost = capital receipt.",
+          "section_2025": [
+            "39",
+            "2(49)(w)"
+          ],
+          "reliance": "high"
+        },
+        {
+          "id": "sahney_steel",
+          "name": "Sahney Steel & Press Works v. CIT",
+          "citation": "(1997) 228 ITR 253 (SC)",
+          "court": "SC",
+          "year": 1997,
+          "principle": "Purpose test: if for setup = capital; if for running = revenue.",
+          "section_2025": [
+            "2(49)(w)"
+          ],
+          "reliance": "high"
+        },
+        {
+          "id": "ponni_sugars",
+          "name": "Ponni Sugars and Chemicals v. CIT",
+          "citation": "(2008) 306 ITR 392 (SC)",
+          "court": "SC",
+          "year": 2008,
+          "principle": "Subsidy for setting up sugar mill in backward area = capital receipt.",
+          "section_2025": [
+            "2(49)(w)"
+          ],
+          "reliance": "high"
+        }
+      ],
+      "ftss_and_royalty": [
+        {
+          "id": "bharti_cellular",
+          "name": "CIT v. Bharti Cellular Ltd.",
+          "citation": "(2011) 330 ITR 239 (SC)",
+          "court": "SC",
+          "year": 2011,
+          "principle": "Interconnect charges NOT FTS — no human element. Equipment use ≠ technical services.",
+          "section_2025": [
+            "9(7)"
+          ],
+          "section_1961": [
+            "9(1)(vii)"
+          ],
+          "reliance": "high"
+        }
+      ],
+      "depreciation": [
+        {
+          "id": "mahendra_mills",
+          "name": "CIT v. Mahendra Mills",
+          "citation": "(2000) 243 ITR 56 (SC)",
+          "court": "SC",
+          "year": 2000,
+          "principle": "Depreciation at option of assessee.",
+          "section_2025": [
+            "33(7)"
+          ],
+          "section_1961": [
+            "32"
+          ],
+          "reliance": "low",
+          "overruled": true,
+          "overruled_by": "Sec 33(7) of 2025 Act — deemed allowed irrespective of claim"
+        },
+        {
+          "id": "ici_india",
+          "name": "I.C.I. India Ltd. v. CIT",
+          "citation": "(2017) 393 ITR 88 (SC)",
+          "court": "SC",
+          "year": 2017,
+          "principle": "Goodwill from amalgamation eligible for depreciation.",
+          "section_2025": [
+            "33"
+          ],
+          "section_1961": [
+            "32"
+          ],
+          "reliance": "low",
+          "overruled": true,
+          "overruled_by": "FA 2021 — goodwill EXCLUDED from depreciable assets"
+        }
+      ],
+      "bad_debts": [
+        {
+          "id": "trf_limited",
+          "name": "TRF Limited v. CIT",
+          "citation": "(2010) 323 ITR 397 (SC)",
+          "court": "SC",
+          "year": 2010,
+          "principle": "Post-1989, write-off in books sufficient for bad debt deduction.",
+          "section_2025": [
+            "31(2)"
+          ],
+          "section_1961": [
+            "36(1)(vii)"
+          ],
+          "reliance": "high"
+        },
+        {
+          "id": "vijaya_bank",
+          "name": "Vijaya Bank v. CIT",
+          "citation": "(2010) 323 ITR 166 (SC)",
+          "court": "SC",
+          "year": 2010,
+          "principle": "Provision-account write-off sufficient even without individual customer reduction.",
+          "section_2025": [
+            "31"
+          ],
+          "reliance": "high"
+        }
+      ],
+      "deductions_general": [
+        {
+          "id": "indian_aluminium",
+          "name": "CIT v. Indian Aluminium Co.",
+          "citation": "(1971) 79 ITR 514 (SC)",
+          "court": "SC",
+          "year": 1971,
+          "principle": "Spousal travel for business deductible if business-related.",
+          "section_2025": [
+            "34"
+          ],
+          "reliance": "medium"
+        },
+        {
+          "id": "eastern_investments",
+          "name": "Eastern Investments Ltd. v. CIT",
+          "citation": "(1951) 20 ITR 1 (SC)",
+          "court": "SC",
+          "year": 1951,
+          "principle": "Interest on borrowing for taxable income earning deductible.",
+          "section_2025": [
+            "32(b)"
+          ],
+          "section_1961": [
+            "36(1)(iii)"
+          ],
+          "reliance": "high"
+        },
+        {
+          "id": "madras_auto_service",
+          "name": "Madras Auto Service v. CIT",
+          "citation": "(1998) 233 ITR 468 (SC)",
+          "court": "SC",
+          "year": 1998,
+          "principle": "Lessee improvements to leased premises = revenue if for facilitating operations.",
+          "section_2025": [
+            "28",
+            "33(6)"
+          ],
+          "reliance": "high"
+        },
+        {
+          "id": "checkmate_services",
+          "name": "Checkmate Services v. CIT",
+          "citation": "(2022) 448 ITR 518 (SC)",
+          "court": "SC",
+          "year": 2022,
+          "principle": "Employee PF/ESI contribution must be paid by PF/ESI Act due date, not Sec 43B return-filing date.",
+          "section_2025": [
+            "29(1)(e)"
+          ],
+          "section_1961": [
+            "36(1)(va)"
+          ],
+          "reliance": "high",
+          "topic_tags": [
+            "pgbp",
+            "tds",
+            "pf"
+          ]
+        }
+      ]
+    },
+    "capital_gains": {
+      "transfer_and_chargeability": [
+        {
+          "id": "rm_amin",
+          "name": "CIT v. R.M. Amin",
+          "citation": "(1977) 106 ITR 368 (SC)",
+          "court": "SC",
+          "year": 1977,
+          "principle": "Liquidation distribution = transfer; cost adjusted by accumulated profits taxed as dividend.",
+          "section_2025": [
+            "68"
+          ],
+          "section_1961": [
+            "46(2)"
+          ],
+          "reliance": "high"
+        },
+        {
+          "id": "suraj_lamps",
+          "name": "Suraj Lamps & Industries v. State of Haryana",
+          "citation": "(2012) 340 ITR 2 (SC)",
+          "court": "SC",
+          "year": 2012,
+          "principle": "PoA + unregistered sale agreement does NOT confer ownership.",
+          "section_2025": [
+            "2(109)"
+          ],
+          "reliance": "high"
+        },
+        {
+          "id": "balbir_singh_maini",
+          "name": "CIT v. Balbir Singh Maini",
+          "citation": "(2017) 398 ITR 531 (SC)",
+          "court": "SC",
+          "year": 2017,
+          "principle": "JDA without consideration / possession = no capital gains in agreement year.",
+          "section_2025": [
+            "67(14)"
+          ],
+          "reliance": "high",
+          "note": "Codified in Sec 67(14)"
+        }
+      ],
+      "cost_of_acquisition": [
+        {
+          "id": "bc_srinivasa_setty",
+          "name": "CIT v. B.C. Srinivasa Setty",
+          "citation": "(1981) 128 ITR 294 (SC)",
+          "court": "SC",
+          "year": 1981,
+          "principle": "If COA cannot be conceived, no capital gains.",
+          "section_2025": [
+            "90"
+          ],
+          "reliance": "low",
+          "overruled": true,
+          "overruled_by": "Sec 90(3)(c) deems COA as NIL for self-generated intangibles"
+        },
+        {
+          "id": "manjula_shah",
+          "name": "CIT v. Manjula J. Shah",
+          "citation": "(2011) 16 taxmann.com 42 (Bom)",
+          "court": "HC",
+          "year": 2011,
+          "principle": "Inherited asset: indexation from previous owner's holding year.",
+          "section_2025": [
+            "73",
+            "72(8)"
+          ],
+          "reliance": "high"
+        }
+      ],
+      "exemption_54_series": [
+        {
+          "id": "sanjeev_lal",
+          "name": "Sanjeev Lal v. CIT",
+          "citation": "(2014) 365 ITR 389 (SC)",
+          "court": "SC",
+          "year": 2014,
+          "principle": "Date of agreement to purchase counts as investment date.",
+          "section_2025": [
+            "82"
+          ],
+          "section_1961": [
+            "54"
+          ],
+          "reliance": "high"
+        },
+        {
+          "id": "tn_aravinda_reddy",
+          "name": "CIT v. T.N. Aravinda Reddy",
+          "citation": "(1979) 120 ITR 46 (SC)",
+          "court": "SC",
+          "year": 1979,
+          "principle": "Purchase from co-owner / brother qualifies for Sec 54 exemption.",
+          "section_2025": [
+            "82"
+          ],
+          "reliance": "high"
+        },
+        {
+          "id": "tilak_raj_bedi",
+          "name": "CIT v. Smt. Tilak Raj Bedi",
+          "citation": "(2009) 314 ITR 80 (Del)",
+          "court": "HC",
+          "year": 2009,
+          "principle": "Investment in spouse's name allowed where assessee provides funds.",
+          "section_2025": [
+            "82"
+          ],
+          "reliance": "medium"
+        },
+        {
+          "id": "gita_duggal",
+          "name": "CIT v. Gita Duggal",
+          "citation": "(2014) 357 ITR 153 (Del)",
+          "court": "HC",
+          "year": 2014,
+          "principle": "'A residential house' includes multiple units in same building.",
+          "section_2025": [
+            "82",
+            "86"
+          ],
+          "reliance": "low",
+          "note": "FA 2014 restricted to ONE house"
+        },
+        {
+          "id": "kalpana_hansraj",
+          "name": "Smt. Kalpana Hansraj v. ITO",
+          "citation": "(2017) 79 taxmann.com 22 (Mum)",
+          "court": "ITAT",
+          "year": 2017,
+          "principle": "Substantial completion sufficient; no need for possession/registration.",
+          "section_2025": [
+            "86"
+          ],
+          "reliance": "medium"
+        }
+      ],
+      "stamp_duty_value": [
+        {
+          "id": "chandni_bhuchar",
+          "name": "CIT v. Chandni Bhuchar",
+          "citation": "(2010) 323 ITR 510 (P&H)",
+          "court": "HC",
+          "year": 2010,
+          "principle": "Assessee can challenge SDV; VO reference mandatory.",
+          "section_2025": [
+            "78(2)"
+          ],
+          "section_1961": [
+            "50C"
+          ],
+          "reliance": "high"
+        },
+        {
+          "id": "nilofer_singh",
+          "name": "CIT v. Smt. Nilofer I. Singh",
+          "citation": "(2009) 309 ITR 233 (Del)",
+          "court": "HC",
+          "year": 2009,
+          "principle": "Sec 50C does NOT apply to stock-in-trade.",
+          "section_2025": [
+            "78"
+          ],
+          "reliance": "high"
+        }
+      ],
+      "esops": [
+        {
+          "id": "mohanjit_singh",
+          "name": "Mohanjit Singh v. ITO",
+          "citation": "(2017) 84 taxmann.com 184 (P&H)",
+          "court": "HC",
+          "year": 2017,
+          "principle": "ESOP capital gains COA = FMV on grant date (perquisite-tax FMV).",
+          "section_2025": [
+            "73(4)"
+          ],
+          "reliance": "high"
+        }
+      ]
+    },
+    "other_sources": [
+      {
+        "id": "gr_karthikeyan",
+        "name": "CIT v. G.R. Karthikeyan",
+        "citation": "(1993) 201 ITR 866 (SC)",
+        "court": "SC",
+        "year": 1993,
+        "principle": "Race horse winnings, lotteries — wide scope.",
+        "section_2025": [
+          "92(2)(b)",
+          "194"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "walfort",
+        "name": "CIT v. Walfort Share & Stock Brokers",
+        "citation": "(2010) 326 ITR 1 (SC)",
+        "court": "SC",
+        "year": 2010,
+        "principle": "Pre-94(7) dividend stripping loss not disallowable merely for dividend receipt.",
+        "section_2025": [
+          "175"
+        ],
+        "section_1961": [
+          "94"
+        ],
+        "reliance": "medium"
+      },
+      {
+        "id": "mathivathanan",
+        "name": "ITO v. M.K. Mathivathanan",
+        "citation": "(2019) 76 ITR(T) 1 (Chennai)",
+        "court": "ITAT",
+        "year": 2019,
+        "principle": "Gift through banking channel from NR relative — exempt under relative carve-out.",
+        "section_2025": [
+          "92(3)(a)"
+        ],
+        "section_1961": [
+          "56(2)(x)"
+        ],
+        "reliance": "medium"
+      }
+    ],
+    "deductions": [
+      {
+        "id": "liberty_india",
+        "name": "CIT v. Liberty India",
+        "citation": "(2009) 317 ITR 218 (SC)",
+        "court": "SC",
+        "year": 2009,
+        "principle": "DEPB / duty drawback NOT 'derived from' eligible business.",
+        "section_2025": [
+          "138-145"
+        ],
+        "section_1961": [
+          "80-IA",
+          "80-IB"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "bharat_diamond_bourse",
+        "name": "DIT (Exemption) v. Bharat Diamond Bourse",
+        "citation": "(2003) 259 ITR 280 (SC)",
+        "court": "SC",
+        "year": 2003,
+        "principle": "Charitable purpose test: profit motive doesn't disqualify if primary objective is public welfare.",
+        "section_2025": [
+          "332-355"
+        ],
+        "reliance": "high"
+      }
+    ],
+    "loss_carry_forward": [
+      {
+        "id": "manmohan_das",
+        "name": "CIT v. Manmohan Das",
+        "citation": "(1966) 59 ITR 699 (SC)",
+        "court": "SC",
+        "year": 1966,
+        "principle": "Loss CF requires return for loss year.",
+        "section_2025": [
+          "121"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "hindustan_zinc",
+        "name": "Hindustan Zinc Ltd. v. CIT",
+        "citation": "(2009) 309 ITR 412 (SC)",
+        "court": "SC",
+        "year": 2009,
+        "principle": "51% shareholding continuity check at year-end of set-off vs loss year.",
+        "section_2025": [
+          "119(3)"
+        ],
+        "section_1961": [
+          "79"
+        ],
+        "reliance": "high"
+      }
+    ],
+    "transfer_pricing": [
+      {
+        "id": "maruti_suzuki_amp",
+        "name": "CIT v. Maruti Suzuki India",
+        "citation": "(2013) 354 ITR 251 (Del)",
+        "court": "HC",
+        "year": 2013,
+        "principle": "AMP expenditure can be international transaction; Bright Line Test for non-routine.",
+        "section_2025": [
+          "163"
+        ],
+        "reliance": "medium",
+        "note": "BLT later rejected by Sony Ericsson"
+      },
+      {
+        "id": "sony_ericsson",
+        "name": "Sony Ericsson Mobile v. CIT",
+        "citation": "(2015) 374 ITR 118 (Del)",
+        "court": "HC",
+        "year": 2015,
+        "principle": "BLT rejected. Each case on facts. Approved methods required.",
+        "section_2025": [
+          "165"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "bharti_airtel_tp",
+        "name": "Bharti Airtel v. ACIT",
+        "citation": "(2014) 63 SOT 113 (Del)",
+        "court": "ITAT",
+        "year": 2014,
+        "principle": "Free of cost airtime from group company = international transaction.",
+        "section_2025": [
+          "161",
+          "163"
+        ],
+        "reliance": "medium"
+      },
+      {
+        "id": "ge_energy_parts",
+        "name": "GE Energy Parts Inc. v. CIT",
+        "citation": "(2017) 247 Taxman 156 (Del)",
+        "court": "HC",
+        "year": 2017,
+        "principle": "Marketing employees in India = DAPE; profit attribution required.",
+        "section_2025": [
+          "9(9)"
+        ],
+        "reliance": "high"
+      }
+    ],
+    "assessment_reassessment": [
+      {
+        "id": "kelvinator",
+        "name": "CIT v. Kelvinator of India",
+        "citation": "(2010) 320 ITR 561 (SC)",
+        "court": "SC",
+        "year": 2010,
+        "principle": "Reassessment requires tangible material; mere change of opinion not permitted.",
+        "section_2025": [
+          "279"
+        ],
+        "section_1961": [
+          "147"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "rajesh_jhaveri",
+        "name": "Asst. CIT v. Rajesh Jhaveri Stock Brokers",
+        "citation": "(2007) 291 ITR 500 (SC)",
+        "court": "SC",
+        "year": 2007,
+        "principle": "143(1) intimation NOT assessment for Sec 147 reopening.",
+        "section_2025": [
+          "279",
+          "270"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "ashish_agarwal",
+        "name": "UOI v. Ashish Agarwal",
+        "citation": "(2022) 444 ITR 1 (SC)",
+        "court": "SC",
+        "year": 2022,
+        "principle": "Old Sec 148 notices post 1.4.2021 deemed under new regime.",
+        "section_2025": [
+          "281"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "saurashtra_kutch",
+        "name": "ACIT v. Saurashtra Kutch Stock Exchange",
+        "citation": "(2008) 305 ITR 227 (SC)",
+        "court": "SC",
+        "year": 2008,
+        "principle": "Rectification covers SC-clarified law mistakes.",
+        "section_2025": [
+          "287"
+        ],
+        "section_1961": [
+          "154"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "volkart_brothers",
+        "name": "T.S. Balaram v. Volkart Brothers",
+        "citation": "(1971) 82 ITR 50 (SC)",
+        "court": "SC",
+        "year": 1971,
+        "principle": "Mistake apparent = obvious; debatable points NOT rectifiable.",
+        "section_2025": [
+          "287"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "gkn_driveshafts",
+        "name": "GKN Driveshafts v. ITO",
+        "citation": "(2003) 259 ITR 19 (SC)",
+        "court": "SC",
+        "year": 2003,
+        "principle": "Reassessment due process: reasons + objections + speaking order.",
+        "section_2025": [
+          "281"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "jet_airways",
+        "name": "CIT v. Jet Airways",
+        "citation": "(2011) 331 ITR 236 (Bom)",
+        "court": "HC",
+        "year": 2011,
+        "principle": "If no addition on reopening issue, AO cannot make addition on other issues.",
+        "section_2025": [
+          "279"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "maruti_suzuki_amalgamation",
+        "name": "PCIT v. Maruti Suzuki India",
+        "citation": "(2019) 416 ITR 613 (SC)",
+        "court": "SC",
+        "year": 2019,
+        "principle": "Reassessment notice on amalgamating co (which ceased to exist) invalid.",
+        "section_2025": [
+          "279"
+        ],
+        "reliance": "high"
+      }
+    ],
+    "appeals": [
+      {
+        "id": "goetze_india",
+        "name": "Goetze (India) Ltd. v. CIT",
+        "citation": "(2006) 284 ITR 323 (SC)",
+        "court": "SC",
+        "year": 2006,
+        "principle": "Appellate authority can entertain new claim not in return.",
+        "section_2025": [
+          "359",
+          "263"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "mahindra_mahindra",
+        "name": "DCIT v. Mahindra & Mahindra",
+        "citation": "(2018) 404 ITR 1 (SC)",
+        "court": "SC",
+        "year": 2018,
+        "principle": "Capital loan waiver = capital receipt, not income.",
+        "section_2025": [
+          "38(1)(a)"
+        ],
+        "section_1961": [
+          "41(1)"
+        ],
+        "reliance": "high"
+      }
+    ],
+    "tds_tcs": [
+      {
+        "id": "ge_india_tech",
+        "name": "GE India Technology Centre v. CIT",
+        "citation": "(2010) 327 ITR 456 (SC)",
+        "court": "SC",
+        "year": 2010,
+        "principle": "TDS u/s 195 only if payment chargeable in India.",
+        "section_2025": [
+          "393"
+        ],
+        "section_1961": [
+          "195"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "hindustan_coca_cola",
+        "name": "Hindustan Coca-Cola Beverages v. CIT",
+        "citation": "(2007) 293 ITR 226 (SC)",
+        "court": "SC",
+        "year": 2007,
+        "principle": "If recipient has paid tax, deductor not in default for disallowance purposes.",
+        "section_2025": [
+          "35(b)",
+          "398(2)"
+        ],
+        "reliance": "high"
+      }
+    ],
+    "penalty_prosecution": [
+      {
+        "id": "reliance_petroproducts",
+        "name": "CIT v. Reliance Petroproducts",
+        "citation": "(2010) 322 ITR 158 (SC)",
+        "court": "SC",
+        "year": 2010,
+        "principle": "Bona fide claim disclosed in return = no penalty.",
+        "section_2025": [
+          "439"
+        ],
+        "section_1961": [
+          "271(1)(c)"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "hindustan_steel",
+        "name": "Hindustan Steel v. State of Orissa",
+        "citation": "(1972) 83 ITR 26 (SC)",
+        "court": "SC",
+        "year": 1972,
+        "principle": "Penalty discretionary; not for technical breaches without contumacious conduct.",
+        "section_2025": [
+          "469"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "mak_data",
+        "name": "MAK Data v. CIT",
+        "citation": "(2013) 358 ITR 593 (SC)",
+        "court": "SC",
+        "year": 2013,
+        "principle": "Voluntary disclosure during assessment doesn't auto-save from penalty.",
+        "section_2025": [
+          "439"
+        ],
+        "reliance": "high"
+      },
+      {
+        "id": "sundaram_finance",
+        "name": "Sundaram Finance v. ACIT",
+        "citation": "(2018) 403 ITR 407 (SC)",
+        "court": "SC",
+        "year": 2018,
+        "principle": "Penalty notice must specify ground; ambiguous notice invalid.",
+        "section_2025": [
+          "471"
+        ],
+        "reliance": "high"
+      }
+    ],
+    "refunds": [
+      {
+        "id": "gujarat_fluoro",
+        "name": "CIT v. Gujarat Fluoro Chemicals",
+        "citation": "(2014) 358 ITR 291 (SC)",
+        "court": "SC",
+        "year": 2014,
+        "principle": "Interest on interest on refund NOT payable absent statute.",
+        "section_2025": [
+          "437"
+        ],
+        "reliance": "high"
+      }
+    ]
+  },
+  "ai_app_usage": {
+    "retrieval_strategy": "When user asks about a topic, retrieve cases tagged to relevant section + topic_tags. Sort by reliance: high → medium → low.",
+    "citation_template": "[Case Name] ([Citation]) [Court] [Year] held: [Principle]. This applies to Section [section_2025] of the Income-tax Act, 2025 (corresponding to old Section [section_1961] of the 1961 Act).",
+    "disclaimer_required": "Always end with: 'Verify current case status before reliance. Consult a CA before final filing.'",
+    "overruled_handling": "If overruled=true, state '[Case] was earlier the position; HOWEVER, this has been overruled / superseded by [overruled_by]. Current position: [current rule].'",
+    "reliance_levels": {
+      "high": "Settled SC law / unequivocal HC + ITAT alignment — quote with confidence",
+      "medium": "HC law with possible contrary views — present and disclaim",
+      "low": "Distinguished / overruled / fact-specific — cite cautiously, prefer current statute"
+    }
+  },
+  "next_steps_for_app_team": [
+    "Add 200-300 more cases across sub-topics as user questions arise (build feedback loop)",
+    "Subscribe to Manupatra / SCC Online for full-text case retrieval",
+    "Build monthly case-law update pipeline from CBDT / e-Courts feeds",
+    "Have a CA / Tax lawyer review the curated list annually",
+    "For sensitive areas (penalty, search, prosecution), require human (CA) review — do not rely solely on AI"
+  ],
+  "pending_review": [
+    {
+      "item_id": "ef9911578c84de4e",
+      "title": "Case Status",
+      "url": "https://itat.gov.in/judicial/casestatus",
+      "date": null,
+      "summary": null,
+      "source": "itat_orders",
+      "added_at": "2026-05-02T07:35:59.351966+00:00"
+    },
+    {
+      "item_id": "93ec2edbc31fcca2",
+      "title": "Tribunal Orders",
+      "url": "https://itat.gov.in/judicial/tribunalorders",
+      "date": null,
+      "summary": null,
+      "source": "itat_orders",
+      "added_at": "2026-05-02T07:35:59.351991+00:00"
+    },
+    {
+      "item_id": "504862271042cc6d",
+      "title": "Notice Board (Judicial Info)",
+      "url": "https://itat.gov.in/judicial/notice_board",
+      "date": null,
+      "summary": null,
+      "source": "itat_orders",
+      "added_at": "2026-05-02T07:35:59.351993+00:00"
+    }
+  ],
+  "metadata": {
+    "last_auto_update": "2026-05-02T07:35:59.352149+00:00"
+  }
+}

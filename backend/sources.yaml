@@ -1,0 +1,81 @@
+# Taxy backend — sources scraped daily.
+# Each source has a name, URL, parser type, and an enabled flag.
+# Add or remove sources by editing this file — no code changes needed.
+
+sources:
+
+  # === CBDT (Central Board of Direct Taxes) ===
+
+  - name: cbdt_circulars
+    url: https://incometaxindia.gov.in/Pages/communications/circulars.aspx
+    type: cbdt_listing
+    category: circulars
+    description: Official CBDT circulars — clarifications and procedural updates
+    enabled: true
+
+  - name: cbdt_notifications
+    url: https://incometaxindia.gov.in/Pages/communications/notifications.aspx
+    type: cbdt_listing
+    category: notifications
+    description: Official CBDT notifications — rate changes, form changes, schemes
+    enabled: true
+
+  - name: cbdt_press_releases
+    url: https://incometaxindia.gov.in/Pages/press-releases.aspx
+    type: cbdt_listing
+    category: press
+    description: CBDT press releases — policy announcements
+    enabled: true
+
+  # === PIB (Press Information Bureau) tax tag ===
+
+  - name: pib_finance
+    url: https://pib.gov.in/AllRelease.aspx?MenuId=3
+    type: pib_listing
+    category: press
+    description: PIB Ministry of Finance releases — Budget, Finance Bill, FA notifications
+    enabled: true
+
+  # === Tribunals & Courts ===
+
+  - name: itat_orders
+    url: https://itat.gov.in/judicial-orders
+    type: itat_listing
+    category: case_law
+    description: ITAT (Income Tax Appellate Tribunal) recent orders
+    enabled: true
+
+  - name: sci_recent
+    url: https://main.sci.gov.in/judgments
+    type: sci_listing
+    category: case_law
+    description: Supreme Court of India — filter to tax matters
+    enabled: false  # too noisy without filtering — enable once filter logic ready
+
+  # === Secondary aggregators (RSS-friendly) ===
+
+  - name: livelaw_tax
+    url: https://www.livelaw.in/category/news-updates/tax-cases/feed
+    type: rss
+    category: case_law
+    description: Live Law tax section — case digests (URL TBD — disable if 404)
+    enabled: false  # confirm correct feed URL before enabling
+
+  - name: taxguru
+    url: https://taxguru.in/category/income-tax/feed/
+    type: rss
+    category: analysis
+    description: TaxGuru income-tax category — analysis articles
+    enabled: true
+
+# === Scheduling ===
+schedule:
+  cron: "0 20 * * *"   # 20:00 UTC = 01:30 IST daily
+  timezone: Asia/Kolkata
+
+# === Deployment notes ===
+# 1. This file is read by scrape_updates.py
+# 2. Each scraper output goes to backend/data/<name>.json
+# 3. diff_engine.py compares today's scrape vs yesterday's, produces backend/data/_diff.json
+# 4. update_kb.py applies approved diffs to the master KB JSONs
+# 5. .github/workflows/daily-update.yml runs the whole chain
