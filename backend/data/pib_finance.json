@@ -1,8 +1,18 @@
 {
   "source": "pib_finance",
-  "scraped_at": "2026-05-02T10:49:03.083670+00:00",
-  "count": 42,
+  "scraped_at": "2026-05-02T22:05:43.260510+00:00",
+  "count": 53,
   "items": [
+    {
+      "source": "pib_finance",
+      "category": "press",
+      "title": "प्रधानमंत्री श्री नरेन्द्र मोदी ने लेह में तथागत के पवित्र अवशेषों की प्रदर्शनी के उद्घाटन पर प्रसन्नता व्यक्त की",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257553",
+      "date": "Posted on: 02 May 2026",
+      "summary": null,
+      "item_id": "6643ace0c9bd539c",
+      "raw_meta": {}
+    },
     {
       "source": "pib_finance",
       "category": "press",
@@ -96,6 +106,26 @@
     {
       "source": "pib_finance",
       "category": "press",
+      "title": "पश्चिम बंगाल में निर्वाचन आयोग ने मतगणना के लिए अतिरिक्त पर्यवेक्षकों और पुलिस पर्यवेक्षकों को तैनात किया",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257496",
+      "date": "Posted on: 02 May 2026",
+      "summary": null,
+      "item_id": "411629019036dc3a",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
+      "title": "भारतीय विदेश व्यापार संस्थान (आईआईएफटी) ने 63वें स्थापना दिवस का आयोजन किया",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257567",
+      "date": "Posted on: 02 May 2026",
+      "summary": null,
+      "item_id": "8ae5c56793c73265",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
       "title": "डीपीआईआईटी सचिव श्री अमरदीप सिंह भाटिया ने हरियाणा और राजस्थान में एनआईसीडीसी परियोजनाओं की समीक्षा की; उद्योग जगत के हितधारकों के साथ परामर्श आयोजित किया",
       "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257397",
       "date": "Posted on: 01 May 2026",
@@ -116,6 +146,16 @@
     {
       "source": "pib_finance",
       "category": "press",
+      "title": "केंद्रीय संचार मंत्री श्री ज्योतिरादित्य सिंधिया ने 'सेल ब्रॉडकास्ट सिस्टम' (सीबीएस) का शुभारंभ किया, यह प्रणाली केंद्रीय गृह मंत्री श्री अमित शाह के मार्गदर्शन में स्वदेशी रूप से विकसित की गई है",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257584",
+      "date": "Posted on: 02 May 2026",
+      "summary": null,
+      "item_id": "6b52296de08bf20c",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
       "title": "केन्द्रीय गृह एवं सहकारिता मंत्री श्री अमित शाह ने लद्दाख में विभिन्न डेयरी अवसंरचना एवं सहकारी पहलों का शिलान्यास और उद्घाटन किया",
       "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257360",
       "date": "Posted on: 01 May 2026",
@@ -131,6 +171,16 @@
       "date": "Posted on: 01 May 2026",
       "summary": null,
       "item_id": "f96847301607597b",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
+      "title": "सैनिकों के अद्वितीय शौर्य और पराक्रम ने ‘ऑपरेशन सिंदूर’ को भारत के सैन्य इतिहास में एक स्वर्णिम अध्याय के रूप में स्थापित कर दिया: ‘शौर्य’ कार्यक्रम में रक्षा मंत्री",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257588",
+      "date": "Posted on: 02 May 2026",
+      "summary": null,
+      "item_id": "561a3b65764789fa",
       "raw_meta": {}
     },
     {
@@ -216,6 +266,16 @@
     {
       "source": "pib_finance",
       "category": "press",
+      "title": "ऋण वसूली ढांचे को मजबूत करने के लिए डीएफएस ने डीआरएटी अध्यक्षों और डीआरटी पीठासीन अधिकारियों की संगोष्ठी का आयोजन किया",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257551",
+      "date": "Posted on: 02 May 2026",
+      "summary": null,
+      "item_id": "d2f9f638d70183b0",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
       "title": "सर्वोत्तम कार्यप्रणालियों, नई पहलों और सुदृढ़ स्वास्थ्य प्रणालियों पर बल देने के साथ नवोन्मेषण और समावेशिता पर राष्ट्रीय शिखर सम्मेलन का समापन",
       "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257353",
       "date": "Posted on: 01 May 2026",
@@ -251,6 +311,16 @@
       "date": "Posted on: 01 May 2026",
       "summary": null,
       "item_id": "feb050c41ee0a540",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
+      "title": "प्रख्यात गीतकार और संचार विशेषज्ञ श्री प्रसून जोशी को प्रसार भारती का अध्यक्ष नियुक्त किया गया",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257555",
+      "date": "Posted on: 02 May 2026",
+      "summary": null,
+      "item_id": "847db487685610fc",
       "raw_meta": {}
     },
     {
@@ -296,6 +366,16 @@
     {
       "source": "pib_finance",
       "category": "press",
+      "title": "आत्मनिर्भर पंचायत कार्यक्रम पर जनसंपर्क कार्यशाला हैदराबाद स्थित राष्ट्रीय ग्रामीण विकास एवं पंचायती राज संस्थान (एनआईआरडी एंड पीआर) में आयोजित की गई",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257585",
+      "date": "Posted on: 02 May 2026",
+      "summary": null,
+      "item_id": "5b755ce2cc4f620c",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
       "title": "पंचायती राज मंत्रालय हैदराबाद स्थित एनआईआरडी एंड पीआर में आत्मनिर्भर पंचायत पहल पर 2 मई 2026 को एक जागरूकता कार्यशाला का आयोजन करेगा",
       "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257367",
       "date": "Posted on: 01 May 2026",
@@ -326,11 +406,41 @@
     {
       "source": "pib_finance",
       "category": "press",
+      "title": "पश्चिम एशिया में चल रहे घटनाक्रमों को ध्‍यान में रखते हुए प्रमुख क्षेत्रों पर अद्यतन जानकारी",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257531",
+      "date": "Posted on: 02 May 2026",
+      "summary": null,
+      "item_id": "45fd7be79e3afd33",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
       "title": "पश्चिम एशिया में वर्तमान घटनाक्रमों के मद्देनजर प्रमुख क्षेत्रों पर नवीनतम जानकारी",
       "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257382",
       "date": "Posted on: 01 May 2026",
       "summary": null,
       "item_id": "39d4e48d6c738728",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
+      "title": "भारतीय रेलवे ने विद्युत प्रणाली के उन्नयन और पुल आधारभूत ढांचे के लिए 895.30 करोड़ रुपये की परियोजनाओं को मंजूरी दी",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257513",
+      "date": "Posted on: 02 May 2026",
+      "summary": null,
+      "item_id": "327efcc05bbbed17",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
+      "title": "एनएचएआई ने गुजरात में भारत की पहली मल्टी-लेन फ्री फ्लो टोलिंग प्रणाली की सफलतापूर्वक शुरूआत की",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257537",
+      "date": "Posted on: 02 May 2026",
+      "summary": null,
+      "item_id": "2012fdc4b081f59b",
       "raw_meta": {}
     },
     {
