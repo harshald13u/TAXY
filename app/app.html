@@ -1545,7 +1545,79 @@ if (msgInput) {
   msgInput.addEventListener('input', () => autoGrow(msgInput));
   msgInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
 }
+// ============================================================
+// LIVE KB SYNC — fetches latest case law + circulars from your
+// GitHub repo at startup. Updates daily via the bot. Silent if offline.
+// ============================================================
+(async function loadLiveKB() {
+  const REPO = 'harshald13u/TAXY';
+  const URLS = {
+    caseLaw: `https://raw.githubusercontent.com/${REPO}/main/landmark_case_law.json`,
+    operational: `https://raw.githubusercontent.com/${REPO}/main/operational_reference_data.json`
+  };
+  state.liveKB = { status: 'loading' };
+  try {
+    const [caseLaw, operational] = await Promise.all([
+      fetch(URLS.caseLaw, { cache: 'no-store' }).then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch(URLS.operational, { cache: 'no-store' }).then(r => r.ok ? r.json() : null).catch(() => null)
+    ]);
+    state.liveKB = { caseLaw, operational, status: 'ok' };
+    const tsRaw = [caseLaw?.metadata?.last_auto_update, operational?.metadata?.last_auto_update].filter(Boolean).sort().pop();
+    const cases = (caseLaw?.pending_review?.length || 0) + (caseLaw?.cases?.length || 0);
+    const ops = Object.values(operational?.pending_review || {}).reduce((s, a) => s + (a?.length || 0), 0)
+              + Object.values(operational?.updates || {}).reduce((s, a) => s + (a?.length || 0), 0);
+    state.liveKB.totalItems = cases + ops;
+    state.liveKB.lastUpdated = tsRaw;
+    showLiveKBBadge();
+  } catch (e) {
+    state.liveKB.status = 'offline';
+    showLiveKBBadge();
+  }
+})();
 
+function showLiveKBBadge() {
+  const target = document.querySelector('.sidebar-top') || document.querySelector('.sidebar') || document.body;
+  const old = document.getElementById('liveKbBadge'); if (old) old.remove();
+  const b = document.createElement('div');
+  b.id = 'liveKbBadge';
+  b.style.cssText = 'margin: 10px 12px; padding: 9px 12px; background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.25); border-radius: 8px; font-size: 11px; color: var(--text-secondary); line-height: 1.5;';
+  const kb = state.liveKB;
+  if (kb.status === 'offline' || !kb.caseLaw) {
+    b.innerHTML = '<span style="color:#f59e0b;">●</span> Live KB offline — using built-in data';
+  } else {
+    const ts = kb.lastUpdated ? new Date(kb.lastUpdated).toLocaleDateString('en-IN', {day:'numeric', month:'short'}) : 'today';
+    b.innerHTML = '<span style="color:#4ade80;">●</span> Live KB · ' + (kb.totalItems || 0) + ' items · synced ' + ts;
+    b.title = 'Auto-updated daily from CBDT, ITAT, TaxGuru. Type /updates in chat to see what\'s new.';
+  }
+  target.appendChild(b);
+}
+
+// Chat command: type "/updates" to see what's new
+const _origHandleUserText = typeof handleUserText === 'function' ? handleUserText : null;
+window.handleUserText = async function(text) {
+  if (text.trim().toLowerCase() === '/updates') {
+    const kb = state.liveKB || {};
+    if (kb.status !== 'ok' || !kb.caseLaw) {
+      ai('<p>Live KB not loaded yet. Try again in a moment.</p>');
+      return;
+    }
+    const cases = (kb.caseLaw?.pending_review || []).slice(0, 5);
+    let html = '<p><b>Latest from the daily auto-scraper:</b></p>';
+    if (cases.length === 0) {
+      html += '<p class="secondary small">No new case law in pending review yet.</p>';
+    } else {
+      html += '<div style="margin-top:10px;">';
+      cases.forEach(c => {
+        html += '<div style="padding:8px 10px; background:var(--bg-elevated); border-radius:8px; margin-bottom:6px; font-size:13px;"><a href="' + c.url + '" target="_blank" style="color:#c4b5fd;">' + c.title + '</a><div style="color:var(--text-muted); font-size:11px; margin-top:2px;">' + (c.source||'') + ' · ' + (c.date||'') + '</div></div>';
+      });
+      html += '</div>';
+    }
+    html += '<p class="secondary small" style="margin-top:10px;">Synced ' + (kb.lastUpdated ? new Date(kb.lastUpdated).toLocaleString('en-IN') : 'recently') + '. Auto-runs daily at 1:30 AM IST.</p>';
+    ai(html);
+    return;
+  }
+  if (_origHandleUserText) return _origHandleUserText(text);
+};
 welcome();
 </script>
 </body>
