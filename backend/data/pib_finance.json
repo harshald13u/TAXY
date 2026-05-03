@@ -1,8 +1,38 @@
 {
   "source": "pib_finance",
-  "scraped_at": "2026-05-02T22:05:43.260510+00:00",
-  "count": 53,
+  "scraped_at": "2026-05-03T22:07:07.632049+00:00",
+  "count": 68,
   "items": [
+    {
+      "source": "pib_finance",
+      "category": "press",
+      "title": "प्रधानमंत्री ने दिल्ली के शाहदरा जिले में आग लगने की घटना में हुई जनहानि पर शोक व्यक्त किया",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257703",
+      "date": "Posted on: 03 May 2026",
+      "summary": null,
+      "item_id": "83da293df2f060f6",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
+      "title": "प्रधानमंत्री ने मिशन दृष्टि के सफल प्रक्षेपण पर गैलेक्सआई को बधाई दी",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257635",
+      "date": "Posted on: 03 May 2026",
+      "summary": null,
+      "item_id": "225d3abb5b7a0015",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
+      "title": "प्रधानमंत्री श्री नरेन्द्र मोदी ने डॉ. आर. बालासुब्रमण्यम जी और डॉ. जोरम अनिया जी को नीति आयोग के पूर्णकालिक सदस्य नियुक्त किए जाने पर बधाई दी",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257602",
+      "date": "Posted on: 02 May 2026",
+      "summary": null,
+      "item_id": "47b393f342c9bf10",
+      "raw_meta": {}
+    },
     {
       "source": "pib_finance",
       "category": "press",
@@ -176,6 +206,26 @@
     {
       "source": "pib_finance",
       "category": "press",
+      "title": "रक्षा मंत्री प्रयागराज में भारतीय सेना और एसआईडीएम द्वारा संयुक्त रूप से आयोजित 3 दिवसीय नॉर्थ टेक संगोष्ठी का उद्घाटन करेंगे",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257673",
+      "date": "Posted on: 03 May 2026",
+      "summary": null,
+      "item_id": "13552b66aaa90c80",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
+      "title": "भारत–कंबोडिया द्विपक्षीय सैन्य अभ्यास ‘सिनबैक्स-द्वितीय 2026’ के लिए भारतीय सेना का दल रवाना",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257605",
+      "date": "Posted on: 03 May 2026",
+      "summary": null,
+      "item_id": "776e780cd3e0d1e3",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
       "title": "सैनिकों के अद्वितीय शौर्य और पराक्रम ने ‘ऑपरेशन सिंदूर’ को भारत के सैन्य इतिहास में एक स्वर्णिम अध्याय के रूप में स्थापित कर दिया: ‘शौर्य’ कार्यक्रम में रक्षा मंत्री",
       "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257588",
       "date": "Posted on: 02 May 2026",
@@ -246,6 +296,16 @@
     {
       "source": "pib_finance",
       "category": "press",
+      "title": "श्री धर्मेंद्र प्रधान ने एनटीए मुख्यालय के दौरे के दौरान नीट यूजी 2026 की व्यवस्थाओं का जायजा लिया",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257687",
+      "date": "Posted on: 03 May 2026",
+      "summary": null,
+      "item_id": "991cb7d3276959ee",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
       "title": "मई की भीषण गर्मी को लेकर घबराने की कोई जरूरत नहीं; सरल सावधानियों से इसके प्रभाव को प्रभावी ढंग से नियंत्रित किया जा सकता है: डॉ. जितेंद्र सिंह",
       "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257482",
       "date": "Posted on: 02 May 2026",
@@ -266,6 +326,16 @@
     {
       "source": "pib_finance",
       "category": "press",
+      "title": "आधार के “नए स्वरूप” से संबंधित कुछ समाचार रिपोर्टों पर स्पष्टीकरण",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257657",
+      "date": "Posted on: 03 May 2026",
+      "summary": null,
+      "item_id": "be35ddbed27a66f7",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
       "title": "ऋण वसूली ढांचे को मजबूत करने के लिए डीएफएस ने डीआरएटी अध्यक्षों और डीआरटी पीठासीन अधिकारियों की संगोष्ठी का आयोजन किया",
       "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257551",
       "date": "Posted on: 02 May 2026",
@@ -276,11 +346,51 @@
     {
       "source": "pib_finance",
       "category": "press",
+      "title": "केंद्रीय स्वास्थ्य एवं परिवार कल्याण मंत्रालय 4 से 10 मई 2026 तक संपूर्ण भारत में ‘अग्नि सुरक्षा सप्ताह’ मनाएगा",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257655",
+      "date": "Posted on: 03 May 2026",
+      "summary": null,
+      "item_id": "81e1600a47d6dc18",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
+      "title": "राष्ट्रीय स्तर पर आयोजित सर्वोत्तम पद्धतियों के शिखर सम्मेलन में केंद्रीय स्वास्थ्य मंत्रालय ने बच्चों में मधुमेह मेलिटस पर व्यापक मार्गदर्शन दस्तावेज जारी किया",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257653",
+      "date": "Posted on: 03 May 2026",
+      "summary": null,
+      "item_id": "ac22ab37159094ae",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
+      "title": "केंद्रीय स्वास्थ्य मंत्रालय ने सर्वोत्तम कार्यप्रणालियों पर राष्ट्रीय शिखर सम्मेलन में राष्ट्रीय बाल स्वास्थ्य कार्यक्रम (आरबीएसके) 2.0 दिशानिर्देश जारी किए",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257654",
+      "date": "Posted on: 03 May 2026",
+      "summary": null,
+      "item_id": "6cb53ecfe910e8aa",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
       "title": "सर्वोत्तम कार्यप्रणालियों, नई पहलों और सुदृढ़ स्वास्थ्य प्रणालियों पर बल देने के साथ नवोन्मेषण और समावेशिता पर राष्ट्रीय शिखर सम्मेलन का समापन",
       "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257353",
       "date": "Posted on: 01 May 2026",
       "summary": null,
       "item_id": "0b3feeb194abba50",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
+      "title": "केन्द्रीय गृह एवं सहकारिता मंत्री श्री अमित शाह जी ने 'मिशन दृष्टि' के सफल निर्माण पर GalaxEye के वैज्ञानिकों और इंजीनियरों को हार्दिक बधाई दी",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257696",
+      "date": "Posted on: 03 May 2026",
+      "summary": null,
+      "item_id": "43e4eb279e575331",
       "raw_meta": {}
     },
     {
@@ -346,6 +456,16 @@
     {
       "source": "pib_finance",
       "category": "press",
+      "title": "‘‘श्रमिक राष्ट्र के विश्वकर्मा हैं’’: डॉ. मनसुख मांडविया ने राष्ट्र-निर्माण में श्रमिकों की अहम भूमिका पर जोर दिया",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257652",
+      "date": "Posted on: 03 May 2026",
+      "summary": null,
+      "item_id": "1b4dcbe6d3010f26",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
       "title": "डॉ. मनसुख मांडविया 3 मई को कर्नाटक के डोड्डाबल्लापुर में 100 बिस्तरों वाले ईएसआईसी अस्पताल का उद्घाटन करेंगे",
       "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257324",
       "date": "Posted on: 01 May 2026",
@@ -361,6 +481,26 @@
       "date": "Posted on: 01 May 2026",
       "summary": null,
       "item_id": "4ebe8a2fb8e2dcbc",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
+      "title": "नवीन और नवीकरणीय ऊर्जा मंत्रालय ने अंतर्राष्ट्रीय सूर्य दिवस पर ‘रन फॉर सन’ मैराथन का आयोजन किया",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257630",
+      "date": "Posted on: 03 May 2026",
+      "summary": null,
+      "item_id": "eba31ac7cf1f6bb2",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
+      "title": "पंचायत विकास योजनाओं (2026-27) की तैयारी पर दो दिवसीय राष्ट्रीय कार्यशाला नई दिल्ली में आयोजित की जाएगी",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257614",
+      "date": "Posted on: 03 May 2026",
+      "summary": null,
+      "item_id": "b30446a7f3469289",
       "raw_meta": {}
     },
     {
@@ -401,6 +541,16 @@
       "date": "Posted on: 01 May 2026",
       "summary": null,
       "item_id": "07598062245708e5",
+      "raw_meta": {}
+    },
+    {
+      "source": "pib_finance",
+      "category": "press",
+      "title": "पश्चिम एशिया के घटनाक्रम के आलोक में प्रमुख क्षेत्रों से संबंधित ताजा जानकारियां",
+      "url": "https://pib.gov.in/PressReleseDetail.aspx?PRID=2257682",
+      "date": "Posted on: 03 May 2026",
+      "summary": null,
+      "item_id": "129c71beb9244d7f",
       "raw_meta": {}
     },
     {
