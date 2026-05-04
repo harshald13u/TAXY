@@ -343,6 +343,8 @@ html, body { height: -webkit-fill-available; }
 </script>
 <!-- Tesseract.js for client-side OCR on uploaded images (no backend, no API key) -->
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.0/dist/tesseract.min.js"></script>
+<!-- heic2any for converting iPhone HEIC screenshots to JPEG (so Tesseract can read them) -->
+<script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
 </head>
 <body>
 
@@ -878,67 +880,149 @@ function parseForm16(text) {
   return out;
 }
 
-// Generic tax-image extractor — works on salary slips, screenshots, bank statements.
-// Strategy: hunt for any number near financial keywords. Looser regex, lower confidence.
-// Used as fallback when parseForm16() returns nothing (e.g. user uploads anything besides a CBDT Form 16).
-function parseGenericTaxImage(text) {
-  const out = { confidence: {} };
-  const norm = text.replace(/\s+/g, ' ').replace(/,/g, '');
-  const num = s => s ? parseInt(s.replace(/[^\d]/g, ''), 10) : 0;
+// ============================================================
+// IMAGE PATTERN LIBRARY — loaded from image_patterns.json on startup.
+// Falls back to a built-in core if the JSON fetch fails.
+// ============================================================
+window._taxPatterns = null;
+(async function loadImagePatterns() {
+  // Try to fetch the comprehensive library from the deployed repo
+  const URL = 'https://raw.githubusercontent.com/harshald13u/TAXY/main/image_patterns.json';
+  try {
+    const r = await fetch(URL, { cache: 'no-store' });
+    if (r.ok) {
+      window._taxPatterns = await r.json();
+      console.log('[Taxy] Loaded image_patterns.json — ' + Object.keys(window._taxPatterns.document_types || {}).length + ' document types');
+    }
+  } catch (e) { /* offline / fetch blocked — use built-in fallback */ }
+})();
 
-  // Helper: find first number within ~50 chars after a keyword pattern.
-  // Returns the number or 0. Keyword can be a regex source.
-  const nearNumber = (keywords) => {
+// Detect which document type the OCR text most resembles. Returns a key like 'form16_part_b' or null.
+function detectDocumentType(normText) {
+  const lib = window._taxPatterns;
+  if (!lib || !lib.document_types) return null;
+  const text = normText.toLowerCase();
+  const scores = {};
+  for (const [key, def] of Object.entries(lib.document_types)) {
+    let score = 0;
+    for (const sig of (def.detection_signals || [])) {
+      if (text.includes(sig.toLowerCase())) score += 1;
+    }
+    if (score > 0) scores[key] = score;
+  }
+  if (Object.keys(scores).length === 0) return null;
+  // Return the document type with the highest score
+  return Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+}
+
+// Generic tax-image extractor — works on salary slips, CTC tables, bank statements.
+// Strategy: hunt for numbers near financial keywords. Multi-column aware (CTC tables
+// often show FY-current and FY-revised side by side; we pick the LARGER/LATER one).
+// Uses image_patterns.json library when available for broader keyword coverage.
+function parseGenericTaxImage(text) {
+  const out = { confidence: {}, _components: {} };
+  const norm = text.replace(/,/g, '').replace(/\s+/g, ' ');  // strip commas first, normalize whitespace
+  const num = s => s ? parseInt(String(s).replace(/[^\d]/g, ''), 10) : 0;
+
+  // For multi-column tables (e.g. "Basic 413050 528437"), grab ALL numbers within ~80 chars
+  // after the keyword and return the LARGEST (likely the most recent / revised value).
+  const findBestNumber = (keywords, opts) => {
+    opts = opts || {};
+    const minVal = opts.min || 1000;
+    const maxVal = opts.max || 100000000;
     for (const kw of keywords) {
-      const re = new RegExp('(?:' + kw + ')[\\s:.\\-=₹Rs]{0,20}([\\d,]{3,12})', 'i');
+      // Allow ANY junk between keyword and number — OCR adds noise like "(D = A + B + C)"
+      const re = new RegExp('(?:\\b' + kw + '\\b)([^\\n]{0,80}?)([\\d]{3,9})(?:\\s+([\\d]{3,9}))?(?:\\s+([\\d]{3,9}))?', 'i');
       const m = norm.match(re);
-      if (m) {
-        const n = num(m[1]);
-        if (n >= 1000 && n <= 100000000) return n; // sanity range
-      }
+      if (!m) continue;
+      const candidates = [m[2], m[3], m[4]].map(num).filter(n => n >= minVal && n <= maxVal);
+      if (candidates.length === 0) continue;
+      // For salary-like fields we want the LARGEST (right column = revised); for tax we want the same.
+      return Math.max(...candidates);
     }
     return 0;
   };
 
-  // PAN — same pattern (5 letters + 4 digits + 1 letter, anywhere in text)
+  // === PAN ===
   const panMatch = norm.match(/\b([A-Z]{5}\d{4}[A-Z])\b/);
   if (panMatch) { out.pan = panMatch[1]; out.confidence.pan = 'high'; }
 
-  // Salary — try many phrasings used across salary slips, Form 16, bank credits
-  const salary = nearNumber([
-    'gross salary', 'gross pay', 'gross earnings', 'gross income',
-    'total salary', 'total earnings', 'total income',
-    'annual salary', 'annual income', 'annual pay', 'annual ctc',
-    'ctc', 'cost to company',
-    'salary credited', 'salary credit',
-    'basic salary', 'basic\\+da', 'basic and da',  // sometimes only basic visible
-    'salary'  // last resort
-  ]);
-  if (salary) { out.salary = salary; out.confidence.salary = 'low'; }
+  // === Direct salary measures (best signals first) ===
+  const totalPay = findBestNumber(['total pay', 'gross pay', 'gross salary', 'gross earnings', 'annual ctc', 'cost to company', 'total ctc'], { min: 100000 });
+  const totalFixedPay = findBestNumber(['total fixed pay', 'fixed cash', 'fixed pay'], { min: 100000 });
+  const grossIncome = findBestNumber(['total income', 'gross total income', 'taxable income', 'annual income', 'annual salary'], { min: 100000 });
 
-  // HRA
-  const hra = nearNumber(['house rent allowance', 'hra exempt', 'hra received', 'hra']);
+  // === Component-wise (for sum-fallback if no total found) ===
+  const basic = findBestNumber(['basic salary', 'basic pay', 'basic'], { min: 50000 });
+  const hra = findBestNumber(['house rent allowance', 'hra exempt', 'hra received', 'hra'], { min: 10000 });
+  const conveyance = findBestNumber(['conveyance allowance', 'conveyance', 'transport allowance'], { min: 5000 });
+  const allowances = findBestNumber(['basket of allowances', 'special allowance', 'other allowances', 'allowances'], { min: 10000 });
+  const pf = findBestNumber(['contribution towards pf', 'employer pf', 'pf contribution', 'provident fund'], { min: 5000 });
+  const gratuity = findBestNumber(['gratuity'], { min: 5000 });
+
+  out._components = { basic, hra, conveyance, allowances, pf, gratuity, totalPay, totalFixedPay, grossIncome };
+
+  // === Choose best salary number ===
+  // Priority: explicit total > component sum
+  let salary = totalPay || grossIncome || totalFixedPay;
+  if (!salary && basic) {
+    // Sum components if we found any meaningful breakdown
+    salary = basic + hra + conveyance + allowances;
+    if (salary < basic * 1.2) salary = 0; // sum looks wrong, abandon
+  }
+  if (salary >= 100000) {
+    out.salary = salary;
+    out.confidence.salary = totalPay ? 'medium' : (basic ? 'low' : 'low');
+  }
   if (hra) { out.hra = hra; out.confidence.hra = 'low'; }
 
-  // TDS
-  const tds = nearNumber([
+  // === TDS ===
+  const tds = findBestNumber([
     'tax deducted at source', 'total tax deducted',
-    'tds deducted', 'tds amount', 'tds',
-    'income tax deducted', 'income tax', 'tax paid'
-  ]);
+    'tds deducted', 'tds amount', 'income tax deducted', 'tax paid', 'tds'
+  ], { min: 100 });
   if (tds) { out.tdsPaid = tds; out.confidence.tdsPaid = 'low'; }
 
-  // 80C
-  const sec80c = nearNumber(['section 80c', 'sec 80c', '80c investment', '80c']);
+  // === 80C / 80D ===
+  const sec80c = findBestNumber(['section 80c', 'sec 80c', '80c investment', '80c'], { min: 100 });
   if (sec80c) { out.sec80c = sec80c; out.confidence.sec80c = 'low'; }
-
-  // 80D
-  const sec80d = nearNumber(['section 80d', 'sec 80d', 'medical insurance', '80d']);
+  const sec80d = findBestNumber(['section 80d', 'sec 80d', 'medical insurance', '80d'], { min: 100 });
   if (sec80d) { out.sec80d = sec80d; out.confidence.sec80d = 'low'; }
 
-  // Employer — look near "company", "employer", "M/s"
+  // === Employer ===
   const empMatch = norm.match(/(?:Employer|Company|M\/s\.?|Organization)[\s:]{1,5}([A-Z][A-Za-z &.,'-]{3,60}?)(?=\s+(?:PAN|TAN|Address|Pvt|Limited|Ltd|Inc|LLP|$|\d))/i);
   if (empMatch) { out.employer = empMatch[1].trim(); out.confidence.employer = 'low'; }
+
+  // Detect "this is a CTC document, not a Form 16" so caller can warn user about missing TDS
+  out._isCTCDocument = !!(totalPay || totalFixedPay) && !tds && !!(basic || hra);
+
+  // === Use library-defined extra labels if image_patterns.json is loaded ===
+  const lib = window._taxPatterns;
+  if (lib && lib.field_definitions) {
+    // Try library's extended salary labels if we still don't have a salary
+    if (!out.salary && lib.field_definitions.salary) {
+      const libLabels = (lib.field_definitions.salary.labels_strong || []).concat(lib.field_definitions.salary.labels_weak || []);
+      const v = findBestNumber(libLabels, { min: lib.field_definitions.salary.min_value || 100000, max: lib.field_definitions.salary.max_value || 100000000 });
+      if (v) { out.salary = v; out.confidence.salary = 'low'; }
+    }
+    // TDS extended labels
+    if (!out.tdsPaid && lib.field_definitions.tdsPaid) {
+      const libLabels = (lib.field_definitions.tdsPaid.labels_strong || []).concat(lib.field_definitions.tdsPaid.labels_weak || []);
+      const v = findBestNumber(libLabels, { min: 100 });
+      if (v) { out.tdsPaid = v; out.confidence.tdsPaid = 'low'; }
+    }
+    // FD interest, dividend, savings interest from library
+    ['fdInterest', 'dividend', 'savingsInterest', 'sec80g', 'sec80e', 'sec80ccd_1b', 'loan_interest', 'loan_principal', 'rental_income'].forEach(key => {
+      if (out[key]) return;
+      const def = lib.field_definitions[key];
+      if (!def || !def.labels) return;
+      const v = findBestNumber(def.labels, { min: def.min_value || 100, max: def.max_value || 100000000 });
+      if (v) { out[key] = v; out.confidence[key] = 'low'; }
+    });
+  }
+
+  // === Detect document type ===
+  out._documentType = detectDocumentType(norm);
 
   out.rawTextLength = norm.length;
   out._source = 'generic';
@@ -976,18 +1060,206 @@ function extractedCardHtml(data) {
 // Tradeoff: ~10-30s per image and 70-85% accuracy (vs ~95%+ for paid Vision).
 // ============================================================
 
+// Convert HEIC (iPhone format) to JPEG so Tesseract can read it.
+// Tesseract doesn't support HEIC natively. heic2any does the conversion in-browser.
+async function heicToJpeg(file) {
+  if (!window.heic2any) throw new Error('heic2any not loaded');
+  const blob = await window.heic2any({ blob: file, toType: 'image/jpeg', quality: 0.9 });
+  // heic2any returns Blob or Blob[] depending on file
+  const out = Array.isArray(blob) ? blob[0] : blob;
+  return new File([out], file.name.replace(/\.heic$/i, '.jpg'), { type: 'image/jpeg' });
+}
+
+// Preprocess image before OCR: resize to ≤2000px, convert to JPEG, mild contrast boost.
+// Returns a Blob (smaller, faster, better OCR).
+async function preprocessImage(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      try {
+        let w = img.width, h = img.height;
+        const MAX = 2000;
+        if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        // White background helps OCR on transparent PNGs
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+
+        // Grayscale + Otsu binarization — significantly better OCR accuracy than raw color
+        try {
+          const id = ctx.getImageData(0, 0, w, h);
+          const d = id.data;
+          const totalPx = w * h;
+          // Step 1: convert to grayscale + build histogram
+          const hist = new Array(256).fill(0);
+          for (let i = 0; i < d.length; i += 4) {
+            const lum = Math.round(0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]);
+            d[i] = d[i + 1] = d[i + 2] = lum;
+            hist[lum]++;
+          }
+          // Step 2: find optimal threshold via Otsu
+          const thr = otsuThreshold(hist, totalPx);
+          // Step 3: binarize — values below threshold → 0 (black), above → 255 (white)
+          for (let i = 0; i < d.length; i += 4) {
+            const v = d[i] < thr ? 0 : 255;
+            d[i] = d[i + 1] = d[i + 2] = v;
+          }
+          ctx.putImageData(id, 0, 0);
+        } catch (_) { /* getImageData can fail on cross-origin canvases — ignore */ }
+
+        canvas.toBlob((blob) => {
+          URL.revokeObjectURL(url);
+          if (!blob) return reject(new Error('Canvas → Blob failed'));
+          resolve(blob);
+        }, 'image/jpeg', 0.85);
+      } catch (e) { URL.revokeObjectURL(url); reject(e); }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Image failed to load')); };
+    img.src = url;
+  });
+}
+
+// ============================================================
+// FREE 100× IMPROVEMENTS — all client-side, no API, no money
+// ============================================================
+
+// SHA-256 hash of a Blob/File. Used to cache OCR results so the same image
+// uploaded twice returns instantly without re-running Tesseract.
+async function imageHash(file) {
+  const buf = await file.arrayBuffer();
+  const digest = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Cache (localStorage) — keys are SHA-256, values are extracted-data JSON
+// Auto-expires after 7 days. Limited to 50 entries (LRU).
+const _ocrCacheKey = 'taxy_ocr_cache_v1';
+function loadOcrCache() {
+  try { return JSON.parse(localStorage.getItem(_ocrCacheKey) || '{}'); }
+  catch { return {}; }
+}
+function saveOcrCache(cache) {
+  try {
+    // Keep only 50 most recent entries
+    const entries = Object.entries(cache).sort((a, b) => (b[1].savedAt || 0) - (a[1].savedAt || 0)).slice(0, 50);
+    localStorage.setItem(_ocrCacheKey, JSON.stringify(Object.fromEntries(entries)));
+  } catch { /* quota exceeded — ignore */ }
+}
+function getCachedOcr(hash) {
+  const cache = loadOcrCache();
+  const entry = cache[hash];
+  if (!entry) return null;
+  // Expire after 7 days
+  if (Date.now() - (entry.savedAt || 0) > 7 * 24 * 60 * 60 * 1000) return null;
+  return entry.data;
+}
+function setCachedOcr(hash, data) {
+  const cache = loadOcrCache();
+  cache[hash] = { data, savedAt: Date.now() };
+  saveOcrCache(cache);
+}
+
+// Otsu's threshold algorithm — automatically picks the best black/white cutoff.
+// Significantly better than fixed threshold=128 for varied lighting.
+function otsuThreshold(grayHistogram, totalPixels) {
+  let sum = 0;
+  for (let t = 0; t < 256; t++) sum += t * grayHistogram[t];
+  let sumB = 0, wB = 0, wF = 0, maxVar = 0, threshold = 128;
+  for (let t = 0; t < 256; t++) {
+    wB += grayHistogram[t];
+    if (wB === 0) continue;
+    wF = totalPixels - wB;
+    if (wF === 0) break;
+    sumB += t * grayHistogram[t];
+    const mB = sumB / wB;
+    const mF = (sum - sumB) / wF;
+    const v = wB * wF * (mB - mF) * (mB - mF);
+    if (v > maxVar) { maxVar = v; threshold = t; }
+  }
+  return threshold;
+}
+
+// Tax-logic validation — flag suspicious extracted values
+function validateExtractedData(d) {
+  const warnings = [];
+  if (d.tdsPaid && d.salary && d.tdsPaid > d.salary * 0.35) {
+    warnings.push('TDS (' + d.tdsPaid.toLocaleString('en-IN') + ') is more than 35% of salary — please verify, this is unusually high.');
+  }
+  if (d.hra && d.salary && d.hra > d.salary * 0.6) {
+    warnings.push('HRA (' + d.hra.toLocaleString('en-IN') + ') is more than 60% of salary — usually HRA is 40-50%. Please verify.');
+  }
+  if (d.salary && d.salary < 100000) {
+    warnings.push('Detected salary is below ₹1 lakh — this might be a monthly figure. Annual salary needed.');
+  }
+  if (d.sec80c && d.sec80c > 150000) {
+    warnings.push('80C (' + d.sec80c.toLocaleString('en-IN') + ') exceeds ₹1.5L statutory cap — extra is not deductible.');
+  }
+  if (d.salary && d._components && d._components.basic) {
+    const sumComp = (d._components.basic || 0) + (d._components.hra || 0) + (d._components.allowances || 0);
+    if (sumComp > d.salary * 1.15) {
+      warnings.push('Components sum (' + sumComp.toLocaleString('en-IN') + ') exceeds gross by >15%. Image may have been read wrong.');
+    }
+  }
+  return warnings;
+}
+
+// User-correction memory — when user fixes a value, remember the (employer, field) → value mapping
+// Next time same employer's doc is uploaded, suggest the saved value.
+const _correctionsKey = 'taxy_user_corrections_v1';
+function loadCorrections() {
+  try { return JSON.parse(localStorage.getItem(_correctionsKey) || '{}'); }
+  catch { return {}; }
+}
+function saveCorrection(employer, field, oldValue, newValue) {
+  if (!employer || !field) return;
+  const c = loadCorrections();
+  c[employer] = c[employer] || {};
+  c[employer][field] = { value: newValue, was: oldValue, at: Date.now() };
+  try { localStorage.setItem(_correctionsKey, JSON.stringify(c)); } catch { /* quota — ignore */ }
+}
+function applyKnownCorrections(data) {
+  if (!data.employer) return data;
+  const c = loadCorrections();
+  const known = c[data.employer];
+  if (!known) return data;
+  // Don't overwrite — just suggest in confidence
+  data._knownCorrections = known;
+  return data;
+}
+
 // Run Tesseract OCR on an image File. Returns plain text.
 // Shows progress in the chat via the `onProgress` callback (0..1).
+// Now: pre-resizes/contrast-boosts the image first for better accuracy + speed.
 async function ocrImage(file, onProgress) {
   if (!window.Tesseract) {
     throw new Error('Tesseract.js not loaded — check your network connection.');
   }
-  const { data } = await window.Tesseract.recognize(file, 'eng', {
+  // Convert HEIC to JPEG if needed
+  let working = file;
+  const ext = (file.name.split('.').pop() || '').toLowerCase();
+  if (ext === 'heic' || ext === 'heif') {
+    if (typeof onProgress === 'function') onProgress(0.05);
+    try { working = await heicToJpeg(file); }
+    catch (e) { throw new Error('Could not convert HEIC. Save the screenshot as JPG/PNG and try again.'); }
+  }
+  // Preprocess (resize + contrast) — speeds up OCR and improves accuracy
+  let preprocessed;
+  try { preprocessed = await preprocessImage(working); }
+  catch (_) { preprocessed = working; /* fall back to original on failure */ }
+
+  const { data } = await window.Tesseract.recognize(preprocessed, 'eng', {
     logger: (m) => {
       if (m.status === 'recognizing text' && typeof onProgress === 'function') {
-        onProgress(m.progress || 0);
+        // Reserve first 10% for HEIC + preprocessing, rest for OCR
+        onProgress(0.1 + (m.progress || 0) * 0.9);
       }
     },
+    // PSM 6: assume uniform block of text — better for table-style docs (Form 16, CTC, slips)
+    tessedit_pageseg_mode: 6,
   });
   return data.text || '';
 }
@@ -997,34 +1269,50 @@ async function tryParseUploadedFile(file) {
   const ext = (file.name.split('.').pop() || '').toLowerCase();
 
   // === IMAGE PATH (Tesseract.js client-side OCR) ===
-  if (['jpg', 'jpeg', 'png', 'webp', 'bmp'].includes(ext)) {
+  if (['jpg', 'jpeg', 'png', 'webp', 'bmp', 'heic', 'heif'].includes(ext)) {
     if (file.size > 10 * 1024 * 1024) {
       return { error: 'too-large', text: 'That image is over 10 MB. Compress it (e.g. tinypng.com) or type the values manually.' };
     }
-    // Show a progress card the user can watch (OCR takes 10-30s)
+
+    // === Cache check: same image uploaded again? Return instantly. ===
+    let hash;
+    try {
+      hash = await imageHash(file);
+      const cached = getCachedOcr(hash);
+      if (cached) {
+        ai('<p class="secondary small" style="font-size:12px; color:#4ade80;">⚡ Recognised from cache — same image was processed before.</p>');
+        return { ok: true, data: cached };
+      }
+    } catch (_) { /* hash failure isn't fatal */ }
+
+    // Show progress card with stages
     const progressId = 'ocr-progress-' + Date.now();
     ai('<div id="' + progressId + '" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:14px 16px;">' +
        '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">' +
          '<div style="width:14px;height:14px;border:1.5px solid rgba(255,255,255,0.2);border-top-color:#a855f7;border-radius:50%;animation:spin 0.8s linear infinite;"></div>' +
-         '<span style="font-size:13.5px;color:var(--text-primary);font-weight:500;">Reading your image…</span>' +
+         '<span id="' + progressId + '-stage" style="font-size:13.5px;color:var(--text-primary);font-weight:500;">Preprocessing image…</span>' +
        '</div>' +
        '<div style="height:6px;background:var(--bg-input);border-radius:3px;overflow:hidden;">' +
          '<div id="' + progressId + '-bar" style="height:100%;width:0%;background:#a855f7;transition:width 0.3s;"></div>' +
        '</div>' +
-       '<p class="secondary small" style="margin-top:8px;font-size:11.5px;">Running OCR locally in your browser — first-time download is ~3 MB. Image stays on your device.</p>' +
+       '<p class="secondary small" style="margin-top:8px;font-size:11.5px;">All processing in your browser — image stays on your device. First time loads ~3 MB.</p>' +
     '</div>');
+    const setStage = (s) => { const e = document.getElementById(progressId + '-stage'); if (e) e.textContent = s; };
 
     let text;
     try {
+      setStage('Reading image…');
       text = await ocrImage(file, (p) => {
         const bar = document.getElementById(progressId + '-bar');
         if (bar) bar.style.width = Math.round(p * 100) + '%';
+        if (p > 0.1 && p < 0.95) setStage('OCR running… ' + Math.round(p * 100) + '%');
       });
     } catch (e) {
       const card = document.getElementById(progressId);
       if (card) card.remove();
       return { error: 'ocr-failed', text: 'OCR failed: ' + esc(e.message || 'unknown error') + '. Try a clearer image or type the values manually.' };
     }
+    setStage('Validating extracted data…');
     // Remove the progress card now that OCR is done
     const card = document.getElementById(progressId);
     if (card) card.remove();
@@ -1032,12 +1320,14 @@ async function tryParseUploadedFile(file) {
     // Try strict Form 16 parser first
     let data = parseForm16(text);
     let usedFallback = false;
+    let isCtc = false;
     // Fallback to generic tax-image parser if strict parser found nothing
     if (!data.salary && !data.tdsPaid && !data.pan) {
       const generic = parseGenericTaxImage(text);
       if (generic.salary || generic.tdsPaid || generic.pan || generic.hra) {
         data = generic;
         usedFallback = true;
+        isCtc = !!generic._isCTCDocument;
       } else {
         // Truly nothing — show what text WAS extracted so user can copy values manually
         const snippet = text.trim().slice(0, 400).replace(/\s+/g, ' ');
@@ -1045,11 +1335,19 @@ async function tryParseUploadedFile(file) {
       }
     }
     data._source = usedFallback ? 'ocr-generic' : 'ocr-form16';
+    data._isCtcWarning = isCtc;
     // Mark all confidence one notch lower since OCR is less reliable than digital PDF text
     Object.keys(data.confidence || {}).forEach(k => {
       if (data.confidence[k] === 'high') data.confidence[k] = 'medium';
       else if (data.confidence[k] === 'medium') data.confidence[k] = 'low';
     });
+    // Tax-logic validation — flag suspicious values
+    const warnings = validateExtractedData(data);
+    if (warnings.length) data._validationWarnings = warnings;
+    // Apply any user corrections from previous uploads of the same employer
+    applyKnownCorrections(data);
+    // Cache result by image hash so re-upload is instant
+    if (hash) try { setCachedOcr(hash, data); } catch (_) {}
     return { ok: true, data };
   }
 
@@ -1695,7 +1993,30 @@ async function handleFiles(fileList) {
       if (d.pan) state.data.pan = d.pan;
       if (d.sec80c) state.data.sec80c = d.sec80c;
       if (d.sec80d) state.data.sec80d = d.sec80d;
-      ai('<p>I read your Form 16. Please check the values below match — yellow dots mean you should verify, green means I\'m confident.</p>' + extractedCardHtml(d) + '<p class="secondary small" style="margin-top: 10px;">Looks right? Type <b>"yes"</b> to continue. Anything wrong? Just tell me — e.g. <i>"salary should be 19 lakh"</i>.</p>');
+      // Build a smart intro based on detected document type + warnings
+      const lib = window._taxPatterns;
+      const docType = d._documentType;
+      const docDef = lib && docType ? lib.document_types[docType] : null;
+      let intro;
+      if (docDef) {
+        intro = '<p>I read your image — looks like a <b>' + esc(docDef.label) + '</b>.</p>';
+        if (docDef.missing_warning) {
+          intro += '<p class="secondary small" style="margin-top: 6px; padding: 10px 12px; background: rgba(245,158,11,0.08); border-left: 3px solid #f59e0b; border-radius: 6px;">⚠ ' + esc(docDef.missing_warning) + '</p>';
+        }
+        if (docDef.annualization_hint) {
+          intro += '<p class="secondary small" style="margin-top: 6px; padding: 10px 12px; background: rgba(6,182,212,0.08); border-left: 3px solid #06b6d4; border-radius: 6px;">ℹ ' + esc(docDef.annualization_hint) + '</p>';
+        }
+      } else if (d._isCtcWarning) {
+        intro = '<p>I read your image — looks like a <b>CTC structure</b>, not a Form 16.</p><p class="secondary small" style="margin-top: 6px; padding: 10px 12px; background: rgba(245,158,11,0.08); border-left: 3px solid #f59e0b; border-radius: 6px;">⚠ A CTC structure tells me your salary, but it doesn\'t show <b>TDS already paid</b>. To file accurately, I\'ll need that from your <b>Form 16</b> or <b>salary slip</b>.</p>';
+      } else {
+        intro = '<p>I read your image. Please check the values below — yellow dots mean you should verify, green means I\'m confident.</p>';
+      }
+      // Surface validation warnings (P0 sanity issues)
+      let warningsHtml = '';
+      if (d._validationWarnings && d._validationWarnings.length) {
+        warningsHtml = '<div style="margin-top:8px;padding:10px 12px;background:rgba(245,158,11,0.08);border-left:3px solid #f59e0b;border-radius:6px;"><div style="font-size:11px;color:#f59e0b;font-weight:600;letter-spacing:0.5px;margin-bottom:6px;">⚠ SANITY CHECK</div>' + d._validationWarnings.map(w => '<p class="secondary small" style="margin: 4px 0; font-size: 12.5px;">• ' + esc(w) + '</p>').join('') + '</div>';
+      }
+      ai(intro + extractedCardHtml(d) + warningsHtml + '<p class="secondary small" style="margin-top: 10px;">Looks right? Type <b>"yes"</b> to continue. Anything wrong? Just tell me — e.g. <i>"salary should be 19 lakh"</i>.</p>');
     } else if (result.error) {
       errors.push(result.text || result.error);
     }

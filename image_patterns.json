@@ -1,0 +1,810 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "purpose": "Comprehensive pattern library for parsing tax-related documents from images/PDFs. Used by parseAnyTaxDocument() in app.html.",
+    "last_updated": "2026-05-04",
+    "design": "Each document_type has detection_signals (to identify the document) and field_extractors (to pull the values). Field aliases are exhaustive — every label variation we've seen across employers, banks, brokers."
+  },
+
+  "document_types": {
+
+    "form16_part_b": {
+      "label": "Form 16 — Part B (TDS Salary Certificate)",
+      "issued_by": "Employer",
+      "frequency": "Annual",
+      "detection_signals": [
+        "FORM NO. 16",
+        "FORM NO 16",
+        "Annexure - II",
+        "Part B (Annexure)",
+        "PART B",
+        "Salary as per provisions",
+        "Section 17(1)",
+        "Section 17(2)",
+        "TAN of the Deductor",
+        "Certificate under section 203"
+      ],
+      "extracts": ["employer", "pan", "salary", "hra", "lta", "perquisites", "profits_in_lieu", "sec80c", "sec80d", "sec80g", "sec80ccd", "tdsPaid", "standard_deduction", "professional_tax"],
+      "primary_fields": ["salary", "tdsPaid", "pan"],
+      "section_ref": "Sec 392 (old 192) — Salary TDS certificate"
+    },
+
+    "form16_part_a": {
+      "label": "Form 16 — Part A (TDS-only summary)",
+      "issued_by": "TRACES (auto-generated)",
+      "detection_signals": [
+        "Part A",
+        "PART A",
+        "TRACES",
+        "Certificate under Section 203",
+        "Quarterly Statement",
+        "Acknowledgement Number",
+        "Last updated on",
+        "Receipt Numbers of original quarterly statements"
+      ],
+      "extracts": ["employer", "pan", "tan", "tdsPaid"],
+      "primary_fields": ["tdsPaid", "pan", "tan"]
+    },
+
+    "form16a": {
+      "label": "Form 16A — TDS on non-salary",
+      "issued_by": "Bank / company that deducted TDS",
+      "detection_signals": [
+        "FORM NO. 16A",
+        "FORM NO 16A",
+        "Certificate under Section 203 of the Income-tax Act",
+        "TDS certificate other than salary",
+        "Nature of payment"
+      ],
+      "extracts": ["deductor_name", "tan", "pan", "tdsPaid", "payment_nature"],
+      "primary_fields": ["tdsPaid"]
+    },
+
+    "form_26AS": {
+      "label": "Form 26AS — Annual Tax Statement",
+      "issued_by": "TRACES (NSDL)",
+      "detection_signals": [
+        "FORM NO. 26AS",
+        "Annual Tax Statement",
+        "Permanent Account Number (PAN)",
+        "Tax Deducted at Source (TDS)",
+        "Part A1",
+        "Part A2",
+        "Part B",
+        "Part C — Details of Tax Paid",
+        "Part F — Details of Tax Deducted on Sale"
+      ],
+      "extracts": ["pan", "tdsPaid", "advance_tax_paid", "self_assessment_tax", "refunds"],
+      "primary_fields": ["tdsPaid", "advance_tax_paid"]
+    },
+
+    "ais": {
+      "label": "AIS — Annual Information Statement",
+      "issued_by": "Income Tax Department",
+      "detection_signals": [
+        "Annual Information Statement",
+        "AIS Information Category",
+        "TIS — Taxpayer Information Summary",
+        "Salary Information",
+        "Interest from savings bank",
+        "Dividend from listed companies",
+        "Sale of securities and units of mutual fund",
+        "Purchase of immovable property",
+        "Cash deposits",
+        "GST turnover"
+      ],
+      "extracts": ["pan", "salary", "savingsInterest", "fdInterest", "dividend", "stcg", "ltcg", "rental_income"],
+      "primary_fields": ["salary", "tdsPaid", "savingsInterest", "dividend"]
+    },
+
+    "salary_slip": {
+      "label": "Monthly salary slip / pay slip",
+      "issued_by": "Employer",
+      "frequency": "Monthly",
+      "detection_signals": [
+        "Pay Slip",
+        "Payslip",
+        "Salary Slip",
+        "Salary Statement",
+        "Earnings Statement",
+        "Pay Period",
+        "Net Pay",
+        "Days Worked",
+        "Days Paid",
+        "Employee ID",
+        "Employee Code",
+        "EPF",
+        "Professional Tax",
+        "LWF"
+      ],
+      "extracts": ["employer", "employee_name", "monthly_basic", "monthly_hra", "monthly_gross", "monthly_net", "monthly_tds", "monthly_pf", "monthly_pt"],
+      "primary_fields": ["monthly_gross", "monthly_tds"],
+      "annualization_hint": "Multiply monthly values by 12 to get annual. Show user the conversion: 'Monthly ₹1.5L = Annual ₹18L'"
+    },
+
+    "ctc_structure": {
+      "label": "CTC structure / Offer letter / Annexure",
+      "issued_by": "Employer (HR)",
+      "frequency": "On joining / appraisal",
+      "detection_signals": [
+        "CTC Details",
+        "CTC Structure",
+        "Cost to Company",
+        "Annual CTC",
+        "Salary Annexure",
+        "Compensation Structure",
+        "Component",
+        "Variable Pay",
+        "Fixed Pay",
+        "Performance Linked",
+        "Annexure - CTC",
+        "Annexure I - CTC",
+        "Total Fixed Pay",
+        "Total Pay",
+        "Total CTC"
+      ],
+      "extracts": ["basic", "hra", "conveyance", "special_allowance", "lta", "medical_allowance", "telephone_allowance", "meal_vouchers", "pf_employer", "gratuity", "bonus", "variable_pay", "total_ctc", "total_fixed_pay"],
+      "primary_fields": ["total_ctc", "basic", "hra"],
+      "missing_warning": "CTC documents do NOT show TDS already deducted. Ask user for Form 16 / salary slip separately."
+    },
+
+    "appointment_letter": {
+      "label": "Appointment letter / Job offer",
+      "detection_signals": [
+        "Appointment Letter",
+        "Letter of Appointment",
+        "Offer of Employment",
+        "Subject to your acceptance",
+        "Date of Joining",
+        "Probation Period",
+        "Annual Compensation"
+      ],
+      "extracts": ["employer", "employee_name", "designation", "total_ctc", "joining_date", "basic"],
+      "missing_warning": "Appointment letters are projected pay, not actual. Use Form 16 for filing."
+    },
+
+    "form_12BA": {
+      "label": "Form 12BA — Perquisites detail",
+      "issued_by": "Employer",
+      "detection_signals": [
+        "FORM NO. 12BA",
+        "Perquisites and amenities",
+        "Statement showing particulars of perquisites",
+        "Section 17(2)"
+      ],
+      "extracts": ["perquisites_total", "rent_free_accommodation", "esop_value", "interest_free_loan", "club_membership", "car_perquisite"],
+      "primary_fields": ["perquisites_total"]
+    },
+
+    "lic_premium_receipt": {
+      "label": "LIC premium receipt",
+      "detection_signals": [
+        "Life Insurance Corporation",
+        "LIC of India",
+        "LIC OF INDIA",
+        "Premium Receipt",
+        "Policy Number",
+        "Plan Name",
+        "Premium Paying Term",
+        "Sum Assured",
+        "Premium Amount"
+      ],
+      "extracts": ["policy_number", "premium_amount", "sum_assured", "plan_name"],
+      "primary_fields": ["premium_amount"],
+      "tax_field_mapping": "sec80c"
+    },
+
+    "ppf_passbook": {
+      "label": "PPF passbook / statement",
+      "detection_signals": [
+        "Public Provident Fund",
+        "PPF Account",
+        "Subscription",
+        "Interest credited",
+        "Account Number",
+        "Year of Maturity"
+      ],
+      "extracts": ["ppf_subscription", "ppf_interest", "ppf_balance"],
+      "primary_fields": ["ppf_subscription"],
+      "tax_field_mapping": "sec80c"
+    },
+
+    "elss_statement": {
+      "label": "ELSS Mutual Fund statement",
+      "detection_signals": [
+        "ELSS",
+        "Tax Saver",
+        "Tax Saving Fund",
+        "Equity Linked Savings Scheme",
+        "Lock-in Period",
+        "Folio Number"
+      ],
+      "extracts": ["elss_invested", "elss_units", "elss_fund_name"],
+      "primary_fields": ["elss_invested"],
+      "tax_field_mapping": "sec80c"
+    },
+
+    "nps_statement": {
+      "label": "NPS Tier-I statement",
+      "detection_signals": [
+        "National Pension System",
+        "NPS",
+        "PRAN",
+        "Permanent Retirement Account Number",
+        "Tier I",
+        "Tier II",
+        "CRA",
+        "POP-SP",
+        "Total Contribution"
+      ],
+      "extracts": ["nps_self_contribution", "nps_employer_contribution", "nps_total"],
+      "primary_fields": ["nps_self_contribution"],
+      "tax_field_mapping": "sec80ccd_1b (additional ₹50k beyond 80C) or sec80ccd_2 (employer)"
+    },
+
+    "health_insurance": {
+      "label": "Mediclaim / Health insurance premium receipt",
+      "detection_signals": [
+        "Health Insurance Premium",
+        "Mediclaim Premium",
+        "Medical Insurance",
+        "Family Floater",
+        "Cashless Hospitalization",
+        "Sum Insured"
+      ],
+      "extracts": ["health_premium", "policy_holder_name", "sum_insured", "family_members"],
+      "primary_fields": ["health_premium"],
+      "tax_field_mapping": "sec80d"
+    },
+
+    "home_loan_certificate": {
+      "label": "Home loan interest + principal certificate",
+      "issued_by": "Bank / HFC",
+      "detection_signals": [
+        "Provisional Interest Certificate",
+        "Loan Account Number",
+        "Loan Account No",
+        "Principal Repaid",
+        "Interest Paid",
+        "Pre-EMI Interest",
+        "Property Address",
+        "Total Sanctioned Amount"
+      ],
+      "extracts": ["loan_principal_repaid", "loan_interest_paid", "property_address", "loan_account_no"],
+      "primary_fields": ["loan_interest_paid", "loan_principal_repaid"],
+      "tax_field_mapping": "loan_interest → Sec 22(2) / loan_principal → Sec 123 (80C)"
+    },
+
+    "education_loan_certificate": {
+      "label": "Education loan interest certificate",
+      "detection_signals": [
+        "Education Loan",
+        "Student Loan",
+        "Interest Paid on Education Loan",
+        "Course Details"
+      ],
+      "extracts": ["edu_loan_interest"],
+      "primary_fields": ["edu_loan_interest"],
+      "tax_field_mapping": "sec80e"
+    },
+
+    "donation_receipt": {
+      "label": "Donation receipt (80G)",
+      "detection_signals": [
+        "Donation Receipt",
+        "80G Receipt",
+        "Section 80G",
+        "Tax Exempt Donation",
+        "Receipt Number",
+        "Donor Name",
+        "Donation Amount",
+        "PAN of Donee"
+      ],
+      "extracts": ["donation_amount", "donee_name", "donee_pan", "donee_80g_registration"],
+      "primary_fields": ["donation_amount"],
+      "tax_field_mapping": "sec80g (Sec 133)"
+    },
+
+    "rent_receipt": {
+      "label": "Rent receipt (HRA claim)",
+      "detection_signals": [
+        "Rent Receipt",
+        "Rent Paid",
+        "Landlord",
+        "Tenant",
+        "Period",
+        "Property Address",
+        "Revenue Stamp"
+      ],
+      "extracts": ["monthly_rent", "annual_rent", "landlord_name", "landlord_pan", "property_address"],
+      "primary_fields": ["annual_rent", "landlord_name"],
+      "tax_field_mapping": "rent → HRA exemption calc; landlord_pan required if rent > ₹1L/yr"
+    },
+
+    "bank_fd_certificate": {
+      "label": "Bank FD interest certificate",
+      "detection_signals": [
+        "Fixed Deposit",
+        "FD Account",
+        "Term Deposit",
+        "Interest Paid",
+        "Interest Accrued",
+        "TDS Deducted",
+        "Maturity Amount",
+        "Deposit Period"
+      ],
+      "extracts": ["fdInterest", "fd_principal", "fd_tds", "fd_maturity_date"],
+      "primary_fields": ["fdInterest", "fd_tds"],
+      "tax_field_mapping": "fdInterest → Sec 92 Other Sources; fd_tds → tdsPaid via Sec 393"
+    },
+
+    "savings_account_interest": {
+      "label": "Savings bank interest certificate",
+      "detection_signals": [
+        "Savings Account",
+        "Savings Bank Account",
+        "Interest Credited to Savings",
+        "SB Account",
+        "SBA Interest"
+      ],
+      "extracts": ["savingsInterest"],
+      "primary_fields": ["savingsInterest"],
+      "tax_field_mapping": "Sec 153 (old 80TTA): ₹10k cap"
+    },
+
+    "dividend_statement": {
+      "label": "Dividend statement (companies / mutual funds)",
+      "detection_signals": [
+        "Dividend",
+        "Dividend Statement",
+        "IDCW",
+        "Income Distribution",
+        "Dividend per Share",
+        "Record Date",
+        "Dividend Tax"
+      ],
+      "extracts": ["dividend_total", "dividend_tds", "company_name"],
+      "primary_fields": ["dividend"],
+      "tax_field_mapping": "Sec 92 — taxed at slab. Sec 393 TDS @10% above ₹5k/co"
+    },
+
+    "broker_pl": {
+      "label": "Broker P&L (Zerodha / Groww / Upstox)",
+      "detection_signals": [
+        "Tax P&L",
+        "Capital Gains Statement",
+        "Equity",
+        "STT",
+        "Realised P&L",
+        "Short Term",
+        "Long Term",
+        "Zerodha",
+        "Groww",
+        "Upstox",
+        "Kuvera",
+        "Console",
+        "Tradebook"
+      ],
+      "extracts": ["stcg_equity", "ltcg_equity", "intraday_pl", "stcg_other", "ltcg_other", "stt_paid"],
+      "primary_fields": ["stcg_equity", "ltcg_equity"],
+      "tax_field_mapping": "Sec 196 (STCG @20%), Sec 198 (LTCG @12.5% > ₹1.25L)"
+    },
+
+    "mutual_fund_capgains": {
+      "label": "Mutual fund capital gains statement",
+      "detection_signals": [
+        "Capital Gains Statement",
+        "Realised Gain",
+        "Equity Oriented",
+        "Debt Oriented",
+        "CAMS",
+        "KFintech",
+        "Karvy",
+        "Folio Number",
+        "Period of Holding"
+      ],
+      "extracts": ["mf_stcg", "mf_ltcg", "mf_equity_ltcg", "mf_debt_stcg"],
+      "primary_fields": ["mf_stcg", "mf_ltcg"]
+    },
+
+    "demat_account_statement": {
+      "label": "Demat account statement / Holding statement",
+      "detection_signals": [
+        "Demat Account",
+        "Holding Statement",
+        "DP ID",
+        "Client ID",
+        "ISIN",
+        "Quantity Held",
+        "NSDL",
+        "CDSL"
+      ],
+      "extracts": ["holdings_value", "dp_name"],
+      "primary_fields": []
+    },
+
+    "crypto_statement": {
+      "label": "Crypto exchange statement",
+      "detection_signals": [
+        "WazirX",
+        "CoinDCX",
+        "Binance",
+        "CoinSwitch",
+        "Crypto Tax Report",
+        "Virtual Digital Asset",
+        "VDA",
+        "Section 194S"
+      ],
+      "extracts": ["vda_sale_proceeds", "vda_cost", "vda_tds"],
+      "primary_fields": ["vda_sale_proceeds", "vda_cost"],
+      "tax_field_mapping": "Sec 194S (old 115BBH) — flat 30%, only cost-of-acquisition allowed"
+    },
+
+    "rental_income_statement": {
+      "label": "Rental income / property statement",
+      "detection_signals": [
+        "Rental Income",
+        "Rent Received",
+        "Property Tax Paid",
+        "Municipal Tax",
+        "Annual Value",
+        "Standard Deduction"
+      ],
+      "extracts": ["rental_income", "municipal_tax_paid"],
+      "primary_fields": ["rental_income"]
+    },
+
+    "advance_tax_challan": {
+      "label": "Advance tax challan / ITNS 280",
+      "detection_signals": [
+        "Challan No",
+        "ITNS 280",
+        "ITNS-280",
+        "Advance Tax",
+        "Self Assessment Tax",
+        "BSR Code",
+        "CIN",
+        "Tender Date"
+      ],
+      "extracts": ["challan_amount", "challan_date", "bsr_code", "cin"],
+      "primary_fields": ["challan_amount"]
+    },
+
+    "itr_acknowledgement": {
+      "label": "ITR-V / ITR Acknowledgement (prior year)",
+      "detection_signals": [
+        "Indian Income Tax Return",
+        "Acknowledgement Number",
+        "INDIAN INCOME TAX RETURN ACKNOWLEDGEMENT",
+        "Verification",
+        "Filed u/s",
+        "Total Income",
+        "Tax Payable",
+        "Refund Due",
+        "ITR-V"
+      ],
+      "extracts": ["prior_pan", "prior_total_income", "prior_tax_paid", "prior_refund", "prior_ay", "prior_regime"],
+      "primary_fields": ["prior_pan", "prior_total_income", "prior_regime"]
+    },
+
+    "pan_card": {
+      "label": "PAN card",
+      "detection_signals": [
+        "INCOME TAX DEPARTMENT",
+        "Permanent Account Number",
+        "GOVT. OF INDIA",
+        "Govt. of India",
+        "Father's Name"
+      ],
+      "extracts": ["pan", "pan_holder_name", "father_name", "dob"],
+      "primary_fields": ["pan"]
+    },
+
+    "aadhaar_card": {
+      "label": "Aadhaar card",
+      "detection_signals": [
+        "AADHAAR",
+        "Government of India",
+        "Unique Identification Authority",
+        "UIDAI",
+        "VID"
+      ],
+      "extracts": ["aadhaar_number", "aadhaar_holder_name", "dob", "address"],
+      "primary_fields": ["aadhaar_number"],
+      "warning": "Aadhaar number should be masked in any storage. Display only last 4 digits."
+    },
+
+    "esop_statement": {
+      "label": "ESOP grant / exercise statement",
+      "detection_signals": [
+        "Stock Options",
+        "ESOP",
+        "RSU",
+        "Restricted Stock Units",
+        "Grant Date",
+        "Vesting Date",
+        "Exercise Price",
+        "Fair Market Value",
+        "Perquisite Value"
+      ],
+      "extracts": ["esop_grant_value", "esop_perquisite", "esop_exercise_value"],
+      "primary_fields": ["esop_perquisite"]
+    },
+
+    "tax_notice": {
+      "label": "Income tax notice (143/139/156/etc)",
+      "detection_signals": [
+        "INCOME TAX DEPARTMENT",
+        "Notice u/s",
+        "Section 143(1)",
+        "Section 143(2)",
+        "Section 139(9)",
+        "Section 156",
+        "Section 245",
+        "DIN",
+        "Document Identification Number",
+        "Compliance Required"
+      ],
+      "extracts": ["notice_section", "notice_din", "demand_amount", "due_date"],
+      "primary_fields": ["notice_section"],
+      "action": "Route user to notice-handling flow"
+    }
+
+  },
+
+  "field_definitions": {
+
+    "pan": {
+      "regex": "\\b([A-Z]{5}[0-9]{4}[A-Z])\\b",
+      "validation": "5 letters + 4 digits + 1 letter; 4th letter encodes type (P/F/C/H/A/T/B/L/J/G)",
+      "example": "ABCDE1234F",
+      "min_length": 10,
+      "max_length": 10,
+      "section_ref": "Sec 139A"
+    },
+
+    "aadhaar": {
+      "regex": "\\b([0-9]{4}\\s?[0-9]{4}\\s?[0-9]{4})\\b",
+      "validation": "12 digits, often shown with spaces every 4",
+      "example": "1234 5678 9012",
+      "warning": "PII — never log full value"
+    },
+
+    "ifsc": {
+      "regex": "\\b([A-Z]{4}0[A-Z0-9]{6})\\b",
+      "validation": "4 letters + 0 + 6 alphanumeric",
+      "example": "HDFC0000123"
+    },
+
+    "tan": {
+      "regex": "\\b([A-Z]{4}[0-9]{5}[A-Z])\\b",
+      "validation": "4 letters + 5 digits + 1 letter",
+      "example": "DELS01234F"
+    },
+
+    "salary": {
+      "labels_strong": [
+        "gross salary", "gross pay", "gross earnings", "gross income",
+        "total salary", "total earnings", "total pay",
+        "annual salary", "annual income", "annual ctc", "annual pay",
+        "total ctc", "cost to company",
+        "salary credited", "net pay annual",
+        "income from salary"
+      ],
+      "labels_weak": [
+        "basic salary", "basic pay", "basic+da", "basic and da",
+        "fixed cash", "total fixed pay", "fixed pay",
+        "salary"
+      ],
+      "min_value": 100000,
+      "max_value": 100000000,
+      "section_ref": "Sec 15-19",
+      "notes": "Strong labels imply gross; weak labels need component-summing fallback"
+    },
+
+    "hra": {
+      "labels": ["house rent allowance", "hra exempt", "hra received", "hra"],
+      "min_value": 5000,
+      "max_value": 10000000,
+      "section_ref": "Schedule III Sl.7"
+    },
+
+    "tdsPaid": {
+      "labels_strong": [
+        "tax deducted at source", "total tax deducted",
+        "total amount of tax deducted",
+        "tds deducted", "tds amount",
+        "income tax deducted", "tax paid"
+      ],
+      "labels_weak": ["tds", "tax"],
+      "min_value": 100,
+      "max_value": 50000000,
+      "section_ref": "Sec 392 (Salary) / Sec 393 (Other)"
+    },
+
+    "advance_tax_paid": {
+      "labels": ["advance tax paid", "advance tax", "self assessment tax"],
+      "min_value": 100,
+      "section_ref": "Sec 207-219"
+    },
+
+    "savingsInterest": {
+      "labels": ["savings account interest", "interest credited to savings", "sb account interest", "savings interest"],
+      "min_value": 1,
+      "max_value": 1000000,
+      "section_ref": "Sec 92 head; Sec 153 deduction up to ₹10k"
+    },
+
+    "fdInterest": {
+      "labels": ["fixed deposit interest", "fd interest", "term deposit interest", "interest on fd", "interest accrued on fd"],
+      "min_value": 100,
+      "section_ref": "Sec 92 — Other Sources"
+    },
+
+    "dividend": {
+      "labels": ["dividend received", "dividend income", "dividend amount", "total dividend", "idcw"],
+      "min_value": 1,
+      "section_ref": "Sec 92 — slab rate post FA 2020"
+    },
+
+    "sec80c": {
+      "labels": [
+        "section 80c", "sec 80c", "section 123",
+        "80c deduction", "80c investment",
+        "deduction under 80c", "chapter via 80c"
+      ],
+      "min_value": 100,
+      "max_value": 150000,
+      "cap": 150000,
+      "section_ref": "Sec 123 (old 80C) — ₹1.5L cap"
+    },
+
+    "sec80d": {
+      "labels": [
+        "section 80d", "sec 80d", "section 126",
+        "80d deduction", "medical insurance premium",
+        "mediclaim premium", "health insurance premium"
+      ],
+      "min_value": 100,
+      "max_value": 100000,
+      "cap_general": 75000,
+      "cap_senior": 100000,
+      "section_ref": "Sec 126 (old 80D)"
+    },
+
+    "sec80g": {
+      "labels": ["section 80g", "sec 80g", "section 133", "donation", "80g deduction"],
+      "min_value": 100,
+      "section_ref": "Sec 133 (old 80G)"
+    },
+
+    "sec80e": {
+      "labels": ["section 80e", "sec 80e", "education loan interest"],
+      "min_value": 100,
+      "section_ref": "Sec 80E (old)"
+    },
+
+    "sec80ccd_1b": {
+      "labels": ["section 80ccd(1b)", "additional nps", "nps tier i additional"],
+      "min_value": 100,
+      "max_value": 50000,
+      "cap": 50000,
+      "section_ref": "Sec 124(1B) — additional ₹50k"
+    },
+
+    "loan_interest": {
+      "labels": ["interest on home loan", "interest paid on housing loan", "housing loan interest", "loan interest paid", "interest component"],
+      "min_value": 100,
+      "max_value": 5000000,
+      "cap_sop": 200000,
+      "section_ref": "Sec 22(2) — ₹2L cap for SOP"
+    },
+
+    "loan_principal": {
+      "labels": ["principal repaid", "principal repayment", "loan principal", "principal component"],
+      "min_value": 100,
+      "section_ref": "Sec 123 (80C) — counted under ₹1.5L cap"
+    },
+
+    "rental_income": {
+      "labels": ["rent received", "rental income", "annual rent", "gross rent"],
+      "min_value": 1000,
+      "section_ref": "Sec 20-25 — House Property"
+    },
+
+    "stcg_equity": {
+      "labels": ["short term capital gain", "stcg", "stcg equity", "short-term capital gain stt-paid"],
+      "min_value": 1,
+      "section_ref": "Sec 196 (old 111A) — 20% flat"
+    },
+
+    "ltcg_equity": {
+      "labels": ["long term capital gain", "ltcg", "ltcg equity", "long-term capital gain stt-paid"],
+      "min_value": 1,
+      "section_ref": "Sec 198 (old 112A) — 12.5% over ₹1.25L"
+    },
+
+    "vda_sale_proceeds": {
+      "labels": ["vda sale", "crypto sale", "virtual digital asset sale", "sale of crypto"],
+      "min_value": 1,
+      "section_ref": "Sec 194S — 30% flat, only COA allowed"
+    },
+
+    "lottery_winnings": {
+      "labels": ["lottery winning", "prize money", "winnings from lottery", "kbc winning"],
+      "min_value": 1,
+      "section_ref": "Sec 188 (old 115BB) — 30% flat"
+    }
+
+  },
+
+  "regional_patterns": {
+    "indian_number_with_lakh_crore": {
+      "regex": "([\\d,]+)\\s*(lakh|lakhs|cr|crore|crores|k|thousand)?",
+      "examples": ["18 lakh", "1.5 crore", "1850000", "₹18,50,000", "18 L", "18L"],
+      "parser": "parseIndianNumber"
+    },
+    "indian_number_with_commas": {
+      "regex": "[0-9]{1,3}(?:,[0-9]{2,3})*(?:\\.[0-9]+)?",
+      "note": "Indian numbering: ₹18,50,000 (lakh-style) NOT 1,850,000 (Western)"
+    },
+    "currency_prefix": {
+      "patterns": ["₹", "Rs.", "Rs ", "INR", "Rupees"]
+    }
+  },
+
+  "employer_keywords_for_company_names": {
+    "suffixes": ["Pvt. Ltd.", "Pvt Ltd", "Private Limited", "Limited", "Ltd.", "Ltd", "Inc.", "Inc", "LLP", "LLP.", "Corporation", "Corp.", "Holdings"],
+    "prefixes": ["M/s.", "M/s ", "M/S "],
+    "exclusion_patterns": ["TAN of", "Address of", "Date of", "Period of"]
+  },
+
+  "common_indian_employers": [
+    "TCS", "Tata Consultancy Services", "Infosys", "Wipro", "HCL Technologies",
+    "Tech Mahindra", "Cognizant", "Accenture", "Capgemini", "IBM India",
+    "Reliance", "Reliance Industries", "Reliance Jio", "Adani",
+    "HDFC Bank", "ICICI Bank", "State Bank of India", "SBI", "Axis Bank", "Kotak Mahindra",
+    "Bharti Airtel", "Vodafone Idea", "BSNL", "MTNL",
+    "Maruti Suzuki", "Tata Motors", "Mahindra", "Hyundai", "Hero MotoCorp",
+    "Hindustan Unilever", "ITC", "Nestle India", "Dabur", "Britannia",
+    "Larsen & Toubro", "L&T", "Bharat Heavy Electricals", "BHEL", "ONGC", "IOC",
+    "Indian Oil Corporation", "GAIL", "NTPC", "Power Grid",
+    "Flipkart", "Amazon India", "Paytm", "Zomato", "Swiggy", "Ola", "Uber India",
+    "PhonePe", "Razorpay", "Freshworks", "Zoho", "BYJU'S", "Unacademy",
+    "Goldman Sachs India", "Morgan Stanley", "JPMorgan India", "Deutsche Bank",
+    "Deloitte", "EY", "PwC", "KPMG", "Grant Thornton",
+    "MakeMyTrip", "Yatra", "BookMyShow", "Naukri", "Quikr", "OYO"
+  ],
+
+  "section_references_quick": {
+    "Sec 15-19": "Salaries head",
+    "Sec 17(1)": "Salary components",
+    "Sec 17(2)": "Perquisites",
+    "Sec 19(1)Sl.2": "Standard deduction (₹50k old / ₹75k new)",
+    "Sec 19(1)Sl.1": "Professional tax",
+    "Sec 20-25": "House Property",
+    "Sec 22(2)": "Home loan interest (₹2L SOP)",
+    "Sec 92": "Other Sources (interest, dividend, gifts)",
+    "Sec 123": "Old 80C (₹1.5L)",
+    "Sec 124(2)": "Old 80CCD(2) — Employer NPS",
+    "Sec 124(1B)": "Old 80CCD(1B) — Additional NPS ₹50k",
+    "Sec 126": "Old 80D (Health insurance)",
+    "Sec 133": "Old 80G (Donations)",
+    "Sec 153": "Old 80TTA/B (Savings interest)",
+    "Sec 156": "Old 87A rebate",
+    "Sec 188": "Old 115BB — Lottery 30%",
+    "Sec 194": "Old 115BBE — Unexplained credits 60%",
+    "Sec 194S": "Old 115BBH — Crypto/VDA 30%",
+    "Sec 196": "Old 111A — STT-paid STCG 20%",
+    "Sec 197": "Old 112 — LTCG general 12.5%",
+    "Sec 198": "Old 112A — STT-paid LTCG 12.5% > ₹1.25L",
+    "Sec 202": "New regime (default)",
+    "Sec 263": "Return filing — due dates",
+    "Sec 392": "Old 192 — Salary TDS",
+    "Sec 393": "Old 193-195 — Other TDS",
+    "Sec 423": "Old 234A — Late filing interest",
+    "Sec 424": "Old 234B — Advance tax default interest",
+    "Sec 425": "Old 234C — Instalment shortfall interest"
+  }
+
+}
