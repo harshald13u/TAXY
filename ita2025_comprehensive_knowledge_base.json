@@ -364,7 +364,8 @@
       "rate": 20
     },
     "stcg_other": "As per slab rates",
-    "VDA_rate_section_194": {
+    "VDA_rate_section_194S": {
+      "_note_section": "ITA 2025 Sec 194S — Tax on transfer of Virtual Digital Assets (VDA). Flat 30%, no deduction except cost of acquisition, no loss set-off, no loss carry-forward. Was Sec 115BBH in 1961 Act.",
       "rate": 30,
       "no_deduction_except_COA": true,
       "no_loss_setoff": true,
@@ -405,14 +406,15 @@
     "substantial_interest_profit_pct": 20
   },
   "unexplained_items": {
+    "_note_section": "ITA 2025 Sec 194 — flat tax on unexplained credits/investments/assets/expenditure/hundi. Was Sec 115BBE in 1961 Act. FA 2026 reduced rate from 60% to 30%.",
     "chapter": "VI",
     "credits_section": "102",
     "investments_section": "103",
     "assets_section": "104",
     "expenditure_section": "105",
     "hundi_section": "106",
-    "tax_rate_section_195": 30,
-    "tax_rate_section_195_pre_FA2026": 60,
+    "tax_rate_section_194": 30,
+    "tax_rate_section_194_pre_FA2026": 60,
     "no_deduction_allowed": true
   },
   "loss_carry_forward": {
@@ -1064,7 +1066,7 @@
       },
       "Capital Gains": {
         "sections": "67-91",
-        "treatment": "STCG (Sec 196 for STT-paid equity), LTCG (Sec 197/198), VDA (Sec 194)"
+        "treatment": "STCG (Sec 196 for STT-paid equity), LTCG (Sec 197/198), VDA (Sec 194S)"
       },
       "Other Sources": {
         "sections": "92-96",

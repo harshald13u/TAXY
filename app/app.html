@@ -342,9 +342,46 @@ html, body { height: -webkit-fill-available; }
   window.__pdfjsLib = pdfjsLib;
 </script>
 <!-- Tesseract.js for client-side OCR on uploaded images (no backend, no API key) -->
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.0/dist/tesseract.min.js"></script>
+<!-- Loaded async with a fallback CDN so a slow/blocked jsdelivr doesn't kill OCR -->
+<script>
+(function loadTesseract(){
+  // Promise that ocrImage awaits before using window.Tesseract
+  let resolveReady, rejectReady;
+  window.__tesseractReady = new Promise((res, rej) => { resolveReady = res; rejectReady = rej; });
+  const CDNs = [
+    'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.0/dist/tesseract.min.js',
+    'https://unpkg.com/tesseract.js@5.1.0/dist/tesseract.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.0/tesseract.min.js'
+  ];
+  let idx = 0;
+  function tryNext() {
+    if (idx >= CDNs.length) {
+      rejectReady(new Error('All Tesseract CDNs failed. Are you offline?'));
+      return;
+    }
+    const s = document.createElement('script');
+    s.src = CDNs[idx++];
+    s.async = true;
+    s.onload = () => {
+      if (window.Tesseract) resolveReady(window.Tesseract);
+      else tryNext();
+    };
+    s.onerror = () => tryNext();
+    document.head.appendChild(s);
+  }
+  tryNext();
+  // Hard ceiling — don't make the user wait forever
+  setTimeout(() => { if (!window.Tesseract) rejectReady(new Error('Tesseract.js load timed out (60s). Check your network and refresh.')); }, 60000);
+})();
+</script>
 <!-- heic2any for converting iPhone HEIC screenshots to JPEG (so Tesseract can read them) -->
 <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+<!-- SheetJS for parsing Excel uploads (.xlsx, .xls, .csv) — text extraction only -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<!-- mammoth.js for parsing Word documents (.docx) — text extraction only -->
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.7.0/mammoth.browser.min.js"></script>
+<!-- JSZip for parsing PPTX uploads (.pptx are ZIP-packaged XML) — text extraction only -->
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </head>
 <body>
 
@@ -355,6 +392,11 @@ html, body { height: -webkit-fill-available; }
       <button class="new-chat" onclick="newChat()">
         <svg class="new-chat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
         <span>New filing</span>
+      </button>
+      <!-- Feature G1 — clears sessionStorage AND resets the chat -->
+      <button class="new-chat" style="margin-top:8px;" onclick="clearTaxySession()" title="Erase saved progress for this tab">
+        <svg class="new-chat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+        <span>Clear saved progress</span>
       </button>
     </div>
     <div class="sidebar-section">
@@ -389,6 +431,8 @@ html, body { height: -webkit-fill-available; }
         <span class="chat-title-tag live">Act-grounded</span>
       </div>
       <div style="display: flex; gap: 6px;">
+        <!-- Feature G2 — undo last exchange (pops from state.history) -->
+        <button class="icon-btn" title="Back — undo last step" onclick="goBack()" aria-label="Undo last step"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
         <button class="icon-btn" title="Share"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg></button>
         <button class="icon-btn" title="Menu"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="18" r="1.5"/></svg></button>
       </div>
@@ -462,6 +506,9 @@ const ACT = {
   s194S_vda: { section: '194S', title: 'Section 194S — Virtual Digital Assets (crypto / NFT)', principle: 'Flat 30% on transfer of VDA. Only cost of acquisition deductible — no other expense, no loss set-off, no Ch VIII, no rebate. 1% TDS on consideration.', old1961: 'Sec 115BBH + 194S (1961 Act)' },
   s115BBC_anon: { section: '115BBC', title: 'Section 115BBC — Anonymous donations to charitable trusts', principle: 'Flat 30% on anonymous donations exceeding ₹1,00,000 or 5% of total donations (whichever is higher). No deduction. Religious trusts excluded.', old1961: 'Sec 115BBC (1961 Act)' },
   s195: { section: '195', title: 'Section 195 — Withholding on payments to non-residents', principle: 'TDS on any sum payable to non-resident chargeable to tax — at rates in force or DTAA, whichever is beneficial.', old1961: 'Sec 195 (1961 Act)' },
+  s58: { section: '58', title: 'Section 58 — Presumptive business', principle: 'Eligible business with turnover ≤ ₹2cr (₹3cr if cash receipts ≤ 5%): deemed profit = 8% (cash) or 6% (digital). No book-keeping required. Once opted, must continue 5 yrs.', old1961: 'Sec 44AD (1961 Act)' },
+  s61: { section: '61', title: 'Section 61 — Presumptive profession', principle: 'Notified profession (legal/medical/engineering/architecture/accountancy/technical consultancy/interior design/film artist) with gross receipts ≤ ₹50L (₹75L if cash ≤ 5%): deemed profit = 50%.', old1961: 'Sec 44ADA (1961 Act)' },
+  s63: { section: '63', title: 'Section 63 — Tax audit', principle: 'Mandatory if turnover > ₹10cr (or > ₹1cr if cash > 5%); profession receipts > ₹50L. Report in Form 3CD by due date.', old1961: 'Sec 44AB (1961 Act)' },
   s196: { section: '196', title: 'Section 196 — STCG STT-paid', principle: '20% on STCG from STT-paid equity / equity funds / business trust units (post FA 2024).', old1961: 'Sec 111A (1961 Act)' },
   s197: { section: '197', title: 'Section 197 — LTCG general', principle: '12.5% on LTCG (any asset, post-FA 2024). Pre-23 Jul 2024 land/building: lower of 12.5% or 20% with indexation.', old1961: 'Sec 112 (1961 Act)' },
   s198: { section: '198', title: 'Section 198 — LTCG STT-paid equity', principle: '12.5% on LTCG > ₹1,25,000 from STT-paid equity. ₹1.25L threshold per year.', old1961: 'Sec 112A (1961 Act)' },
@@ -472,6 +519,10 @@ const ACT = {
   s425: { section: '425', title: 'Section 425 — Deferment of advance tax instalments', principle: '1% per month on shortfall in any of the four quarterly advance-tax instalments (15 Jun / 15 Sep / 15 Dec / 15 Mar). Senior with no PGBP exempt.', old1961: 'Sec 234C (1961 Act)' },
   s392: { section: '392', title: 'Section 392 — Salary TDS', principle: 'Employer deducts TDS at average rate on estimated annual salary income.', old1961: 'Sec 192 (1961 Act)' },
   s393: { section: '393', title: 'Section 393 — Other TDS', principle: 'Consolidated TDS for non-salary payments. Each item has own threshold and rate.', old1961: 'Sec 193-195 (1961 Act)' },
+  s194I: { section: '194I', title: 'Section 194I — TDS on rent', principle: '10% TDS on rent if monthly > ₹50,000 (individual/HUF) or annual > ₹2.4L (others). Carried into ITA 2025 Sec 393 schedule.', old1961: 'Sec 194I (1961 Act)' },
+  s396: { section: '396', title: 'Section 396 — TCS', principle: 'Tax collected at source on motor vehicles (>₹10L), foreign remittances, overseas tour packages — credited like TDS.', old1961: 'Sec 206C (1961 Act)' },
+  s416: { section: '416', title: 'Section 416 — Advance tax', principle: 'Quarterly instalments 15 Jun / 15 Sep / 15 Dec / 15 Mar (15/45/75/100% cumulative). Mandatory if estimated tax > ₹10,000.', old1961: 'Sec 208-211 (1961 Act)' },
+  s140A: { section: '140A', title: 'Section 140A — Self-assessment tax', principle: 'Balance tax (with interest u/s 423/424/425) paid by taxpayer before furnishing return. Challan ITNS 280.', old1961: 'Sec 140A (1961 Act)' },
   sch3_hra: { section: 'Schedule III Sl.7', title: 'HRA exemption', principle: 'Old regime only. Exempt = MIN of: actual HRA; rent − 10% (basic+DA); 50% (Mumbai/Delhi/Kolkata/Chennai) or 40% (other).', old1961: 'Sec 10(13A) (1961 Act)' },
   sch_xv: { section: 'Schedule XV', title: 'Schedule XV — Sec 123 eligible items', principle: 'LIC ≤10% sum assured, PPF, ELSS, NSC, 5-yr FD, Sukanya, NPS Tier-I, school fees, housing principal.' },
   cess: { section: 'Finance Act, 2026', title: 'Health & Education Cess', principle: '4% on (income tax + surcharge). All assessees.' },
@@ -637,6 +688,92 @@ function specialRateTax(d) {
   return { lotteryTax, vdaTax, anonDonTax, total: lotteryTax + vdaTax + anonDonTax };
 }
 
+// CG ENGINE — Sec 196 / 197 / 198, post FA 2024 + FA 2026 rates.
+// Inputs (all optional, defaults to 0):
+//   d.stcgEquity   — Net STCG on STT-paid equity / equity MFs / business-trust units. Sec 196 → 20%.
+//   d.ltcgEquity   — Net LTCG on STT-paid equity / equity MFs. Sec 198 → 12.5% over ₹1,25,000/yr exemption.
+//   d.ltcgOther    — Net LTCG on any other LTCA (debt MFs, gold, property, unlisted shares). Sec 197 → 12.5%.
+//                    For land/building bought BEFORE 23 Jul 2024: user can pre-elect "lower of 12.5% w/o
+//                    indexation OR 20% w/ indexation". Caller passes the smaller-tax gain figure here.
+//   d.stcgOther    — STCG on non-equity assets (e.g. debt MF held < 36 months pre-FA23, or other STCA).
+//                    Taxed at SLAB rate (not special). We add this into GTI in recompute(), NOT here.
+//   d.sec54Exempt  — Amount of LTCG already reinvested (Sec 82 / 83 / 84 — old 54/54F/54EC). Subtracted
+//                    from gross LTCG before tax. User must satisfy reinvestment rules separately.
+// Returns: { stcgEqTax, ltcgEqTax, ltcgOtherTax, ltcgEqExemption, totalCGTax, totalCGSpecialIncome }
+function capitalGains(d) {
+  // Sec 196 — STCG on STT-paid equity = 20% (post FA 2024; was 15% before)
+  const stcgEq = Math.max(0, d.stcgEquity || 0);
+  const stcgEqTax = stcgEq * 0.20;
+
+  // Sec 198 — LTCG STT-paid equity. ₹1,25,000/yr exemption per assessee.
+  const ltcgEqGross = Math.max(0, d.ltcgEquity || 0);
+  const ltcgEqExemption = Math.min(125000, ltcgEqGross);
+  const ltcgEqTaxable = Math.max(0, ltcgEqGross - 125000);
+  const ltcgEqTax = ltcgEqTaxable * 0.125;
+
+  // Sec 197 — LTCG general (any other long-term asset). 12.5% post-FA 2024.
+  // Sec 82/83/84 reinvestment exemption applied first.
+  const sec54 = Math.max(0, d.sec54Exempt || 0);
+  const ltcgOtherTaxable = Math.max(0, (d.ltcgOther || 0) - sec54);
+  const ltcgOtherTax = ltcgOtherTaxable * 0.125;
+
+  const totalCGTax = stcgEqTax + ltcgEqTax + ltcgOtherTax;
+  // Income amounts to add back to "tiTotal" for surcharge slab determination
+  // (gross LTCG eq above exemption + STCG eq + taxable LTCG other).
+  const totalCGSpecialIncome = stcgEq + ltcgEqTaxable + ltcgOtherTaxable;
+
+  return { stcgEqTax, ltcgEqTax, ltcgOtherTax, ltcgEqExemption, totalCGTax, totalCGSpecialIncome };
+}
+
+// PGBP ENGINE — Sec 26-66. We support three input modes (caller picks one):
+//   d.pgbpMode = 'presumptive_biz'  → Sec 58: deemed profit = grossReceipts × (cashPct/100 × 0.08 + (1-cashPct/100) × 0.06)
+//                                     Eligibility: turnover ≤ ₹2cr (₹3cr if cash ≤ 5%).
+//   d.pgbpMode = 'presumptive_prof' → Sec 61: deemed profit = grossReceipts × 0.50
+//                                     Eligibility: gross receipts ≤ ₹50L (₹75L if cash ≤ 5%).
+//   d.pgbpMode = 'regular_books'    → Use d.businessNetProfit directly (user computed P&L themselves).
+//                                     Audit (Sec 63) required if turnover > ₹10cr or profession > ₹50L.
+//   d.pgbpMode = 'none' (or absent) → no PGBP income.
+// Inputs: d.pgbpGrossReceipts, d.pgbpCashPct (0-100), d.businessNetProfit, d.isProfession (bool).
+// Returns: { businessIncome, deemed, auditRequired, presumptiveLimitBreached, mode }
+function pgbpIncome(d) {
+  if (!d || !d.pgbpMode || d.pgbpMode === 'none') {
+    return { businessIncome: 0, deemed: 0, auditRequired: false, presumptiveLimitBreached: false, mode: 'none' };
+  }
+  const gr = Math.max(0, d.pgbpGrossReceipts || 0);
+  const cashPct = Math.max(0, Math.min(100, d.pgbpCashPct == null ? 100 : d.pgbpCashPct));
+  if (d.pgbpMode === 'presumptive_biz') {
+    // Sec 58 — Eligibility cap: ₹2cr (₹3cr if cash ≤ 5%)
+    const cap = (cashPct <= 5) ? 30000000 : 20000000;
+    const breached = gr > cap;
+    // Deemed profit: 8% on cash portion, 6% on digital portion.
+    const cashPart = gr * (cashPct / 100);
+    const digiPart = gr - cashPart;
+    const deemed = Math.round(cashPart * 0.08 + digiPart * 0.06);
+    // If breached, presumptive doesn't apply — fall back to regular books (user must supply NP).
+    const businessIncome = breached ? Math.max(0, d.businessNetProfit || 0) : deemed;
+    return { businessIncome, deemed, auditRequired: breached, presumptiveLimitBreached: breached, mode: 'presumptive_biz' };
+  }
+  if (d.pgbpMode === 'presumptive_prof') {
+    // Sec 61 — Eligibility cap: ₹50L (₹75L if cash ≤ 5%)
+    const cap = (cashPct <= 5) ? 7500000 : 5000000;
+    const breached = gr > cap;
+    const deemed = Math.round(gr * 0.50);
+    const businessIncome = breached ? Math.max(0, d.businessNetProfit || 0) : deemed;
+    return { businessIncome, deemed, auditRequired: breached, presumptiveLimitBreached: breached, mode: 'presumptive_prof' };
+  }
+  if (d.pgbpMode === 'regular_books') {
+    const np = Math.max(0, d.businessNetProfit || 0);
+    // Sec 63 audit thresholds
+    const auditCap = d.isProfession ? 5000000 : 100000000; // prof ₹50L / biz ₹10cr
+    const auditCashCap = d.isProfession ? 5000000 : 10000000; // biz ₹1cr if cash > 5%
+    const cashAbove5 = cashPct > 5;
+    const turnover = Math.max(0, d.pgbpGrossReceipts || 0);
+    const auditRequired = turnover > auditCap || (cashAbove5 && turnover > auditCashCap);
+    return { businessIncome: np, deemed: 0, auditRequired, presumptiveLimitBreached: false, mode: 'regular_books' };
+  }
+  return { businessIncome: 0, deemed: 0, auditRequired: false, presumptiveLimitBreached: false, mode: 'none' };
+}
+
 // CA-A fix: HRA metro list per Sched III Sl.7 — only Mumbai, Delhi, Kolkata, Chennai
 const HRA_METROS = ['Mumbai', 'Delhi', 'New Delhi', 'Kolkata', 'Chennai'];
 const isHraMetro = city => HRA_METROS.includes((city || '').trim());
@@ -657,8 +794,10 @@ function selectItrForm(d) {
   if (d.hasForeignAssets || d.hasForeignIncome) return { form: 'ITR-2', reason: 'Schedule FA disclosure mandatory — ITR-2 / ITR-3' };
   if (!d.isResident) return { form: 'ITR-2', reason: 'Non-resident — ITR-1 only for ordinarily resident' };
   if ((d.numHouseProps || 0) > 1) return { form: 'ITR-2', reason: 'More than one house property' };
-  if (d.hasBusinessIncome) return { form: 'ITR-3', reason: 'Business / professional income (Sec 26-66)' };
-  if (d.isPresumptive) return { form: 'ITR-4', reason: 'Presumptive scheme under Sec 58 / 61' };
+  // Order matters: presumptive (Sec 58/61) → ITR-4 Sugam takes precedence over ITR-3 (regular books).
+  // bizAnswer() sets BOTH hasBusinessIncome=true AND isPresumptive=true for presumptive flows.
+  if (d.isPresumptive) return { form: 'ITR-4', reason: 'Presumptive scheme under Sec 58 / 61 — Sugam' };
+  if (d.hasBusinessIncome) return { form: 'ITR-3', reason: 'Business / professional income (Sec 26-66, regular books)' };
   return { form: 'ITR-1 (Sahaj)', reason: 'Salary + 1 SOP + other sources up to ₹50L — Sahaj fits' };
 }
 
@@ -777,9 +916,13 @@ async function hideTyping() {
 // CONVERSATION STATE
 // ============================================================
 const DRAFT_KEY = 'taxy_draft_v1';
+const SESSION_KEY = 'taxy_state'; // Feature G1 — sessionStorage key (clears on tab close)
 let _saveTimer = null;
 function saveDraft() {
   try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ data: state.data, last: state.last })); }
+  catch (e) {}
+  // Feature G1 — also persist to sessionStorage so a mid-flow refresh restores state.data
+  try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(state.data)); }
   catch (e) {}
 }
 function loadDraft() {
@@ -792,7 +935,9 @@ function loadDraft() {
   } catch (e) { return null; }
 }
 function deleteDraft() { try { localStorage.removeItem(DRAFT_KEY); } catch (e) {} }
-function scheduleSave() { clearTimeout(_saveTimer); _saveTimer = setTimeout(saveDraft, 500); }
+// Feature G1 — debounced ~300ms (spec) for sessionStorage. Falls through to saveDraft
+// which handles BOTH localStorage AND sessionStorage writes.
+function scheduleSave() { clearTimeout(_saveTimer); _saveTimer = setTimeout(saveDraft, 300); }
 function _wrap(obj) {
   if (!obj || typeof obj !== 'object') return obj;
   for (const k of Object.keys(obj)) {
@@ -812,11 +957,104 @@ const state = _wrap({
     otherIncome: 0, savingsInterest: 0, fdInterest: 0,
     dividend: 0, dividendMaxPerCompany: 0, familyPension: 0,
     sec80c: 0, sec80d: 0, sec80g: 0, employerNps: 0,
+    // Capital Gains (Sec 196 / 197 / 198) — see capitalGains() for treatment
+    stcgEquity: 0, ltcgEquity: 0, ltcgOther: 0, stcgOther: 0, sec54Exempt: 0,
+    hasCapitalGains: false,
+    // PGBP (Sec 26-66 / Sec 58 / Sec 61) — see pgbpIncome()
+    pgbpMode: 'none', pgbpGrossReceipts: 0, pgbpCashPct: 100, businessNetProfit: 0,
+    isProfession: false, hasBusinessIncome: false, isPresumptive: false,
     isSenior: false, ageBand: 'regular', isResident: true,
+    isGovtEmployee: false,
     state: 'Maharashtra',
-    pan: 'ABCDE1234F', tdsPaid: 0, city: 'Mumbai'
+    pan: 'ABCDE1234F', tdsPaid: 0, city: 'Mumbai',
+    // Feature C — multi-employer Form 16 support. Sums roll up into salary/basic/hra/tdsSalary.
+    employers: [], // [{employerName, tan, salary, basic, hra, tdsPaid}]
+    // Feature D — Sec 157 (old Sec 89) salary arrears relief / Form 10E
+    salaryArrears: 0, arrearsRelief: 0, arrearsForYear: '', hasArrears: false,
+    // Feature E — bucketed taxes paid (Schedule TDS / TCS / Advance / Self-assessment)
+    tdsSalary: 0, tdsInterest: 0, tdsRent: 0, tdsProfFees: 0, tdsOther: 0,
+    tcsCollected: 0, advanceTax: 0, selfAssessmentTax: 0,
+    fullName: '' // populated from Form 16 / manual entry; never hardcoded
   }
 });
+
+// ============================================================
+// Feature G1 — sessionStorage restore on page load.
+// Only rehydrate if there was meaningful data (avoid clobbering with an empty session).
+// We do NOT restore the chat thread DOM — too fragile. Just data.
+// ============================================================
+(function restoreFromSession() {
+  try {
+    const s = sessionStorage.getItem(SESSION_KEY);
+    if (!s) return;
+    const parsed = JSON.parse(s);
+    if (!parsed || typeof parsed !== 'object') return;
+    // Spec: don't restore an empty session (salary === 0 && basic === 0)
+    if ((parsed.salary || 0) === 0 && (parsed.basic || 0) === 0) return;
+    Object.assign(state.data, parsed);
+  } catch (_) { /* ignore — corrupt sessionStorage shouldn't break the app */ }
+})();
+
+// ============================================================
+// Feature G2 — Snapshot history for the Back button.
+// state.history holds in-memory snapshots; not persisted (refresh = empty history).
+// ============================================================
+state.history = [];
+let _isRestoringSnapshot = false; // guard so Object.assign during goBack doesn't push fresh snapshots
+function pushSnapshot(label) {
+  if (_isRestoringSnapshot) return; // don't snapshot while undoing
+  try {
+    state.history.push({
+      snapshot: JSON.parse(JSON.stringify(state.data)),
+      label: label || '',
+      messageCount: messages ? messages.children.length : 0
+    });
+    // Cap at 30 entries
+    while (state.history.length > 30) state.history.shift();
+  } catch (_) { /* snapshotting must never crash the chat */ }
+}
+function goBack() {
+  if (!state.history || state.history.length === 0) {
+    // Tiny inline toast — keep it simple, no new CSS
+    try {
+      const t = document.createElement('div');
+      t.textContent = 'Nothing to undo';
+      t.style.cssText = 'position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#1a1a1d; color:#fafafa; padding:8px 14px; border:1px solid rgba(255,255,255,0.14); border-radius:8px; font-size:13px; z-index:9999;';
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 1600);
+    } catch (_) {}
+    return;
+  }
+  const popped = state.history.pop();
+  _isRestoringSnapshot = true;
+  try {
+    // Use Object.assign so the Proxy's set trap still fires (and persists). We also
+    // delete keys present on state.data but not in the snapshot to keep things clean.
+    const snap = popped.snapshot || {};
+    // First, copy snapshot fields back
+    Object.assign(state.data, snap);
+    // Truncate the chat thread back to where it was before the action
+    if (messages) {
+      while (messages.children.length > popped.messageCount) {
+        messages.lastElementChild && messages.lastElementChild.remove();
+      }
+    }
+  } finally {
+    _isRestoringSnapshot = false;
+  }
+  // Recompute totals so any cached state.last matches the restored data
+  try { if (typeof recompute === 'function') state.last = recompute(); } catch (_) {}
+}
+window.goBack = goBack;
+window.pushSnapshot = pushSnapshot;
+
+// Feature G1 — Clear-saved-progress button handler exposed for the sidebar.
+function clearTaxySession() {
+  try { sessionStorage.removeItem(SESSION_KEY); } catch (_) {}
+  try { state.history = []; } catch (_) {}
+  if (typeof newChat === 'function') newChat();
+}
+window.clearTaxySession = clearTaxySession;
 
 // ============================================================
 // REAL PDF PARSING — uses PDF.js loaded in <head>
@@ -1011,15 +1249,32 @@ function parseGenericTaxImage(text) {
       const v = findBestNumber(libLabels, { min: 100 });
       if (v) { out.tdsPaid = v; out.confidence.tdsPaid = 'low'; }
     }
-    // FD interest, dividend, savings interest from library
-    ['fdInterest', 'dividend', 'savingsInterest', 'sec80g', 'sec80e', 'sec80ccd_1b', 'loan_interest', 'loan_principal', 'rental_income'].forEach(key => {
+    // All other heads — use whatever's in the library
+    const allFieldKeys = [
+      'fdInterest', 'dividend', 'savingsInterest', 'family_pension',
+      'sec80g', 'sec80e', 'sec80ccd_1b',
+      'loan_interest', 'loan_principal', 'rental_income',
+      'stcg_equity', 'ltcg_equity', 'vda_sale_proceeds', 'lottery_winnings',
+      'advance_tax_paid'
+    ];
+    allFieldKeys.forEach(key => {
       if (out[key]) return;
       const def = lib.field_definitions[key];
       if (!def || !def.labels) return;
       const v = findBestNumber(def.labels, { min: def.min_value || 100, max: def.max_value || 100000000 });
-      if (v) { out[key] = v; out.confidence[key] = 'low'; }
+      if (v) {
+        out[key] = v;
+        out.confidence[key] = 'low';
+      }
     });
   }
+  // Independent capital-gains regex extraction (works without library)
+  const stcgEq = findBestNumber(['short term capital gain', 'short-term capital gain', 'stcg equity', 'stcg stt', 'stcg'], { min: 100 });
+  if (stcgEq) { out.stcg_equity = stcgEq; out.confidence.stcg_equity = 'low'; }
+  const ltcgEq = findBestNumber(['long term capital gain', 'long-term capital gain', 'ltcg equity', 'ltcg stt', 'ltcg'], { min: 100 });
+  if (ltcgEq) { out.ltcg_equity = ltcgEq; out.confidence.ltcg_equity = 'low'; }
+  const advTax = findBestNumber(['advance tax paid', 'advance tax', 'self assessment tax', 'self-assessment tax'], { min: 100 });
+  if (advTax) { out.advance_tax_paid = advTax; out.confidence.advance_tax_paid = 'low'; }
 
   // === Detect document type ===
   out._documentType = detectDocumentType(norm);
@@ -1041,15 +1296,93 @@ function extractedCardHtml(data) {
   };
   let html = '<div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:8px;">';
   html += '<div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;letter-spacing:0.5px;">EXTRACTED FROM YOUR FORM 16</div>';
-  // Audit R3 fix: data.employer / data.pan come from PDF text — sanitize before injecting
+  // Feature C — multi-employer summary block (only shown when 1+ Form 16s already saved)
+  const empList = (state && state.data && Array.isArray(state.data.employers)) ? state.data.employers : [];
+  if (empList.length > 0) {
+    const sumSal = empList.reduce((a, e) => a + (e.salary || 0), 0);
+    const sumTds = empList.reduce((a, e) => a + (e.tdsPaid || 0), 0);
+    html += '<div style="margin-bottom:10px;padding:10px 12px;background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.25);border-radius:8px;">';
+    html += '<div style="font-size:11px;color:#c4b5fd;letter-spacing:0.5px;margin-bottom:6px;font-weight:600;">MULTI-EMPLOYER SUMMARY ('+empList.length+')</div>';
+    empList.forEach((e, i) => {
+      const nm = e.employerName || ('Employer ' + (i+1));
+      const tn = e.tan ? ' <span style="color:var(--text-muted);font-size:11px;">TAN '+esc(e.tan)+'</span>' : '';
+      html += '<div style="display:flex;justify-content:space-between;font-size:12.5px;padding:3px 0;">'+
+              '<span>'+esc(nm)+tn+'</span>'+
+              '<span>'+fmt(e.salary || 0)+' · TDS '+fmt(e.tdsPaid || 0)+'</span>'+
+              '</div>';
+    });
+    html += '<div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0 0;border-top:1px solid rgba(168,85,247,0.25);margin-top:6px;font-weight:600;">'+
+            '<span>Combined</span><span>'+fmt(sumSal)+' · TDS '+fmt(sumTds)+'</span></div>';
+    html += '</div>';
+  }
+  // Sanitize PDF/OCR text before injecting (audit R3 fix)
   if (data.employer) html += '<div style="margin-bottom:8px;font-size:14px;"><b>'+esc(data.employer)+'</b>'+conf('employer')+'</div>';
   if (data.pan) html += '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:6px;">PAN: '+esc(data.pan)+conf('pan')+'</div>';
+
+  // Helper to render a row only if value exists
+  const row = (label, key) => data[key] ? '<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;"><span>'+label+'</span><span>'+fmt(data[key])+conf(key)+'</span></div>' : '';
+
+  // === Salary head ===
   html += '<div style="border-top:1px solid var(--border);padding-top:10px;margin-top:10px;">';
-  html += '<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;"><span>Gross salary</span><span>'+fmt(data.salary)+conf('salary')+'</span></div>';
-  if (data.hra) html += '<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;"><span>HRA</span><span>'+fmt(data.hra)+conf('hra')+'</span></div>';
-  html += '<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;"><span>TDS deducted</span><span>'+fmt(data.tdsPaid)+conf('tdsPaid')+'</span></div>';
+  html += '<div style="font-size:11px;color:var(--text-muted);letter-spacing:0.5px;margin-bottom:4px;">SALARY (Sec 15-19)</div>';
+  if (data.salary) html += '<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;"><span>Gross salary</span><span>'+fmt(data.salary)+conf('salary')+'</span></div>';
+  html += row('HRA received', 'hra');
+  html += row('Family pension', 'family_pension');
   html += '</div>';
-  html += '<div style="margin-top:12px;font-size:11px;color:var(--text-muted);line-height:1.5;">No PDF parser is 100% accurate. Please check each value against your physical Form 16 — click any line to correct it.</div>';
+
+  // === House Property head (Sec 20-25) ===
+  if (data.rental_income || data.loan_interest || data.loan_principal) {
+    html += '<div style="border-top:1px solid var(--border);padding-top:10px;margin-top:10px;">';
+    html += '<div style="font-size:11px;color:var(--text-muted);letter-spacing:0.5px;margin-bottom:4px;">HOUSE PROPERTY (Sec 20-25)</div>';
+    html += row('Rent received', 'rental_income');
+    html += row('Home loan interest', 'loan_interest');
+    html += row('Home loan principal', 'loan_principal');
+    html += '</div>';
+  }
+
+  // === Capital Gains (Sec 196/197/198) ===
+  if (data.stcg_equity || data.ltcg_equity || data.vda_sale_proceeds) {
+    html += '<div style="border-top:1px solid var(--border);padding-top:10px;margin-top:10px;">';
+    html += '<div style="font-size:11px;color:var(--text-muted);letter-spacing:0.5px;margin-bottom:4px;">CAPITAL GAINS (Sec 196-198)</div>';
+    html += row('STCG (equity, STT-paid)', 'stcg_equity');
+    html += row('LTCG (equity, STT-paid)', 'ltcg_equity');
+    html += row('VDA / crypto sale', 'vda_sale_proceeds');
+    html += '</div>';
+  }
+
+  // === Other Sources (Sec 92) ===
+  if (data.savingsInterest || data.fdInterest || data.dividend || data.lottery_winnings) {
+    html += '<div style="border-top:1px solid var(--border);padding-top:10px;margin-top:10px;">';
+    html += '<div style="font-size:11px;color:var(--text-muted);letter-spacing:0.5px;margin-bottom:4px;">OTHER SOURCES (Sec 92)</div>';
+    html += row('Savings interest', 'savingsInterest');
+    html += row('FD / RD interest', 'fdInterest');
+    html += row('Dividend', 'dividend');
+    html += row('Lottery winnings', 'lottery_winnings');
+    html += '</div>';
+  }
+
+  // === Deductions (Ch VIII) ===
+  if (data.sec80c || data.sec80d || data.sec80g || data.sec80e || data.sec80ccd_1b) {
+    html += '<div style="border-top:1px solid var(--border);padding-top:10px;margin-top:10px;">';
+    html += '<div style="font-size:11px;color:var(--text-muted);letter-spacing:0.5px;margin-bottom:4px;">CHAPTER VIII DEDUCTIONS</div>';
+    html += row('Sec 123 (old 80C)', 'sec80c');
+    html += row('Sec 126 (old 80D)', 'sec80d');
+    html += row('Sec 133 (old 80G)', 'sec80g');
+    html += row('Sec 80E (Edu loan)', 'sec80e');
+    html += row('Sec 124(1B) NPS extra', 'sec80ccd_1b');
+    html += '</div>';
+  }
+
+  // === Tax already paid ===
+  if (data.tdsPaid || data.advance_tax_paid) {
+    html += '<div style="border-top:1px solid var(--border);padding-top:10px;margin-top:10px;">';
+    html += '<div style="font-size:11px;color:var(--text-muted);letter-spacing:0.5px;margin-bottom:4px;">TAX ALREADY PAID</div>';
+    html += row('TDS deducted', 'tdsPaid');
+    html += row('Advance tax paid', 'advance_tax_paid');
+    html += '</div>';
+  }
+
+  html += '<div style="margin-top:12px;font-size:11px;color:var(--text-muted);line-height:1.5;">No parser is 100% accurate. Please verify every value against your source document — type any correction in chat.</div>';
   html += '</div>';
   return html;
 }
@@ -1235,8 +1568,18 @@ function applyKnownCorrections(data) {
 // Shows progress in the chat via the `onProgress` callback (0..1).
 // Now: pre-resizes/contrast-boosts the image first for better accuracy + speed.
 async function ocrImage(file, onProgress) {
+  // Wait for Tesseract to load if it hasn't yet (3MB download, can take a few seconds on slow networks).
+  // Show a helpful "loading OCR engine" message instead of failing instantly.
   if (!window.Tesseract) {
-    throw new Error('Tesseract.js not loaded — check your network connection.');
+    if (typeof onProgress === 'function') onProgress(0.01); // signal "started"
+    if (window.__tesseractReady) {
+      try { await window.__tesseractReady; }
+      catch (e) { throw new Error('OCR engine failed to load: ' + (e && e.message ? e.message : 'unknown error') + ' Try refreshing the page, or type the values manually.'); }
+    } else {
+      // No loader installed (head script missing?) — try injecting one inline as a last resort
+      throw new Error('OCR engine not available. Refresh the page or type values manually.');
+    }
+    if (!window.Tesseract) throw new Error('OCR engine still unavailable after waiting. Try a different network or type values manually.');
   }
   // Convert HEIC to JPEG if needed
   let working = file;
@@ -1264,9 +1607,149 @@ async function ocrImage(file, onProgress) {
   return data.text || '';
 }
 
-// Main entry point — PDF or image. Both paths run 100% in the browser.
+// === Excel extractor (.xlsx/.xls/.csv) ===
+async function extractTextFromExcel(file) {
+  if (!window.XLSX) throw new Error('SheetJS not loaded');
+  const buf = await file.arrayBuffer();
+  const wb = window.XLSX.read(buf, { type: 'array' });
+  let allText = '';
+  for (const sheetName of wb.SheetNames) {
+    const sheet = wb.Sheets[sheetName];
+    // Convert each sheet to space-separated text rows
+    const csv = window.XLSX.utils.sheet_to_csv(sheet, { FS: '  ', RS: '\n' });
+    allText += '\n=== Sheet: ' + sheetName + ' ===\n' + csv + '\n';
+  }
+  return allText;
+}
+
+// === Word extractor (.docx) ===
+async function extractTextFromWord(file) {
+  if (!window.mammoth) throw new Error('mammoth.js not loaded');
+  const buf = await file.arrayBuffer();
+  const result = await window.mammoth.extractRawText({ arrayBuffer: buf });
+  return result.value || '';
+}
+
+// === PowerPoint extractor (.pptx) — JSZip + DOMParser, no backend, no API key ===
+// pptx files are ZIPs containing slide XMLs at ppt/slides/slideN.xml. Text lives
+// inside <a:t> (DrawingML "text run") elements within each slide.
+async function extractTextFromPPTX(file) {
+  try {
+    if (!window.JSZip) {
+      // Lazy-load JSZip on demand if the head script didn't get to load in time
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
+        s.onload = resolve;
+        s.onerror = () => reject(new Error('Could not load JSZip from CDN'));
+        document.head.appendChild(s);
+      });
+      if (!window.JSZip) throw new Error('JSZip failed to initialise');
+    }
+    const buffer = await file.arrayBuffer();
+    const zip = await window.JSZip.loadAsync(buffer);
+    // Match ppt/slides/slide<N>.xml and sort numerically by N (string sort would
+    // place slide10 before slide2). The spec calls this out explicitly.
+    const slideRe = /^ppt\/slides\/slide(\d+)\.xml$/;
+    const slideEntries = Object.keys(zip.files)
+      .map(name => { const m = name.match(slideRe); return m ? { name, n: parseInt(m[1], 10) } : null; })
+      .filter(Boolean)
+      .sort((a, b) => a.n - b.n);
+    if (slideEntries.length === 0) throw new Error('No slides found inside the .pptx (corrupt or empty deck)');
+    const parser = new DOMParser();
+    const parts = [];
+    for (const entry of slideEntries) {
+      const xml = await zip.files[entry.name].async('text');
+      let slideText = '';
+      try {
+        const doc = parser.parseFromString(xml, 'application/xml');
+        // <a:t> is the namespaced DrawingML text element. Browsers' DOMParser
+        // exposes the qualified tag name when XML uses prefix, so we use it directly.
+        const nodes = doc.getElementsByTagName('a:t');
+        const lines = [];
+        for (let i = 0; i < nodes.length; i++) {
+          const t = (nodes[i].textContent || '').trim();
+          if (t) lines.push(t);
+        }
+        slideText = lines.join('\n');
+      } catch (parseErr) {
+        // Fallback to regex strip if XML is malformed for one slide — don't kill the whole upload
+        slideText = xml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+      }
+      parts.push('\n--- Slide ' + entry.n + ' ---\n' + slideText);
+    }
+    return parts.join('\n');
+  } catch (e) {
+    // Re-throw with a descriptive message so the existing error UI can surface it
+    throw new Error('PPTX text extraction failed: ' + (e && e.message ? e.message : String(e)));
+  }
+}
+// Backward-compat alias — older code paths called the lowercase name.
+const extractTextFromPptx = extractTextFromPPTX;
+
+// Main entry point — PDF, image, Excel, Word, PowerPoint. All client-side, all free.
 async function tryParseUploadedFile(file) {
   const ext = (file.name.split('.').pop() || '').toLowerCase();
+
+  // === EXCEL PATH ===
+  if (['xlsx', 'xls', 'csv'].includes(ext)) {
+    try {
+      const text = await extractTextFromExcel(file);
+      let data = parseForm16(text);
+      if (!data.salary && !data.tdsPaid && !data.pan) {
+        const generic = parseGenericTaxImage(text);
+        if (generic.salary || generic.tdsPaid || generic.hra || generic.fdInterest) {
+          data = generic;
+        } else {
+          return { error: 'no-match', text: 'I read the Excel but couldn\'t find tax fields. <br><br>What I read: <br><span style="font-family:monospace;font-size:11px;color:var(--text-muted);">' + esc(text.slice(0, 400)) + '…</span><br><br>Please type the values you want me to use.' };
+        }
+      }
+      data._source = 'excel';
+      return { ok: true, data };
+    } catch (e) {
+      return { error: 'excel-failed', text: 'Couldn\'t read the Excel file: ' + esc(e.message) };
+    }
+  }
+
+  // === WORD PATH ===
+  if (ext === 'docx' || ext === 'doc') {
+    if (ext === 'doc') {
+      return { error: 'old-word', text: '.doc (Word 97-2003) isn\'t supported — please save as .docx and try again.' };
+    }
+    try {
+      const text = await extractTextFromWord(file);
+      let data = parseForm16(text);
+      if (!data.salary && !data.tdsPaid && !data.pan) {
+        const generic = parseGenericTaxImage(text);
+        if (generic.salary || generic.tdsPaid || generic.hra) data = generic;
+        else return { error: 'no-match', text: 'I read the Word document but couldn\'t find tax fields. Please type the values.' };
+      }
+      data._source = 'word';
+      return { ok: true, data };
+    } catch (e) {
+      return { error: 'word-failed', text: 'Couldn\'t read the Word file: ' + esc(e.message) };
+    }
+  }
+
+  // === POWERPOINT PATH ===
+  if (ext === 'pptx' || ext === 'ppt') {
+    if (ext === 'ppt') {
+      return { error: 'old-ppt', text: 'Old .ppt format isn\'t supported. Save as .pptx in PowerPoint and re-upload.' };
+    }
+    try {
+      const text = await extractTextFromPPTX(file);
+      // Pipe extracted text through the same downstream parser as Excel/Word
+      const data = parseGenericTaxImage(text);
+      if (!data.salary && !data.tdsPaid && !data.hra && !data.fdInterest) {
+        return { error: 'no-match', text: 'I read the PowerPoint but couldn\'t find tax fields. <br><br>What I read: <br><span style="font-family:monospace;font-size:11px;color:var(--text-muted);">' + esc(text.slice(0, 400)) + '…</span><br><br>Please type the values you want me to use.' };
+      }
+      data._source = 'pptx';
+      return { ok: true, data };
+    } catch (e) {
+      return { error: 'pptx-failed', text: 'Couldn\'t read the PowerPoint: ' + esc(e.message) };
+    }
+  }
+
 
   // === IMAGE PATH (Tesseract.js client-side OCR) ===
   if (['jpg', 'jpeg', 'png', 'webp', 'bmp', 'heic', 'heif'].includes(ext)) {
@@ -1301,6 +1784,19 @@ async function tryParseUploadedFile(file) {
 
     let text;
     try {
+      // Surface the "still downloading the OCR engine" state explicitly so the user
+      // knows what's happening if Tesseract.js hasn't finished loading from CDN yet.
+      if (!window.Tesseract) {
+        setStage('Loading OCR engine (~3 MB) — first time only…');
+        if (window.__tesseractReady) {
+          try { await window.__tesseractReady; setStage('OCR engine ready, starting…'); }
+          catch (e) {
+            const card = document.getElementById(progressId);
+            if (card) card.remove();
+            return { error: 'ocr-load-failed', text: 'Could not load the OCR engine. Network might be blocking the CDN. Try refreshing, or type the values manually below.' };
+          }
+        }
+      }
       setStage('Reading image…');
       text = await ocrImage(file, (p) => {
         const bar = document.getElementById(progressId + '-bar');
@@ -1506,6 +2002,7 @@ async function askHousingProperty() {
 }
 
 function hpAnswer(kind) {
+  pushSnapshot('before hpAnswer:' + kind);
   const d = state.data;
   if (kind === 'none') { d.properties = []; }
   else if (kind === 'sop1') { d.properties = [{ type:'SOP', annualValue:0, municipalTaxPaid:0, interestPaid: 200000, completedIn5y:true, jointSharePct:100 }]; }
@@ -1515,6 +2012,513 @@ function hpAnswer(kind) {
   d.numHouseProps = (d.properties || []).length;
   user(kind === 'none' ? 'No property' : kind);
   state.last = recompute();
+}
+
+// ============================================================
+// CAPITAL GAINS — Sec 196 / 197 / 198
+// ============================================================
+async function askCapitalGains() {
+  pushSnapshot('before askCapitalGains');
+  await sleep(300); showTyping(); await sleep(900); hideTyping();
+  ai(
+    '<p>Did you sell any investments or property this year? ' + ref('s196', 'Sec 196') + ' / ' + ref('s197', 'Sec 197') + ' / ' + ref('s198', 'Sec 198') + '</p>' +
+    '<p class="secondary small" style="margin-top:6px;">Shares/equity MFs held &lt; 1 year = short-term (20% tax). Held ≥ 1 year = long-term (12.5% over ₹1.25L exempt).</p>' +
+    '<p class="secondary small" style="margin-top:4px;">Property/gold/debt-MF held &lt; 24 months = short-term (slab). Held ≥ 24 months = long-term (12.5%, post FA 2024).</p>' +
+    '<div class="choice-grid-2" style="margin-top:10px;">' +
+      '<button class="choice-btn" onclick="cgAnswer(\'none\')">No, I didn\'t sell anything</button>' +
+      '<button class="choice-btn" onclick="cgAnswer(\'equity\')">Sold equity / equity MF</button>' +
+      '<button class="choice-btn" onclick="cgAnswer(\'property\')">Sold property</button>' +
+      '<button class="choice-btn" onclick="cgAnswer(\'mixed\')">Mixed asset classes</button>' +
+      '<button class="choice-btn" onclick="cgAnswer(\'manual\')">I\'ll type the gains myself</button>' +
+    '</div>'
+  );
+}
+
+function cgAnswer(kind) {
+  pushSnapshot('before cgAnswer:' + kind);
+  const d = state.data;
+  user(kind === 'none' ? 'No, no asset sales this year'
+     : kind === 'equity' ? 'Sold some equity / equity MF — net STCG ₹40,000, net LTCG ₹2,00,000'
+     : kind === 'property' ? 'Sold a flat — long-term gain ₹15,00,000 (after indexation)'
+     : kind === 'mixed' ? 'Sold equity + property + some gold — see numbers below'
+     : 'Let me type my own numbers');
+  if (kind === 'none') {
+    d.hasCapitalGains = false;
+    d.stcgEquity = 0; d.ltcgEquity = 0; d.ltcgOther = 0; d.stcgOther = 0; d.sec54Exempt = 0;
+  } else if (kind === 'equity') {
+    d.hasCapitalGains = true;
+    d.stcgEquity = 40000;   // 20% (Sec 196) → ₹8,000
+    d.ltcgEquity = 200000;  // 12.5% on (200000 - 125000) = ₹9,375 (Sec 198)
+    d.ltcgOther = 0; d.stcgOther = 0; d.sec54Exempt = 0;
+  } else if (kind === 'property') {
+    d.hasCapitalGains = true;
+    d.stcgEquity = 0; d.ltcgEquity = 0;
+    d.ltcgOther = 1500000;  // 12.5% (Sec 197) → ₹1,87,500 (assumes user already chose lower of 12.5% w/o indexation vs 20% w/ indexation)
+    d.stcgOther = 0; d.sec54Exempt = 0;
+  } else if (kind === 'mixed') {
+    d.hasCapitalGains = true;
+    d.stcgEquity = 25000; d.ltcgEquity = 175000; d.ltcgOther = 600000; d.stcgOther = 0; d.sec54Exempt = 0;
+  } else if (kind === 'manual') {
+    // Show inline mini-form so user can type real numbers
+    return showCGManualForm();
+  }
+  state.last = recompute();
+  setTimeout(() => showCGSummaryAndContinue(), 200);
+}
+
+function showCGManualForm() {
+  const id = 'cgform_' + Date.now();
+  ai(
+    '<p>Type whatever applies — leave blank or 0 if not applicable. All amounts in rupees.</p>' +
+    '<div id="' + id + '" style="margin-top:10px; display:grid; gap:8px; max-width:480px;">' +
+      cgFieldRow(id, 'stcgEquity', 'STCG on equity / equity MF (Sec 196 — 20%)', 'e.g. 40000') +
+      cgFieldRow(id, 'ltcgEquity', 'LTCG on equity / equity MF (Sec 198 — 12.5% over ₹1.25L)', 'e.g. 200000') +
+      cgFieldRow(id, 'ltcgOther', 'LTCG on other assets — property/gold/debt MF (Sec 197 — 12.5%)', 'e.g. 1500000') +
+      cgFieldRow(id, 'stcgOther', 'STCG on other assets — slab rate', 'e.g. 50000') +
+      cgFieldRow(id, 'sec54Exempt', 'Reinvested in house/bonds (Sec 82 / 83 / 84) — exempt', 'e.g. 1000000') +
+      '<button class="btn btn-primary" style="margin-top:6px;" onclick="cgSubmitManual(\'' + id + '\')">Save capital gains →</button>' +
+    '</div>'
+  );
+}
+
+function cgFieldRow(formId, field, label, placeholder) {
+  return '<label style="display:flex; flex-direction:column; gap:4px; font-size:13px; color:var(--text-secondary);">' +
+    '<span>' + esc(label) + '</span>' +
+    '<input type="number" inputmode="numeric" min="0" data-cg-field="' + esc(field) + '" placeholder="' + esc(placeholder) + '" style="padding:8px 10px; background:var(--bg-elevated); border:1px solid var(--border); border-radius:6px; color:var(--text-primary); font-size:14px;" />' +
+  '</label>';
+}
+
+function cgSubmitManual(formId) {
+  const d = state.data;
+  const form = document.getElementById(formId);
+  if (!form) return;
+  const inputs = form.querySelectorAll('input[data-cg-field]');
+  let typed = [];
+  inputs.forEach(inp => {
+    const f = inp.getAttribute('data-cg-field');
+    const v = parseInt(inp.value, 10);
+    if (Number.isFinite(v) && v > 0) {
+      d[f] = v;
+      typed.push(f + '=' + v.toLocaleString('en-IN'));
+    } else {
+      d[f] = 0;
+    }
+  });
+  d.hasCapitalGains = (d.stcgEquity + d.ltcgEquity + d.ltcgOther + d.stcgOther) > 0;
+  user(typed.length ? 'Capital gains: ' + typed.join(', ') : 'No capital gains');
+  state.last = recompute();
+  setTimeout(() => showCGSummaryAndContinue(), 200);
+}
+
+function showCGSummaryAndContinue() {
+  const r = state.last; if (!r || !r.cg) return;
+  const cg = r.cg;
+  const d = state.data;
+  if (!d.hasCapitalGains || cg.totalCGTax <= 0) {
+    ai('<p>Got it — no capital gains added.</p>');
+    setTimeout(() => askBusinessGate(), 400);
+    return;
+  }
+  const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+  let rows = '';
+  if (cg.stcgEqTax > 0) rows += '<div style="display:flex; justify-content:space-between;"><span>' + ref('s196', 'Sec 196') + ' STCG equity @ 20% on ' + fmt(d.stcgEquity) + '</span><span><b>' + fmt(cg.stcgEqTax) + '</b></span></div>';
+  if (cg.ltcgEqTax > 0) rows += '<div style="display:flex; justify-content:space-between;"><span>' + ref('s198', 'Sec 198') + ' LTCG equity @ 12.5% on ' + fmt(Math.max(0, d.ltcgEquity - 125000)) + ' <span class="secondary small">(₹1.25L exempt)</span></span><span><b>' + fmt(cg.ltcgEqTax) + '</b></span></div>';
+  if (cg.ltcgOtherTax > 0) rows += '<div style="display:flex; justify-content:space-between;"><span>' + ref('s197', 'Sec 197') + ' LTCG other @ 12.5% on ' + fmt(Math.max(0, (d.ltcgOther || 0) - (d.sec54Exempt || 0))) + '</span><span><b>' + fmt(cg.ltcgOtherTax) + '</b></span></div>';
+  ai(
+    '<p>Capital gains tax computed:</p>' +
+    '<div style="margin-top:10px; padding:12px 14px; background:var(--bg-elevated); border-radius:8px; font-size:13.5px; display:grid; gap:6px;">' +
+      rows +
+      '<div style="border-top:1px solid var(--border); padding-top:6px; margin-top:4px; display:flex; justify-content:space-between;"><span><b>Total CG tax</b></span><span><b style="color:#a855f7;">' + fmt(cg.totalCGTax) + '</b></span></div>' +
+    '</div>' +
+    '<p class="secondary small" style="margin-top:8px;">⚠ Capital gains require <strong>ITR-2</strong>, not ITR-1 (Sahaj). I\'ll switch the form selection automatically.</p>' +
+    '<button class="choice-btn choice-btn-primary" style="margin-top:12px;" onclick="cgContinueToCompute()"><span class="choice-btn-arrow">→</span> Compute final tax</button>'
+  );
+}
+
+async function cgContinueToCompute() {
+  await sleep(200);
+  await askBusinessGate();
+}
+
+// ============================================================
+// PGBP — Sec 26-66, Sec 58 (presumptive biz), Sec 61 (presumptive prof)
+// ============================================================
+async function askBusinessGate() {
+  pushSnapshot('before askBusinessGate');
+  await sleep(300); showTyping(); await sleep(800); hideTyping();
+  ai(
+    '<p>Quick one — do you run any business or work as a freelancer/professional?</p>' +
+    '<p class="secondary small" style="margin-top:6px;">Examples: trading account, consulting, freelance design, doctor, lawyer, CA practice, online seller, YouTube/Insta income.</p>' +
+    '<div class="action-row" style="margin-top:10px;">' +
+      '<button class="btn btn-secondary" onclick="askBusiness()">Yes, I have business/profession income</button>' +
+      '<button class="btn btn-primary" onclick="businessSkipAndCompute()">No — only salaried</button>' +
+    '</div>'
+  );
+}
+
+async function businessSkipAndCompute() {
+  user('No — only salaried');
+  state.data.hasBusinessIncome = false;
+  state.data.isPresumptive = false;
+  state.data.pgbpMode = 'none';
+  await sleep(300);
+  await askArrearsGate();
+}
+
+async function askBusiness() {
+  user('Yes, I have business/profession income');
+  await sleep(400); showTyping(); await sleep(900); hideTyping();
+  ai(
+    '<p>Pick the one that fits you best:</p>' +
+    '<div class="choice-grid-2" style="margin-top:10px;">' +
+      '<button class="choice-btn" onclick="bizAnswer(\'presumptive_biz\')">Small business — turnover ≤ ₹2 cr (' + ref('s58', 'Sec 58') + ')</button>' +
+      '<button class="choice-btn" onclick="bizAnswer(\'presumptive_prof\')">Professional — receipts ≤ ₹50 lakh (' + ref('s61', 'Sec 61') + ')</button>' +
+      '<button class="choice-btn" onclick="bizAnswer(\'regular_books\')">Bigger business — I keep books / file P&amp;L</button>' +
+    '</div>' +
+    '<p class="secondary small" style="margin-top:10px;">' +
+      '<b>Presumptive</b> = government-deemed profit (no books needed): 8% (cash) / 6% (digital) for business under ' + ref('s58', 'Sec 58') + '; 50% for profession under ' + ref('s61', 'Sec 61') + '. ' +
+      '<b>Regular books</b> = tax audit (' + ref('s63', 'Sec 63') + ') if turnover &gt; ₹10 cr or profession &gt; ₹50 L.' +
+    '</p>'
+  );
+}
+
+function bizAnswer(mode) {
+  pushSnapshot('before bizAnswer:' + mode);
+  state.data.pgbpMode = mode;
+  state.data.hasBusinessIncome = true;
+  state.data.isPresumptive = (mode === 'presumptive_biz' || mode === 'presumptive_prof');
+  state.data.isProfession = (mode === 'presumptive_prof');
+  user(mode === 'presumptive_biz' ? 'Small business — Sec 58 presumptive'
+     : mode === 'presumptive_prof' ? 'Professional — Sec 61 presumptive'
+     : 'Bigger business — regular books');
+  showBizManualForm(mode);
+}
+
+function showBizManualForm(mode) {
+  const id = 'bizform_' + Date.now();
+  const isPres = (mode === 'presumptive_biz' || mode === 'presumptive_prof');
+  const isProf = (mode === 'presumptive_prof');
+  let intro = '';
+  if (mode === 'presumptive_biz')  intro = '<p>I\'ll deem your profit at <b>8% cash / 6% digital</b> per ' + ref('s58', 'Sec 58') + '. Just give me the totals:</p>';
+  else if (mode === 'presumptive_prof') intro = '<p>I\'ll deem your profit at <b>50% of gross receipts</b> per ' + ref('s61', 'Sec 61') + '. Just need:</p>';
+  else                              intro = '<p>You\'ll need your P&amp;L net profit. I\'ll also flag if tax audit (' + ref('s63', 'Sec 63') + ') is required:</p>';
+
+  ai(
+    intro +
+    '<div id="' + id + '" style="margin-top:10px; display:grid; gap:8px; max-width:480px;">' +
+      bizFieldRow(id, 'pgbpGrossReceipts', isProf ? 'Gross professional receipts (₹)' : 'Gross turnover (₹)', 'e.g. 1500000') +
+      (isPres ? bizFieldRow(id, 'pgbpCashPct', 'Cash receipts as % of total (rest digital/UPI)', 'e.g. 20') : '') +
+      (mode === 'regular_books' ? bizFieldRow(id, 'businessNetProfit', 'Net profit per P&L (₹)', 'e.g. 600000') : '') +
+      (mode === 'regular_books' ? bizFieldRow(id, 'pgbpCashPct', 'Cash receipts %', 'e.g. 15') : '') +
+      '<button class="btn btn-primary" style="margin-top:6px;" onclick="bizSubmitManual(\'' + id + '\')">Compute business income →</button>' +
+    '</div>'
+  );
+}
+
+function bizFieldRow(formId, field, label, placeholder) {
+  return '<label style="display:flex; flex-direction:column; gap:4px; font-size:13px; color:var(--text-secondary);">' +
+    '<span>' + esc(label) + '</span>' +
+    '<input type="number" inputmode="numeric" min="0" data-biz-field="' + esc(field) + '" placeholder="' + esc(placeholder) + '" style="padding:8px 10px; background:var(--bg-elevated); border:1px solid var(--border); border-radius:6px; color:var(--text-primary); font-size:14px;" />' +
+  '</label>';
+}
+
+function bizSubmitManual(formId) {
+  const d = state.data;
+  const form = document.getElementById(formId);
+  if (!form) return;
+  const inputs = form.querySelectorAll('input[data-biz-field]');
+  let typed = [];
+  inputs.forEach(inp => {
+    const f = inp.getAttribute('data-biz-field');
+    const v = parseFloat(inp.value);
+    if (Number.isFinite(v) && v >= 0) {
+      d[f] = v;
+      typed.push(f + '=' + v.toLocaleString('en-IN'));
+    }
+  });
+  user(typed.length ? 'Business inputs: ' + typed.join(', ') : 'No business inputs');
+  state.last = recompute();
+  setTimeout(() => showBizSummaryAndContinue(), 200);
+}
+
+function showBizSummaryAndContinue() {
+  const r = state.last; if (!r || !r.pg) { return compute(); }
+  const pg = r.pg;
+  const d = state.data;
+  const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+  if (pg.businessIncome <= 0) {
+    ai('<p>No business income to add. Computing your tax now…</p>');
+    setTimeout(() => compute(), 400);
+    return;
+  }
+  let modeLabel = pg.mode === 'presumptive_biz' ? ref('s58', 'Sec 58') + ' — Presumptive business'
+                : pg.mode === 'presumptive_prof' ? ref('s61', 'Sec 61') + ' — Presumptive profession'
+                : 'Regular books (Sec 26-66)';
+  let auditWarn = pg.auditRequired ? '<p class="secondary small" style="margin-top:8px; color:#f59e0b;">⚠ Tax audit (' + ref('s63', 'Sec 63') + ') required for this turnover. Form 3CD due before ITR.</p>' : '';
+  let breachWarn = pg.presumptiveLimitBreached ? '<p class="secondary small" style="margin-top:8px; color:#f59e0b;">⚠ Turnover exceeds presumptive limit — falling back to your declared net profit. ITR-3 will be selected.</p>' : '';
+  ai(
+    '<p>Business income computed:</p>' +
+    '<div style="margin-top:10px; padding:12px 14px; background:var(--bg-elevated); border-radius:8px; font-size:13.5px; display:grid; gap:6px;">' +
+      '<div style="display:flex; justify-content:space-between;"><span>' + modeLabel + '</span><span></span></div>' +
+      '<div style="display:flex; justify-content:space-between;"><span>Gross receipts / turnover</span><span><b>' + fmt(d.pgbpGrossReceipts || 0) + '</b></span></div>' +
+      (pg.deemed > 0 ? '<div style="display:flex; justify-content:space-between;"><span>Deemed profit (presumptive)</span><span><b>' + fmt(pg.deemed) + '</b></span></div>' : '') +
+      '<div style="border-top:1px solid var(--border); padding-top:6px; margin-top:4px; display:flex; justify-content:space-between;"><span><b>Business income added to GTI</b></span><span><b style="color:#a855f7;">' + fmt(pg.businessIncome) + '</b></span></div>' +
+    '</div>' +
+    auditWarn + breachWarn +
+    '<p class="secondary small" style="margin-top:8px;">⚠ Business income means <strong>ITR-3</strong> (regular books) or <strong>ITR-4 Sugam</strong> (presumptive). I\'ll switch the form selection automatically.</p>' +
+    '<button class="choice-btn choice-btn-primary" style="margin-top:12px;" onclick="bizContinueToCompute()"><span class="choice-btn-arrow">→</span> Compute final tax</button>'
+  );
+}
+
+async function bizContinueToCompute() {
+  await sleep(200);
+  await askArrearsGate();
+}
+
+// ============================================================
+// Feature C — Multi-employer Form 16 chat flow
+// ============================================================
+async function askMultipleEmployers() {
+  user('I had more than one employer this year');
+  await sleep(300); showTyping(); await sleep(800); hideTyping();
+  ai(
+    '<p>Got it — let\'s combine your Form 16s. Add one row per employer.</p>' +
+    '<p class="secondary small" style="margin-top:6px;">I\'ll sum salary, basic, HRA and salary TDS (' + ref('s392', 'Sec 392') + ') across all employers and report each separately in your ITR Schedule S.</p>' +
+    '<div id="empWrap" style="margin-top:12px; display:grid; gap:10px; max-width:560px;"></div>' +
+    '<div class="action-row" style="margin-top:10px;">' +
+      '<button class="btn btn-secondary" onclick="empAddRow()">+ Add another employer</button>' +
+      '<button class="btn btn-primary" onclick="empSubmit()">Save all employers →</button>' +
+    '</div>'
+  );
+  // seed with two empty rows
+  setTimeout(() => { empAddRow(); empAddRow(); }, 50);
+}
+function empFieldRow(rowId, field, label, placeholder, type) {
+  type = type || 'number';
+  const numAttrs = type === 'number' ? ' inputmode="numeric" min="0"' : '';
+  return '<label style="display:flex; flex-direction:column; gap:4px; font-size:12.5px; color:var(--text-secondary);">' +
+    '<span>' + esc(label) + '</span>' +
+    '<input type="' + esc(type) + '"' + numAttrs + ' data-emp-field="' + esc(field) + '" placeholder="' + esc(placeholder) + '" style="padding:7px 10px; background:var(--bg-elevated); border:1px solid var(--border); border-radius:6px; color:var(--text-primary); font-size:13.5px;" />' +
+  '</label>';
+}
+function empAddRow() {
+  const wrap = document.getElementById('empWrap');
+  if (!wrap) return;
+  const idx = wrap.querySelectorAll('[data-emp-row]').length + 1;
+  const rowId = 'emp_row_' + Date.now() + '_' + idx;
+  const div = document.createElement('div');
+  div.setAttribute('data-emp-row', '1');
+  div.style.cssText = 'padding:10px 12px; background:var(--bg-elevated); border:1px solid var(--border); border-radius:8px; display:grid; gap:8px;';
+  div.innerHTML =
+    '<div style="font-size:12px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Employer ' + idx + '</div>' +
+    '<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">' +
+      empFieldRow(rowId, 'employerName', 'Employer name', 'e.g. Infosys Ltd', 'text') +
+      empFieldRow(rowId, 'tan', 'TAN (optional)', 'e.g. BLRI12345A', 'text') +
+    '</div>' +
+    '<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">' +
+      empFieldRow(rowId, 'salary', 'Gross salary (₹)', 'e.g. 800000') +
+      empFieldRow(rowId, 'basic', 'Basic (₹)', 'e.g. 400000') +
+    '</div>' +
+    '<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">' +
+      empFieldRow(rowId, 'hra', 'HRA (₹)', 'e.g. 200000') +
+      empFieldRow(rowId, 'tdsPaid', 'TDS deducted (₹)', 'e.g. 80000') +
+    '</div>';
+  wrap.appendChild(div);
+}
+function empSubmit() {
+  const wrap = document.getElementById('empWrap');
+  if (!wrap) return;
+  const rows = wrap.querySelectorAll('[data-emp-row]');
+  state.data.employers = [];
+  let added = 0;
+  rows.forEach(row => {
+    const inputs = row.querySelectorAll('input[data-emp-field]');
+    const emp = {};
+    let any = false;
+    inputs.forEach(inp => {
+      const f = inp.getAttribute('data-emp-field');
+      const v = inp.value.trim();
+      if (v) any = true;
+      if (f === 'employerName' || f === 'tan') emp[f] = v;
+      else emp[f] = parseFloat(v) || 0;
+    });
+    if (any && (emp.salary || 0) > 0) {
+      addEmployer(emp);
+      added++;
+    }
+  });
+  if (added === 0) {
+    user('Cancelled — no employers added');
+    setTimeout(() => askArrearsGate(), 300);
+    return;
+  }
+  const totalSal = (state.data.employers || []).reduce((a, e) => a + (e.salary || 0), 0);
+  const totalTds = (state.data.employers || []).reduce((a, e) => a + (e.tdsPaid || 0), 0);
+  const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+  user(added + ' employers added');
+  ai(
+    '<p>Combined: <strong>' + fmt(totalSal) + ' salary</strong> and <strong>' + fmt(totalTds) + ' TDS</strong> across <strong>' + added + ' employers</strong>.</p>' +
+    '<p class="secondary small" style="margin-top:6px;">I\'ve summed everything into your salary fields and will list each employer separately in Schedule S of your ITR.</p>' +
+    '<button class="choice-btn choice-btn-primary" style="margin-top:10px;" onclick="askArrearsGate()"><span class="choice-btn-arrow">→</span> Continue</button>'
+  );
+}
+
+// ============================================================
+// Feature D — Sec 157 arrears relief / Form 10E chat flow
+// ============================================================
+async function askArrearsGate() {
+  pushSnapshot('before askArrearsGate');
+  await sleep(300); showTyping(); await sleep(700); hideTyping();
+  ai(
+    '<p>Did you receive any salary <b>arrears</b> this year — back-pay for an earlier financial year? ' + ref('s157', 'Sec 157') + '</p>' +
+    '<p class="secondary small" style="margin-top:6px;">If yes, you may qualify for relief under Sec 157 (old Sec 89) so the arrears aren\'t taxed at today\'s higher slab. Filed via Form 10E before your ITR.</p>' +
+    '<div class="action-row" style="margin-top:10px;">' +
+      '<button class="btn btn-secondary" onclick="askArrears()">Yes, I got arrears</button>' +
+      '<button class="btn btn-primary" onclick="arrearsSkip()">No arrears</button>' +
+    '</div>'
+  );
+}
+async function arrearsSkip() {
+  user('No arrears this year');
+  state.data.salaryArrears = 0;
+  state.data.arrearsRelief = 0;
+  state.data.hasArrears = false;
+  await sleep(200);
+  await askTaxesPaidGate();
+}
+async function askArrears() {
+  pushSnapshot('before askArrears');
+  user('Yes, I got arrears for an earlier year');
+  await sleep(300); showTyping(); await sleep(700); hideTyping();
+  const id = 'arrform_' + Date.now();
+  ai(
+    '<p>Tell me the arrears amount and (if you\'ve already calculated it) the relief from Form 10E. Leave relief blank if unsure — I\'ll use a rough 5% estimate and flag it.</p>' +
+    '<div id="' + id + '" style="margin-top:10px; display:grid; gap:8px; max-width:480px;">' +
+      '<label style="display:flex; flex-direction:column; gap:4px; font-size:13px; color:var(--text-secondary);">' +
+        '<span>Total arrears received this year (₹)</span>' +
+        '<input type="number" inputmode="numeric" min="0" data-arr-field="salaryArrears" placeholder="e.g. 250000" style="padding:8px 10px; background:var(--bg-elevated); border:1px solid var(--border); border-radius:6px; color:var(--text-primary); font-size:14px;" />' +
+      '</label>' +
+      '<label style="display:flex; flex-direction:column; gap:4px; font-size:13px; color:var(--text-secondary);">' +
+        '<span>Arrears were for FY (e.g. 2023-24)</span>' +
+        '<input type="text" data-arr-field="arrearsForYear" placeholder="2023-24" style="padding:8px 10px; background:var(--bg-elevated); border:1px solid var(--border); border-radius:6px; color:var(--text-primary); font-size:14px;" />' +
+      '</label>' +
+      '<label style="display:flex; flex-direction:column; gap:4px; font-size:13px; color:var(--text-secondary);">' +
+        '<span>Relief amount from Form 10E (optional, ₹)</span>' +
+        '<input type="number" inputmode="numeric" min="0" data-arr-field="arrearsRelief" placeholder="leave blank for rough estimate" style="padding:8px 10px; background:var(--bg-elevated); border:1px solid var(--border); border-radius:6px; color:var(--text-primary); font-size:14px;" />' +
+      '</label>' +
+      '<button class="btn btn-primary" style="margin-top:6px;" onclick="arrearsSubmit(\'' + id + '\')">Save arrears →</button>' +
+    '</div>'
+  );
+}
+function arrearsSubmit(formId) {
+  pushSnapshot('before arrearsSubmit');
+  const d = state.data;
+  const form = document.getElementById(formId);
+  if (!form) return;
+  const inputs = form.querySelectorAll('input[data-arr-field]');
+  inputs.forEach(inp => {
+    const f = inp.getAttribute('data-arr-field');
+    const raw = inp.value.trim();
+    if (f === 'arrearsForYear') {
+      d[f] = raw;
+    } else {
+      const v = parseFloat(raw);
+      d[f] = (Number.isFinite(v) && v >= 0) ? v : 0;
+    }
+  });
+  const ar = computeArrearsRelief(d);
+  d.hasArrears = ar.arrears > 0;
+  const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+  user('Arrears: ' + fmt(d.salaryArrears) + (d.arrearsForYear ? ' for FY ' + d.arrearsForYear : ''));
+  let summary = '<p>Recorded arrears of <strong>' + fmt(ar.arrears) + '</strong>. Relief applied: <strong>' + fmt(ar.relief) + '</strong>.</p>';
+  if (!ar.isUserProvided) {
+    summary += '<p class="secondary small" style="margin-top:6px; padding:10px 12px; background:rgba(245,158,11,0.08); border-left:3px solid #f59e0b; border-radius:6px;">⚠ This is a rough 5% estimate. <strong>You must file Form 10E</strong> on the income-tax portal BEFORE filing your ITR — otherwise the relief will be denied. The actual relief can be much higher or lower depending on your prior-year incomes.</p>';
+  } else {
+    summary += '<p class="secondary small" style="margin-top:6px;">Using your Form 10E figure. Make sure Form 10E is submitted before filing the ITR.</p>';
+  }
+  ai(summary + '<button class="choice-btn choice-btn-primary" style="margin-top:10px;" onclick="askTaxesPaidGate()"><span class="choice-btn-arrow">→</span> Continue</button>');
+}
+
+// ============================================================
+// Feature E — Bucketed taxes paid (TDS/TCS/Advance/SA) chat flow
+// ============================================================
+async function askTaxesPaidGate() {
+  pushSnapshot('before askTaxesPaidGate');
+  await sleep(300); showTyping(); await sleep(700); hideTyping();
+  ai(
+    '<p>Last bit — taxes you\'ve already paid this year. Beyond salary TDS (' + ref('s392', 'Sec 392') + '), did you have any of: bank/FD interest TDS, rent TDS (' + ref('s194I', 'Sec 194I') + '), professional fees TDS, TCS (' + ref('s396', 'Sec 396') + '), advance tax (' + ref('s416', 'Sec 416') + ') or self-assessment tax (' + ref('s140A', 'Sec 140A') + ')?</p>' +
+    '<div class="action-row" style="margin-top:10px;">' +
+      '<button class="btn btn-secondary" onclick="askTaxesPaid()">Yes, let me enter them</button>' +
+      '<button class="btn btn-primary" onclick="taxesPaidSkip()">No — only salary TDS</button>' +
+    '</div>'
+  );
+}
+async function taxesPaidSkip() {
+  user('Only salary TDS — nothing else');
+  // Pre-fill tdsSalary from legacy tdsPaid so totalTaxesPaid() returns the right number
+  if ((state.data.tdsSalary || 0) === 0 && (state.data.tdsPaid || 0) > 0) {
+    state.data.tdsSalary = state.data.tdsPaid;
+  }
+  await sleep(200);
+  await compute();
+}
+function tdsFieldRow(formId, field, label, placeholder) {
+  return '<label style="display:flex; flex-direction:column; gap:4px; font-size:13px; color:var(--text-secondary);">' +
+    '<span>' + esc(label) + '</span>' +
+    '<input type="number" inputmode="numeric" min="0" data-tds-field="' + esc(field) + '" placeholder="' + esc(placeholder) + '" style="padding:8px 10px; background:var(--bg-elevated); border:1px solid var(--border); border-radius:6px; color:var(--text-primary); font-size:14px;" />' +
+  '</label>';
+}
+async function askTaxesPaid() {
+  pushSnapshot('before askTaxesPaid');
+  user('Yes, I have other taxes paid');
+  await sleep(300); showTyping(); await sleep(700); hideTyping();
+  const id = 'tdsform_' + Date.now();
+  // Pre-fill tdsSalary from existing tdsPaid (Form 16 import) if not set
+  if ((state.data.tdsSalary || 0) === 0 && (state.data.tdsPaid || 0) > 0) {
+    state.data.tdsSalary = state.data.tdsPaid;
+  }
+  const pf = (k) => state.data[k] ? ' value="' + state.data[k] + '"' : '';
+  ai(
+    '<p>Type whatever applies — leave blank or 0 for none. All amounts in rupees.</p>' +
+    '<div id="' + id + '" style="margin-top:10px; display:grid; gap:8px; max-width:520px;">' +
+      // Pre-filled salary TDS
+      '<label style="display:flex; flex-direction:column; gap:4px; font-size:13px; color:var(--text-secondary);">' +
+        '<span>Salary TDS (Sec 392) — from Form 16</span>' +
+        '<input type="number" inputmode="numeric" min="0" data-tds-field="tdsSalary" placeholder="e.g. 80000"' + pf('tdsSalary') + ' style="padding:8px 10px; background:var(--bg-elevated); border:1px solid var(--border); border-radius:6px; color:var(--text-primary); font-size:14px;" />' +
+      '</label>' +
+      tdsFieldRow(id, 'tdsInterest', 'Bank/FD interest TDS (Sec 393)', 'e.g. 4000') +
+      tdsFieldRow(id, 'tdsRent',     'Rent TDS (Sec 194I — if landlord deducted on you, or you on landlord)', 'e.g. 0') +
+      tdsFieldRow(id, 'tdsProfFees', 'Professional / technical fees TDS (Sec 393)', 'e.g. 0') +
+      tdsFieldRow(id, 'tdsOther',    'Other TDS — commission, brokerage etc.', 'e.g. 0') +
+      tdsFieldRow(id, 'tcsCollected','TCS (Sec 396) — car > ₹10L / foreign remittance / tour package', 'e.g. 0') +
+      tdsFieldRow(id, 'advanceTax',  'Advance tax paid (Sec 416) — quarterly instalments total', 'e.g. 0') +
+      tdsFieldRow(id, 'selfAssessmentTax', 'Self-assessment tax already paid (Sec 140A)', 'e.g. 0') +
+      '<button class="btn btn-primary" style="margin-top:6px;" onclick="taxesPaidSubmit(\'' + id + '\')">Save and compute →</button>' +
+    '</div>'
+  );
+}
+function taxesPaidSubmit(formId) {
+  pushSnapshot('before taxesPaidSubmit');
+  const d = state.data;
+  const form = document.getElementById(formId);
+  if (!form) return;
+  const inputs = form.querySelectorAll('input[data-tds-field]');
+  let typed = [];
+  inputs.forEach(inp => {
+    const f = inp.getAttribute('data-tds-field');
+    const v = parseFloat(inp.value);
+    if (Number.isFinite(v) && v >= 0) {
+      d[f] = v;
+      if (v > 0) typed.push(f + '=' + v.toLocaleString('en-IN'));
+    } else {
+      d[f] = 0;
+    }
+  });
+  const total = totalTaxesPaid(d);
+  user(typed.length ? 'Taxes paid: ' + typed.join(', ') : 'No taxes paid entered');
+  const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+  ai('<p>Got it. Total taxes already paid: <strong>' + fmt(total) + '</strong>. Computing your final tax now…</p>');
+  setTimeout(() => compute(), 500);
 }
 
 // CA-E: family pension deduction — Sec 92(1)(iia)
@@ -1546,21 +2550,109 @@ function savingsInterestSplit(d) {
   return { savings: sav, fd, oldDed, totalInterest: sav + fd };
 }
 
+// ============================================================
+// Feature C — Multi-employer Form 16 helpers
+// ============================================================
+function addEmployer(emp) {
+  state.data.employers = state.data.employers || [];
+  state.data.employers.push({
+    employerName: emp.employerName || '',
+    tan: emp.tan || '',
+    salary: Number(emp.salary) || 0,
+    basic: Number(emp.basic) || 0,
+    hra: Number(emp.hra) || 0,
+    tdsPaid: Number(emp.tdsPaid) || 0
+  });
+  recomputeFromEmployers();
+}
+function recomputeFromEmployers() {
+  rebuildSalaryAggregates(state.data);
+}
+// Spec helper — sums across employers when the array has entries; else leaves scalars alone.
+function rebuildSalaryAggregates(d) {
+  const list = d.employers || [];
+  if (!list.length) return;
+  d.salary = list.reduce((a, e) => a + (e.salary || 0), 0);
+  d.basic  = list.reduce((a, e) => a + (e.basic  || 0), 0);
+  d.hra    = list.reduce((a, e) => a + (e.hra    || 0), 0);
+  const totalSalTds = list.reduce((a, e) => a + (e.tdsPaid || 0), 0);
+  d.tdsSalary = totalSalTds;
+  d.tdsPaid   = totalSalTds; // back-compat mirror
+}
+// Spec helper — opens a fresh file picker so the user can upload another Form 16.
+// Pushes the current scalars into d.employers as the first entry (if not already present),
+// then triggers the file input. The handleFiles() success path already calls
+// extractedCardHtml() which (after this commit) shows the multi-employer summary.
+function addAnotherEmployer() {
+  const d = state.data;
+  d.employers = d.employers || [];
+  if (d.employers.length === 0 && (d.salary || 0) > 0) {
+    d.employers.push({
+      employerName: d.lastEmployer || 'Employer 1',
+      tan: d.lastTAN || '',
+      salary: d.salary || 0,
+      basic: d.basic || 0,
+      hra: d.hra || 0,
+      tdsPaid: d.tdsPaid || d.tdsSalary || 0
+    });
+  }
+  const fi = document.getElementById('fileInput');
+  if (fi) fi.click();
+}
+
+// ============================================================
+// Feature D — Sec 157 (old Sec 89) arrears relief — Form 10E
+// ============================================================
+function computeArrearsRelief(d) {
+  const arrears = Math.max(0, d.salaryArrears || 0);
+  if (arrears <= 0) return { arrears: 0, relief: 0, isUserProvided: false };
+  const userProvided = Math.max(0, d.arrearsRelief || 0);
+  if (userProvided > 0) return { arrears, relief: userProvided, isUserProvided: true };
+  // Rough fallback — 5% of arrears. STRONG caveat: must file Form 10E for accurate amount.
+  return { arrears, relief: Math.round(arrears * 0.05), isUserProvided: false };
+}
+
+// ============================================================
+// Feature E — Total taxes paid (bucketed; legacy tdsPaid as fallback)
+// ============================================================
+function totalTaxesPaid(d) {
+  const buckets = (d.tdsSalary || 0) + (d.tdsInterest || 0) + (d.tdsRent || 0) +
+                  (d.tdsProfFees || 0) + (d.tdsOther || 0) + (d.tcsCollected || 0) +
+                  (d.advanceTax || 0) + (d.selfAssessmentTax || 0);
+  if (buckets > 0) return buckets;
+  return d.tdsPaid || 0;
+}
+
 function recompute() {
   const d = state.data;
+  // Feature C — roll up multi-employer scalars before any computation.
+  rebuildSalaryAggregates(d);
+  // Feature E — legacy tdsPaid back-compat: if old chat flow only set tdsPaid, mirror to tdsSalary.
+  if ((d.tdsSalary || 0) === 0 && (d.tdsPaid || 0) > 0) d.tdsSalary = d.tdsPaid;
   // CA-J: NRI cannot claim senior basic exemption; NRI also can't claim Sec 153
   const ageKey = (d.isResident === false) ? 'regular' : (d.ageBand || (d.isSenior ? 'senior' : 'regular'));
   // CA-1: Slabs vary by age (super_senior / senior / regular)
   const slabsForAge = getOldSlabs(ageKey);
   // CA-19: Professional tax cap depends on state
   const profCap = profTaxCap(d.state || 'Maharashtra');
-  // CA-20: Employer NPS deduction capped at 14% of (basic + DA) — both regimes per FA 2025
+  // CA-20 / CA-1 F11: Employer NPS — Sec 124(2) — 14% in NEW regime (Sec 202),
+  // 10% in OLD regime for non-Govt employees. Govt employees always 14% (FA 2025).
   const npsCapBase = (d.basic || 0);
-  const empNpsAllowed = Math.min(d.employerNps || 0, npsCapBase * 0.14);
-  // CA-21 + CA-J: Sec 153 — TTA ₹10k / TTB ₹50k senior; NRI gets ZERO
-  const ttaCap = (d.isResident === false) ? 0
-              : ((d.ageBand === 'senior' || d.ageBand === 'super_senior' || d.isSenior) ? 50000 : 10000);
-  const ttaDed = Math.min(d.savingsInterest || 0, ttaCap);
+  const isGovtEmployee = d.isGovtEmployee === true;
+  const empNpsAllowedOld = Math.min(d.employerNps || 0, npsCapBase * (isGovtEmployee ? 0.14 : 0.10));
+  const empNpsAllowedNew = Math.min(d.employerNps || 0, npsCapBase * 0.14);
+  // CA-21 + CA-J + CA-1 F5: Sec 153 — savings ₹10k (TTA) / ₹50k senior (TTB, includes FD); NRI = 0
+  const intSplit = savingsInterestSplit(d);
+  const ttaDed = intSplit.oldDed; // already gates NRI + senior FD inclusion
+  // CA-1 F7: Family pension — Sec 92(1)(iia) — min(₹15k old / ₹25k new, 1/3 of pension)
+  const fpDedOld = familyPensionDeduction(d.familyPension || 0, 'old');
+  const fpDedNew = familyPensionDeduction(d.familyPension || 0, 'new');
+  const fpNetOld = Math.max(0, (d.familyPension || 0) - fpDedOld);
+  const fpNetNew = Math.max(0, (d.familyPension || 0) - fpDedNew);
+  // CA-1 F7: Dividend — Sec 92 residual, taxable at slab in both regimes
+  const div = dividendIncome(d);
+  // PGBP — Sec 26-66 / Sec 58 / Sec 61. Slab-rate income, joins GTI in BOTH regimes.
+  const pg = pgbpIncome(d);
   // CA-F: Clamp Ch VIII inputs at statutory limits before summing
   const sec123 = Math.min(d.sec80c || 0, 150000);
   const sec126Cap = (ageKey === 'senior' || ageKey === 'super_senior') ? 100000 : 75000; // self+parents combined cap
@@ -1577,18 +2669,27 @@ function recompute() {
   const hp = houseProperty(d);
   const hpForOld = hp.hpIncome >= 0 ? hp.hpIncome : -Math.min(200000, Math.abs(hp.hpIncome));
   const hpLossCfOld = hp.hpIncome < 0 ? Math.max(0, Math.abs(hp.hpIncome) - 200000) : 0;
-  const oldGTI = oldNetSalary + d.otherIncome + d.savingsInterest + hpForOld;
+  // CA-1 F6/F7: GTI must include FD interest, dividends, family-pension net of deduction.
+  // savingsInterest stays here as gross — TTA/TTB removed below as Ch VIII deduction.
+  // STCG on non-equity assets (d.stcgOther) is taxed at SLAB → goes into GTI, NOT special-rate.
+  // PGBP income (presumptive deemed profit OR regular net profit) → slab rate, joins GTI.
+  const oldGTI = oldNetSalary + d.otherIncome + d.savingsInterest + (d.fdInterest || 0)
+               + div.taxable + fpNetOld + hpForOld + (d.stcgOther || 0) + pg.businessIncome;
   // CA-F: Use clamped Sec 123 / Sec 126 instead of raw user input
-  const oldChVIII = sec123 + sec126 + empNpsAllowed + ttaDed + (d.sec80g || 0);
+  const oldChVIII = sec123 + sec126 + empNpsAllowedOld + ttaDed + (d.sec80g || 0);
   const oldTI = Math.max(0, oldGTI - oldChVIII);
   const oldSlabTax = applySlabs(oldTI, slabsForAge);
   const oldRebate = rebateOld(oldTI, oldSlabTax, d.isResident);
   const oldAfterRebate = Math.max(0, oldSlabTax - oldRebate);
   // Sec 188 / 194S / 115BBC — flat 30%, ADDED post-rebate (rebate doesn't shelter these)
   const sp = specialRateTax(d);
-  const oldTaxIncSpecial = oldAfterRebate + sp.total;
-  // Surcharge: lottery (Sec 188) gets FULL rate; VDA + anon donation use CG-cap helper (15% max)
-  const oldSurBase = surchargeWithCGCap(oldTI + sp.total / 0.30, oldAfterRebate + sp.lotteryTax, sp.vdaTax + sp.anonDonTax, 'old');
+  // Sec 196 / 197 / 198 — capital gains, taxed at 12.5% / 20% (NOT slab), ADDED post-rebate too.
+  // Sec 156 rebate cannot offset CG tax per 156(2). Surcharge on CG portion capped at 15%.
+  const cg = capitalGains(d);
+  const oldTaxIncSpecial = oldAfterRebate + sp.total + cg.totalCGTax;
+  // Surcharge: lottery (Sec 188) gets FULL rate; VDA + anon donation + CG (Sec 196-198) use 15% cap
+  const oldTiForSur = oldTI + sp.total / 0.30 + cg.totalCGSpecialIncome;
+  const oldSurBase = surchargeWithCGCap(oldTiForSur, oldAfterRebate + sp.lotteryTax, sp.vdaTax + sp.anonDonTax + cg.totalCGTax, 'old');
   const oldSur = oldSurBase;
   const oldCess = (oldTaxIncSpecial + oldSur) * 0.04;
   const oldTotal = oldTaxIncSpecial + oldSur + oldCess;
@@ -1597,24 +2698,41 @@ function recompute() {
   const newNetSalary = Math.max(0, d.salary - newStd);
   // Sec 202: new regime DISALLOWS inter-head HP loss set-off; positive HP income still taxed.
   const hpForNew = hp.hpIncome > 0 ? hp.hpIncome : 0;
-  const newGTI = newNetSalary + d.otherIncome + d.savingsInterest + hpForNew;
-  const newChVIII = empNpsAllowed; // Only 124(2) carries to new regime
+  // CA-1 F6/F7: include FD, dividend, family-pension net (Sec 92) in new regime too.
+  // Sec 202 disallows TTA/TTB so savings/FD interest is fully taxable here.
+  // STCG on non-equity (d.stcgOther) is also slab-rate so it joins GTI here.
+  // PGBP income joins new-regime GTI as well — no presumptive disallowance under Sec 202.
+  const newGTI = newNetSalary + d.otherIncome + d.savingsInterest + (d.fdInterest || 0)
+               + div.taxable + fpNetNew + hpForNew + (d.stcgOther || 0) + pg.businessIncome;
+  const newChVIII = empNpsAllowedNew; // Only Sec 124(2) carries to new regime (14% cap)
   const newTI = Math.max(0, newGTI - newChVIII);
   const newSlabTax = applySlabs(newTI, newSlabs);
   const newRebate = rebateNew(newTI, newSlabTax, d.isResident);
   const newAfterRebate = Math.max(0, newSlabTax - newRebate);
-  // Sec 188 / 194S / 115BBC — flat 30%, ADDED post-rebate
-  const newTaxIncSpecial = newAfterRebate + sp.total;
-  const newSur = surchargeWithCGCap(newTI + sp.total / 0.30, newAfterRebate + sp.lotteryTax, sp.vdaTax + sp.anonDonTax, 'new');
+  // Sec 188 / 194S / 115BBC — flat 30%, ADDED post-rebate.
+  // Sec 196 / 197 / 198 — capital gains likewise added post-rebate (Sec 156(2)).
+  const newTaxIncSpecial = newAfterRebate + sp.total + cg.totalCGTax;
+  const newTiForSur = newTI + sp.total / 0.30 + cg.totalCGSpecialIncome;
+  const newSur = surchargeWithCGCap(newTiForSur, newAfterRebate + sp.lotteryTax, sp.vdaTax + sp.anonDonTax + cg.totalCGTax, 'new');
   const newCess = (newTaxIncSpecial + newSur) * 0.04;
   const newTotal = newTaxIncSpecial + newSur + newCess;
+  // Feature D — Sec 157 arrears relief (Form 10E). Subtract from BOTH regimes' totals.
+  const ar = computeArrearsRelief(d);
+  const oldTotalAfterRelief = Math.max(0, oldTotal - ar.relief);
+  const newTotalAfterRelief = Math.max(0, newTotal - ar.relief);
+  // Mutate the per-regime detail objects so display + JSON reflect the post-relief total
+  const oldDetailsObj = { hraExempt: oldHra, std: oldStd, prof: oldProf, gti: oldGTI, chVIII: oldChVIII, ttaDed, taxable: oldTI, slab: oldSlabTax, rebate: oldRebate, sur: oldSur, cess: oldCess, total: oldTotalAfterRelief, totalBeforeRelief: oldTotal, npsAllowed: empNpsAllowedOld, hp: hpForOld, hpLossCf: hpLossCfOld, hpDetail: hp.hpDetail, special: sp, cg: cg, pg: pg, fpDed: fpDedOld, divTds: div.tds };
+  const newDetailsObj = { std: newStd, gti: newGTI, chVIII: newChVIII, taxable: newTI, slab: newSlabTax, rebate: newRebate, sur: newSur, cess: newCess, total: newTotalAfterRelief, totalBeforeRelief: newTotal, npsAllowed: empNpsAllowedNew, hp: hpForNew, hpDetail: hp.hpDetail, special: sp, cg: cg, pg: pg, fpDed: fpDedNew, divTds: div.tds };
   return {
-    oldDetails: { hraExempt: oldHra, std: oldStd, prof: oldProf, gti: oldGTI, chVIII: oldChVIII, ttaDed, taxable: oldTI, slab: oldSlabTax, rebate: oldRebate, sur: oldSur, cess: oldCess, total: oldTotal, npsAllowed: empNpsAllowed, hp: hpForOld, hpLossCf: hpLossCfOld, hpDetail: hp.hpDetail, special: sp },
-    newDetails: { std: newStd, gti: newGTI, chVIII: newChVIII, taxable: newTI, slab: newSlabTax, rebate: newRebate, sur: newSur, cess: newCess, total: newTotal, hp: hpForNew, hpDetail: hp.hpDetail, special: sp },
+    oldDetails: oldDetailsObj,
+    newDetails: newDetailsObj,
     hpRaw: hp.hpIncome, hpLossCarryFwd: hp.lossCarryFwd,
-    oldTotal, newTotal,
-    winner: newTotal < oldTotal ? 'new' : 'old',
-    savings: Math.abs(oldTotal - newTotal)
+    cg: cg, pg: pg,
+    arrearsRelief: ar,
+    oldTotal: oldTotalAfterRelief, newTotal: newTotalAfterRelief,
+    oldTotalBeforeRelief: oldTotal, newTotalBeforeRelief: newTotal,
+    winner: newTotalAfterRelief < oldTotalAfterRelief ? 'new' : 'old',
+    savings: Math.abs(oldTotalAfterRelief - newTotalAfterRelief)
   };
 }
 
@@ -1748,6 +2866,7 @@ async function demo() {
 }
 
 async function askRent() {
+  pushSnapshot('before askRent');
   user('Yes, my rent went up. Now ₹35,000/month, so ₹4,20,000 for the year.');
   await sleep(600); showTyping(); await sleep(1800); hideTyping();
   state.data.rent = 420000;
@@ -1761,6 +2880,7 @@ async function askRent() {
 }
 
 async function ask80c() {
+  pushSnapshot('before ask80c');
   user('Same as last year — ₹1,50,000 in PPF and ELSS combined.');
   await sleep(500); showTyping(); await sleep(1200); hideTyping();
   state.data.sec80c = 150000;
@@ -1773,17 +2893,40 @@ async function ask80c() {
 }
 
 async function ask80dY() {
+  pushSnapshot('before ask80dY');
   user('Yes, ₹25,000 paid to HDFC ERGO for self + spouse policy.');
   await sleep(500); showTyping(); await sleep(1500); hideTyping();
   state.data.sec80d = 25000;
-  await compute();
+  await askCGGate();
 }
 
 async function ask80dN() {
+  pushSnapshot('before ask80dN');
   user('Skip — no health insurance this year.');
   await sleep(500); showTyping(); await sleep(1500); hideTyping();
   state.data.sec80d = 0;
-  await compute();
+  await askCGGate();
+}
+
+// Lightweight gate: ask if user has CG — if no, go straight to compute. If yes, run full CG flow.
+async function askCGGate() {
+  pushSnapshot('before askCGGate');
+  await sleep(300); showTyping(); await sleep(800); hideTyping();
+  ai(
+    '<p>One more thing — did you sell any shares, mutual funds, or property this year?</p>' +
+    '<p class="secondary small" style="margin-top:6px;">If yes I\'ll calculate the capital gains tax separately. If no, I\'ll compute your final tax now.</p>' +
+    '<div class="action-row" style="margin-top:10px;">' +
+      '<button class="btn btn-secondary" onclick="askCapitalGains()">Yes, I sold something</button>' +
+      '<button class="btn btn-primary" onclick="cgSkipAndCompute()">No — compute my tax</button>' +
+    '</div>'
+  );
+}
+
+async function cgSkipAndCompute() {
+  user('No, no asset sales this year');
+  state.data.hasCapitalGains = false;
+  await sleep(300);
+  await askBusinessGate();
 }
 
 async function compute() {
@@ -1803,6 +2946,8 @@ async function compute() {
         '<div class="compare-cell-amount">' + formatINR(r.oldTotal) + '</div>' +
         '<div class="compare-cell-detail"><span>Taxable</span><span>' + formatINR(r.oldDetails.taxable) + '</span></div>' +
         '<div class="compare-cell-detail"><span>Slab tax</span><span>' + formatINR(r.oldDetails.slab) + '</span></div>' +
+        ((r.pg && r.pg.businessIncome > 0) ? '<div class="compare-cell-detail"><span>incl. PGBP (Sec 26-66)</span><span>' + formatINR(r.pg.businessIncome) + '</span></div>' : '') +
+        ((r.cg && r.cg.totalCGTax > 0) ? '<div class="compare-cell-detail"><span>+ CG tax (Sec 196/197/198)</span><span>' + formatINR(r.cg.totalCGTax) + '</span></div>' : '') +
         '<div class="compare-cell-detail"><span>+ Cess (4%)</span><span>' + formatINR(r.oldDetails.cess) + '</span></div>' +
       '</div>' +
       '<div class="compare-cell ' + (winner === 'new' ? 'win' : '') + '">' +
@@ -1810,20 +2955,61 @@ async function compute() {
         '<div class="compare-cell-amount">' + formatINR(r.newTotal) + '</div>' +
         '<div class="compare-cell-detail"><span>Taxable</span><span>' + formatINR(r.newDetails.taxable) + '</span></div>' +
         '<div class="compare-cell-detail"><span>Slab tax</span><span>' + formatINR(r.newDetails.slab) + '</span></div>' +
+        ((r.pg && r.pg.businessIncome > 0) ? '<div class="compare-cell-detail"><span>incl. PGBP (Sec 26-66)</span><span>' + formatINR(r.pg.businessIncome) + '</span></div>' : '') +
+        ((r.cg && r.cg.totalCGTax > 0) ? '<div class="compare-cell-detail"><span>+ CG tax (Sec 196/197/198)</span><span>' + formatINR(r.cg.totalCGTax) + '</span></div>' : '') +
         '<div class="compare-cell-detail"><span>+ Cess (4%)</span><span>' + formatINR(r.newDetails.cess) + '</span></div>' +
       '</div>' +
     '</div>' +
+    ((r.arrearsRelief && r.arrearsRelief.relief > 0) ? '<p class="secondary small" style="margin-top: 12px; padding: 10px 12px; background: rgba(34,197,94,0.08); border-left: 3px solid #22c55e; border-radius: 6px;">Less: Relief u/s ' + ref('s157', 'Sec 157') + ' (Form 10E) — <strong style="color:#22c55e;">' + formatINR(r.arrearsRelief.relief) + '</strong> on arrears of ' + formatINR(r.arrearsRelief.arrears) + (r.arrearsRelief.isUserProvided ? '' : ' <em>(rough 5% estimate — file Form 10E for accurate figure)</em>') + '</p>' : '') +
     '<div class="reco-banner">' +
       '<div><div class="reco-banner-label">Recommendation</div><div class="reco-banner-title">Choose ' + (winner === 'new' ? 'NEW' : 'OLD') + ' Regime</div><div class="reco-banner-desc">' + (winner === 'old' ? 'Your HRA + 80C + 80D deductions outweigh the higher slabs. Old regime wins.' : 'Even with HRA, 80C and 80D, the new regime\'s wider slabs and higher standard deduction beat the old.') + '</div></div>' +
       '<div class="reco-banner-savings"><div class="reco-banner-savings-label">You save</div><div class="reco-banner-savings-amount">' + formatINR(savings) + '</div></div>' +
     '</div>' +
-    '<p class="secondary small" style="margin-top: 16px;">TDS already paid: <strong style="color: var(--text-primary);">₹2,15,000</strong> (' + ref('s392', 'Sec 392') + '). So your <strong style="color: ' + (r[winner+'Total'] < 215000 ? '#4ade80' : '#fb923c') + ';">' + (r[winner+'Total'] < 215000 ? '₹' + (215000 - r[winner+'Total']).toLocaleString('en-IN') + ' refund' : '₹' + (r[winner+'Total'] - 215000).toLocaleString('en-IN') + ' balance') + '</strong> ' + (r[winner+'Total'] < 215000 ? 'is refundable.' : 'needs to be paid before filing.') + '</p>' +
-    interestBannerHtml(r[winner+'Total'], 215000) +
-    '<p style="margin-top: 16px;">Ready to generate your ITR-1 JSON ' + ref('s263', 'Sec 263') + '?</p>' +
-    '<div class="action-row">' +
-      '<button class="btn btn-primary" onclick="generate(\'' + winner + '\')">' + arrowDownSvg() + ' Generate ITR-1 JSON</button>' +
-      '<button class="btn btn-secondary" onclick="askChange()">Wait — let me change something</button>' +
-    '</div>'
+    (function(){
+       var d = state.data;
+       var tdsAmt = totalTaxesPaid(d);
+       var winnerTax = r[winner+'Total'];
+       var refund = winnerTax < tdsAmt;
+       var diff = Math.abs(tdsAmt - winnerTax);
+       // Feature E — bucketed breakdown. Show only non-zero rows.
+       var rows = [
+         { v: d.tdsSalary || 0,        label: 'Salary TDS',           pill: ref('s392', 'Sec 392') },
+         { v: d.tdsInterest || 0,      label: 'Interest TDS',         pill: ref('s393', 'Sec 393') },
+         { v: d.tdsRent || 0,          label: 'Rent TDS',             pill: ref('s393', 'Sec 393') },
+         { v: d.tdsProfFees || 0,      label: 'Professional fees TDS',pill: ref('s393', 'Sec 393') },
+         { v: d.tdsOther || 0,         label: 'Other TDS',            pill: ref('s393', 'Sec 393') },
+         { v: d.tcsCollected || 0,     label: 'TCS collected',        pill: ref('s396', 'Sec 396') },
+         { v: d.advanceTax || 0,       label: 'Advance tax',          pill: ref('s416', 'Sec 416') },
+         { v: d.selfAssessmentTax || 0,label: 'Self-assessment tax',  pill: ref('s140A', 'Sec 140A') }
+       ];
+       var nonZero = rows.filter(function(rw){ return rw.v > 0; });
+       var breakdown = '';
+       if (nonZero.length > 0) {
+         breakdown = '<div style="margin-top: 12px; padding: 10px 12px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px;">' +
+           '<div style="font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 6px;">TAXES ALREADY PAID — BREAKDOWN</div>' +
+           nonZero.map(function(rw){
+             return '<div style="display:flex; justify-content:space-between; font-size:13px; padding:3px 0;"><span>' + esc(rw.label) + ' ' + rw.pill + '</span><span>' + formatINR(rw.v) + '</span></div>';
+           }).join('') +
+           '<div style="display:flex; justify-content:space-between; font-size:13.5px; padding:6px 0 0; border-top:1px solid var(--border); margin-top:6px; font-weight:600;"><span>Total credits</span><span>' + formatINR(tdsAmt) + '</span></div>' +
+           '</div>';
+       }
+       var summary = '<p class="secondary small" style="margin-top: 16px;">Total taxes already paid: <strong style="color: var(--text-primary);">' + formatINR(tdsAmt) + '</strong>. So your <strong style="color: ' + (refund ? '#4ade80' : '#fb923c') + ';">' + formatINR(diff) + (refund ? ' refund' : ' balance') + '</strong> ' + (refund ? 'is refundable.' : 'needs to be paid before filing.') + '</p>';
+       var arrearsNote = (r.arrearsRelief && r.arrearsRelief.relief > 0)
+         ? '<p class="secondary small" style="margin-top:8px;">' + ref('s157', 'Sec 157') + ' arrears relief of ' + formatINR(r.arrearsRelief.relief) + ' has been deducted from both regime totals. ⚠ File Form 10E on the income-tax portal BEFORE submitting this ITR.</p>'
+         : '';
+       return breakdown + summary + arrearsNote;
+    })() +
+    interestBannerHtml(r[winner+'Total'], totalTaxesPaid(state.data)) +
+    (function(){
+       // CA-3 #2: pick correct ITR form based on actual income heads
+       var formInfo = selectItrForm(state.data);
+       var btnLabel = 'Generate ' + formInfo.form.split(' ')[0] + ' JSON';
+       return '<p style="margin-top: 16px;">Ready to generate your <strong>' + esc(formInfo.form) + '</strong> JSON ' + ref('s263', 'Sec 263') + '?<br><span class="secondary small">' + esc(formInfo.reason) + '</span></p>' +
+         '<div class="action-row">' +
+           '<button class="btn btn-primary" onclick="generate(\'' + winner + '\')">' + arrowDownSvg() + ' ' + esc(btnLabel) + '</button>' +
+           '<button class="btn btn-secondary" onclick="askChange()">Wait — let me change something</button>' +
+         '</div>';
+    })()
   );
 }
 
@@ -1840,6 +3026,7 @@ async function askChange() {
 }
 
 async function addDonation() {
+  pushSnapshot('before addDonation');
   user('Yes, UPI to a registered NGO. Receipt available.');
   await sleep(500); showTyping(); await sleep(1500); hideTyping();
   state.data.sec80g = 20000;
@@ -1858,7 +3045,11 @@ async function addDonation() {
       '</div>' +
     '</div>' +
     '<p class="secondary small" style="margin-top: 12px;">' + (r.winner === 'new' ? 'Even with the donation deduction, the new regime is still cheaper by ' + formatINR(r.savings) + '. Recommendation stands: NEW regime.' : 'With the donation, old regime is now better by ' + formatINR(r.savings) + '. Recommendation switched to OLD regime.') + '</p>' +
-    '<div class="action-row"><button class="btn btn-primary" onclick="generate(\'' + r.winner + '\')">' + arrowDownSvg() + ' Generate ITR-1 JSON</button></div>'
+    (function(){
+       var fi = selectItrForm(state.data);
+       var fc = (fi.form || 'ITR-1').split(' ')[0];
+       return '<div class="action-row"><button class="btn btn-primary" onclick="generate(\'' + r.winner + '\')">' + arrowDownSvg() + ' Generate ' + esc(fc) + ' JSON</button></div>';
+    })()
   );
 }
 
@@ -1873,13 +3064,49 @@ async function generate(regime) {
   const d = state.data;
   const totalTax = regime === 'new' ? r.newTotal : r.oldTotal;
   const details = regime === 'new' ? r.newDetails : r.oldDetails;
+  // CA-3 #2: pick the right ITR form based on actual income heads collected.
+  const formInfo = selectItrForm(d);
+  const itrFormCode = (formInfo.form || 'ITR-1').split(' ')[0]; // "ITR-1" / "ITR-2" / "ITR-3" / "ITR-4"
+  const cg = r.cg || { totalCGTax: 0, totalCGSpecialIncome: 0 };
 
   const itrJson = {
-    "ITR": { "ITR1": {
-      "CreationInfo": { "SWVersionNo": "0.1", "SWCreatedBy": "Taxy", "JSONCreationDate": new Date().toISOString().split('T')[0], "ActReference": "Income-tax Act, 2025 (30 of 2025) as amended by Finance Act, 2026", "ActAppliesFrom": "2026-04-01 (Tax Year 2026-27 onward)" },
-      "Form_ITR1": { "FormName": "ITR-1", "TaxYear": "2026-27", "AssessmentYear_legacy": "2027-28", "_note": "ITA 2025 Sec 3 replaces 'previous year + assessment year' with single 'Tax Year'. Legacy field kept for any CBDT systems still on old schema.", "SchemaVer": "DRAFT — replace with official CBDT XSD before filing" },
-      "PersonalInfo": { "AssesseeName": { "FirstName": "Priya", "SurNameOrOrgName": "Mehta" }, "PAN": d.pan, "Status": "I", "ResidentialStatus": "RESIDENT" },
+    "ITR": { [itrFormCode.replace('-', '')]: {
+      "CreationInfo": { "SWVersionNo": "0.2", "SWCreatedBy": "Taxy", "JSONCreationDate": new Date().toISOString().split('T')[0], "ActReference": "Income-tax Act, 2025 (30 of 2025) as amended by Finance Act, 2026", "ActAppliesFrom": "2026-04-01 (Tax Year 2026-27 onward)" },
+      "Form_ITR": { "FormName": itrFormCode, "FormReason": formInfo.reason, "TaxYear": "2026-27", "AssessmentYear_legacy": "2027-28", "_note": "ITA 2025 Sec 3 replaces 'previous year + assessment year' with single 'Tax Year'. Legacy field kept for any CBDT systems still on old schema.", "SchemaVer": "DRAFT — replace with official CBDT XSD before filing" },
+      "PersonalInfo": (function(){
+        // CA-3 #1: never hardcode names. Use Form-16-extracted/typed name; split on first space.
+        var nm = (d.fullName || '').trim();
+        var parts = nm ? nm.split(/\s+/) : [];
+        var first = parts.shift() || '';
+        var sur = parts.join(' ');
+        return {
+          "AssesseeName": { "FirstName": first, "SurNameOrOrgName": sur },
+          "_AssesseeName_note": nm ? undefined : "Name missing — populate before filing.",
+          "PAN": d.pan,
+          "Status": "I",
+          "ResidentialStatus": (d.isResident === false) ? "NRI" : "RESIDENT"
+        };
+      })(),
       "FilingStatus": { "ReturnFileSec": 11, "NewTaxRegime": regime === 'new' ? "Y" : "N", "Section202Applied": regime === 'new' },
+      "Schedule_BP_PGBP": (d.hasBusinessIncome && r.pg && r.pg.businessIncome > 0) ? {
+        "_section_refs": "Sec 26-66 (regular) / Sec 58 (presumptive biz) / Sec 61 (presumptive prof) / Sec 63 (audit)",
+        "Mode": r.pg.mode,
+        "GrossReceiptsOrTurnover": d.pgbpGrossReceipts || 0,
+        "CashReceiptsPct": d.pgbpCashPct == null ? 100 : d.pgbpCashPct,
+        "DeemedProfit": Math.round(r.pg.deemed),
+        "BusinessIncomeAddedToGTI": Math.round(r.pg.businessIncome),
+        "TaxAuditRequired_Sec63": r.pg.auditRequired,
+        "PresumptiveLimitBreached": r.pg.presumptiveLimitBreached,
+        "_note": r.pg.auditRequired ? "Form 3CD due before ITR." : (r.pg.mode === 'presumptive_biz' ? "Sec 58 lock-in: 5 years." : undefined)
+      } : undefined,
+      "Schedule_CapitalGains": (d.hasCapitalGains && cg.totalCGTax > 0) ? {
+        "_section_refs": "Sec 196 (STCG STT-paid eq) / Sec 197 (LTCG general) / Sec 198 (LTCG STT-paid eq)",
+        "STCG_Equity_Sec196": { "amount": d.stcgEquity || 0, "rate_pct": 20, "tax": Math.round(cg.stcgEqTax) },
+        "LTCG_Equity_Sec198": { "gross": d.ltcgEquity || 0, "exemption_125k": Math.round(cg.ltcgEqExemption), "taxable": Math.max(0, (d.ltcgEquity || 0) - 125000), "rate_pct": 12.5, "tax": Math.round(cg.ltcgEqTax) },
+        "LTCG_Other_Sec197": { "gross": d.ltcgOther || 0, "sec54_exempt": d.sec54Exempt || 0, "taxable": Math.max(0, (d.ltcgOther || 0) - (d.sec54Exempt || 0)), "rate_pct": 12.5, "tax": Math.round(cg.ltcgOtherTax) },
+        "STCG_Other_SlabRate": { "amount": d.stcgOther || 0, "_note": "Taxed at applicable slab rate — already included in TotalIncome/TaxOnSlabs above." },
+        "TotalCGTax": Math.round(cg.totalCGTax)
+      } : undefined,
       "ITR1_IncomeDeductions": {
         "GrossSalary_Sec15": d.salary,
         "HRA_Exempt_SchIIIsl7": regime === 'old' ? r.oldDetails.hraExempt : 0,
@@ -1902,29 +3129,64 @@ async function generate(regime) {
         "EducationCess_4pct": Math.round(details.cess),
         "TotalTaxPayable": Math.round(totalTax)
       },
-      "TaxPaid": { "TaxesPaid": { "TDS_Sec392": d.tdsPaid, "TotalTaxesPaid": d.tdsPaid }, "BalTaxPayable": Math.max(0, Math.round(totalTax - d.tdsPaid)), "RefundAmount": Math.max(0, Math.round(d.tdsPaid - totalTax)) },
+      "Schedule_S_Salary_PerEmployer": (d.employers && d.employers.length > 0) ? {
+        _note: "Multi-employer return — see Schedule_S detail",
+        AggregateGrossSalary_Sec15: d.employers.reduce((a, e) => a + (e.salary || 0), 0),
+        Employers: d.employers.map(e => ({
+          EmployerName: e.employerName || '',
+          TAN: e.tan || '',
+          Salary: e.salary || 0,
+          TDS: e.tdsPaid || 0
+        }))
+      } : undefined,
+      "Schedule_Sec157_ArrearsRelief": (d.hasArrears || (r.arrearsRelief && r.arrearsRelief.relief > 0)) ? {
+        ArrearsAmount: r.arrearsRelief.arrears,
+        ReliefClaimed: r.arrearsRelief.relief,
+        UserProvided: r.arrearsRelief.isUserProvided,
+        Form10E_Required: true,
+        ArrearsForFY: d.arrearsForYear || undefined,
+        _note: r.arrearsRelief.isUserProvided ? "User-computed relief from Form 10E" : "Rough 5% estimate — file Form 10E for accurate amount before filing ITR"
+      } : undefined,
+      "TaxPaid": {
+        "TaxesPaid": {
+          "TDS_Sec392_Salary": d.tdsSalary || d.tdsPaid || 0,
+          "TDS_Sec393_Interest": d.tdsInterest || 0,
+          "TDS_Sec393_Rent": d.tdsRent || 0,
+          "TDS_Sec393_ProfFees": d.tdsProfFees || 0,
+          "TDS_Sec393_Other": d.tdsOther || 0,
+          "TCS_Sec396": d.tcsCollected || 0,
+          "AdvanceTax_Sec416": d.advanceTax || 0,
+          "SelfAssessmentTax_Sec140A": d.selfAssessmentTax || 0,
+          "TotalTaxesPaid": totalTaxesPaid(d)
+        },
+        "BalTaxPayable": Math.max(0, Math.round(totalTax - totalTaxesPaid(d))),
+        "RefundAmount": Math.max(0, Math.round(totalTaxesPaid(d) - totalTax))
+      },
       "Verification": { "Place": d.city, "Date": new Date().toISOString().split('T')[0] }
     } }
   };
 
   const blob = new Blob([JSON.stringify(itrJson, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
-  const refund = Math.max(0, d.tdsPaid - totalTax);
-  const balance = Math.max(0, totalTax - d.tdsPaid);
+  // DEV-1 #2: revoke after the user has had time to click the download link, to free memory.
+  setTimeout(() => { try { URL.revokeObjectURL(url); } catch (_) {} }, 60_000);
+  const totalPaid = totalTaxesPaid(d);
+  const refund = Math.max(0, totalPaid - totalTax);
+  const balance = Math.max(0, totalTax - totalPaid);
   // Audit fix #11: timestamp filename so re-downloads don't overwrite
   const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-  const filename = 'ITR-1_FY2026-27_' + d.pan + '_' + ts + '.json';
+  const filename = itrFormCode + '_FY2026-27_' + d.pan + '_' + ts + '.json';
 
   ai(
-    '<p>Done. Your ITR-1 is ready.</p>' +
+    '<p>Done. Your <strong>' + esc(formInfo.form) + '</strong> is ready.</p>' +
     '<div class="itr-card">' +
       '<div class="itr-card-icon">' + arrowDownSvg(20) + '</div>' +
-      '<div class="itr-card-info"><div class="itr-card-title">' + filename + '</div><div class="itr-card-meta">' + (regime === 'new' ? 'New regime (Sec 202)' : 'Old regime') + ' · Total tax ' + formatINR(totalTax) + '</div></div>' +
-      '<a href="' + url + '" download="' + filename + '" class="itr-card-action">Download</a>' +
+      '<div class="itr-card-info"><div class="itr-card-title">' + esc(filename) + '</div><div class="itr-card-meta">' + (regime === 'new' ? 'New regime (Sec 202)' : 'Old regime') + ' · Total tax ' + formatINR(totalTax) + (cg.totalCGTax > 0 ? ' · incl. CG tax ' + formatINR(cg.totalCGTax) : '') + '</div></div>' +
+      '<a href="' + url + '" download="' + esc(filename) + '" class="itr-card-action">Download</a>' +
     '</div>' +
-    '<div class="refund-banner"><div class="refund-banner-title">' + (refund > 0 ? '🎉 You\'re getting a refund of ' + formatINR(refund) : 'Balance to pay: ' + formatINR(balance)) + '</div><div class="refund-banner-meta">' + (refund > 0 ? 'After filing, refund will hit your HDFC account in 4-12 weeks. Filing per Sec 263 deadline 31 July 2027.' : 'Pay via challan ITNS 280 before filing the return.') + '</div></div>' +
+    '<div class="refund-banner"><div class="refund-banner-title">' + (refund > 0 ? '🎉 You\'re getting a refund of ' + formatINR(refund) : 'Balance to pay: ' + formatINR(balance)) + '</div><div class="refund-banner-meta">' + (refund > 0 ? 'After filing, refund will hit your bank account in 4-12 weeks. Filing per Sec 263 deadline 31 July 2027.' : 'Pay via challan ITNS 280 before filing the return.') + '</div></div>' +
     '<p style="margin-top: 18px; font-weight: 500;">Next steps:</p>' +
-    '<ol class="next-steps"><li>Download the JSON file above</li><li>Login at <a href="https://incometax.gov.in" target="_blank">incometax.gov.in</a> with your PAN</li><li>e-File → Income Tax Returns → File Income Tax Return</li><li>Select FY 2026-27, ITR-1, upload this JSON</li><li>Verify via Aadhaar OTP / DSC / EVC</li></ol>' +
+    '<ol class="next-steps"><li>Download the JSON file above</li><li>Login at <a href="https://incometax.gov.in" target="_blank">incometax.gov.in</a> with your PAN</li><li>e-File → Income Tax Returns → File Income Tax Return</li><li>Select FY 2026-27, ' + esc(itrFormCode) + ', upload this JSON</li><li>Verify via Aadhaar OTP / DSC / EVC</li></ol>' +
     '<p class="secondary small" style="margin-top: 14px;">⚠ Don\'t forget: rent over ₹1L means you need to add landlord\'s PAN before filing (per ' + ref('s263', 'Sec 263(2)') + ' disclosure rules).</p>' +
     '<p class="secondary small" style="margin-top: 8px;">⚠ This JSON uses a DRAFT schema. Map to the official CBDT XSD for AY 2027-28 before actually filing.</p>' +
     '<p style="margin-top: 18px;">Anything else for this filing?</p>' +
@@ -2016,7 +3278,12 @@ async function handleFiles(fileList) {
       if (d._validationWarnings && d._validationWarnings.length) {
         warningsHtml = '<div style="margin-top:8px;padding:10px 12px;background:rgba(245,158,11,0.08);border-left:3px solid #f59e0b;border-radius:6px;"><div style="font-size:11px;color:#f59e0b;font-weight:600;letter-spacing:0.5px;margin-bottom:6px;">⚠ SANITY CHECK</div>' + d._validationWarnings.map(w => '<p class="secondary small" style="margin: 4px 0; font-size: 12.5px;">• ' + esc(w) + '</p>').join('') + '</div>';
       }
-      ai(intro + extractedCardHtml(d) + warningsHtml + '<p class="secondary small" style="margin-top: 10px;">Looks right? Type <b>"yes"</b> to continue. Anything wrong? Just tell me — e.g. <i>"salary should be 19 lakh"</i>.</p>');
+      ai(intro + extractedCardHtml(d) + warningsHtml +
+        '<p class="secondary small" style="margin-top: 10px;">Looks right? Type <b>"yes"</b> to continue. Anything wrong? Just tell me — e.g. <i>"salary should be 19 lakh"</i>.</p>' +
+        '<div class="action-row" style="margin-top:8px;">' +
+          '<button class="btn btn-secondary" onclick="addAnotherEmployer()">+ Add another employer (upload Form 16)</button>' +
+          '<button class="btn btn-secondary" onclick="askMultipleEmployers()">+ Enter employers manually</button>' +
+        '</div>');
     } else if (result.error) {
       errors.push(result.text || result.error);
     }
@@ -2130,9 +3397,43 @@ async function handleUserText(text) {
   ai('<p class="secondary small">I didn\'t catch that. Try typing one of:</p><ul style="margin: 8px 0 0 18px; font-size: 13.5px; color: var(--text-secondary); line-height: 1.8;"><li><i>"salary 18 lakh"</i> — to set your salary</li><li><i>"tds 2 lakh"</i> — to set tax already paid</li><li><i>"compute"</i> or <i>"yes"</i> — to compute the tax</li><li><i>"help"</i> — if you\'re stuck</li></ul>');
 }
 
+// DEV-1 #1: define toggleSidebar so the mobile hamburger + backdrop don't ReferenceError.
+// `force` undefined = toggle, true = open, false = close.
+function toggleSidebar(force) {
+  const sb = document.getElementById('sidebar');
+  const bd = document.getElementById('sidebarBackdrop');
+  const btn = document.querySelector('.hamburger');
+  if (!sb) return;
+  const willOpen = (typeof force === 'boolean') ? force : !sb.classList.contains('open');
+  sb.classList.toggle('open', willOpen);
+  if (bd) bd.classList.toggle('show', willOpen);  // backdrop CSS uses .show
+  if (btn) btn.setAttribute('aria-expanded', String(willOpen));
+}
+window.toggleSidebar = toggleSidebar;
+
 function newChat() {
   messages.innerHTML = '';
-  state.data = { salary:0, hra:0, basic:0, rent:0, isMetro:true, otherIncome:0, savingsInterest:0, sec80c:0, sec80d:0, sec80g:0, employerNps:0, isSenior:false, ageBand:'regular', isResident:true, state:'Maharashtra', pan:'ABCDE1234F', tdsPaid:0, city:'Mumbai' };
+  state.data = {
+    salary:0, hra:0, basic:0, rent:0, isMetro:true,
+    otherIncome:0, savingsInterest:0, fdInterest:0,
+    dividend:0, dividendMaxPerCompany:0, familyPension:0,
+    sec80c:0, sec80d:0, sec80g:0, employerNps:0,
+    stcgEquity:0, ltcgEquity:0, ltcgOther:0, stcgOther:0, sec54Exempt:0,
+    hasCapitalGains:false,
+    pgbpMode:'none', pgbpGrossReceipts:0, pgbpCashPct:100, businessNetProfit:0,
+    isProfession:false, hasBusinessIncome:false, isPresumptive:false,
+    isSenior:false, ageBand:'regular', isResident:true,
+    isGovtEmployee:false,
+    state:'Maharashtra', pan:'ABCDE1234F', tdsPaid:0, city:'Mumbai',
+    // Feature C — multi-employer Form 16
+    employers: [],
+    // Feature D — Sec 157 arrears relief
+    salaryArrears: 0, arrearsRelief: 0, arrearsForYear: '', hasArrears: false,
+    // Feature E — bucketed taxes paid
+    tdsSalary: 0, tdsInterest: 0, tdsRent: 0, tdsProfFees: 0, tdsOther: 0,
+    tcsCollected: 0, advanceTax: 0, selfAssessmentTax: 0,
+    fullName: ''
+  };
   delete state.last;
   welcome();
 }
@@ -2243,8 +3544,19 @@ window.handleUserText = async function(text) {
       html += '<p class="secondary small">No new case law in pending review yet.</p>';
     } else {
       html += '<div style="margin-top:10px;">';
+      // DEV-2 #1 (Critical): scraped content is untrusted — escape every field, gate URL scheme to https.
+      const safeUrl = (u) => {
+        try {
+          const parsed = new URL(String(u || ''), 'https://example.com');
+          return (parsed.protocol === 'https:' || parsed.protocol === 'http:') ? parsed.toString() : '#';
+        } catch { return '#'; }
+      };
       cases.forEach(c => {
-        html += '<div style="padding:8px 10px; background:var(--bg-elevated); border-radius:8px; margin-bottom:6px; font-size:13px;"><a href="' + c.url + '" target="_blank" style="color:#c4b5fd;">' + c.title + '</a><div style="color:var(--text-muted); font-size:11px; margin-top:2px;">' + (c.source||'') + ' · ' + (c.date||'') + '</div></div>';
+        const url = esc(safeUrl(c.url));
+        const title = esc(c.title || '(untitled)');
+        const source = esc(c.source || '');
+        const date = esc(c.date || '');
+        html += '<div style="padding:8px 10px; background:var(--bg-elevated); border-radius:8px; margin-bottom:6px; font-size:13px;"><a href="' + url + '" target="_blank" rel="noopener noreferrer" style="color:#c4b5fd;">' + title + '</a><div style="color:var(--text-muted); font-size:11px; margin-top:2px;">' + source + ' · ' + date + '</div></div>';
       });
       html += '</div>';
     }
