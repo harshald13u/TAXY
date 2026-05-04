@@ -5,7 +5,9 @@
     "version": "1.0",
     "knowledge_cutoff": "2025-05",
     "verify_annually": true,
-    "disclaimer": "All values must be verified against current CBDT notifications / Finance Act of relevant year before reliance."
+    "disclaimer": "All values must be verified against current CBDT notifications / Finance Act of relevant year before reliance.",
+    "cii_status": "partial — 2025-26 & 2026-27 provisional, awaiting official CBDT notification",
+    "last_full_review": "2026-05-03"
   },
   "surcharge_rates": {
     "_note": "Per Finance Act 2026 (assumed continuation of prior pattern). Verify against First Schedule.",
@@ -145,7 +147,7 @@
     "applies_to": "ALL assessees including companies, firms, individuals, trusts"
   },
   "cost_inflation_index": {
-    "_note": "Cost Inflation Index notified by CBDT under Sec 72(8). Used for indexed cost of acquisition / improvement.",
+    "_note": "Cost Inflation Index notified by CBDT under Sec 72(8). Used for indexed cost of acquisition / improvement. ⚠ FY 2025-26 and 2026-27 values awaiting CBDT notification — DO NOT use for live filing without verifying.",
     "_base_year": "2001-02 = 100",
     "values": {
       "2001-02": 100,
@@ -175,7 +177,13 @@
       "2025-26": "TBD - verify CBDT notification",
       "2026-27": "TBD"
     },
-    "_indexation_note_post_jul2024": "FA 2024 amendment: indexation REMOVED for most assets transferred on/after 23 Jul 2024. Retained for resident individuals/HUFs on land/buildings acquired before that date (Sec 197(3) — option of 12.5% no-indexation OR 20% with-indexation, whichever lower)."
+    "_indexation_note_post_jul2024": "FA 2024 amendment: indexation REMOVED for most assets transferred on/after 23 Jul 2024. Retained for resident individuals/HUFs on land/buildings acquired before that date (Sec 197(3) — option of 12.5% no-indexation OR 20% with-indexation, whichever lower).",
+    "_provisional_years": [
+      "2025-26",
+      "2026-27"
+    ],
+    "_official_source": "https://incometaxindia.gov.in/Pages/communications/notifications.aspx",
+    "_last_verified": "2026-05-03"
   },
   "compliance_calendar_2026_27": {
     "_note": "All dates assume FY 2026-27 / Tax Year 2026-27. Verify each year as dates shift.",

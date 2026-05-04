@@ -8,17 +8,23 @@ on:
     - cron: '0 20 * * *'
   workflow_dispatch:        # also allow manual trigger from Actions tab
 
+# Default to read-only for the whole workflow (defense-in-depth per audit S1/R5).
+# Write is escalated only on the final commit step below.
 permissions:
-  contents: write           # required to push the updated KB JSONs back to repo
+  contents: read
 
 jobs:
   update:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Hard guard: never run on forks or PRs (we don't define pull_request, but belt + suspenders).
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true   # needed for the push step
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -57,6 +63,9 @@ jobs:
           fi
 
       - name: Commit & push updates
+        # Only this step gets write access — minimum scope per audit S1/R5
+        permissions:
+          contents: write
         run: |
           git config user.name "taxy-bot"
           git config user.email "taxy-bot@users.noreply.github.com"

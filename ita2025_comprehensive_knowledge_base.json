@@ -10,46 +10,192 @@
     "total_schedules": 16,
     "knowledge_base_version": "2.0_comprehensive"
   },
-
   "chapter_index": {
-    "I": {"title": "Preliminary", "sections": "1-3"},
-    "II": {"title": "Basis of Charge", "sections": "4-10"},
-    "III": {"title": "Incomes not in Total Income", "sections": "11-12"},
-    "IV": {"title": "Computation of Total Income", "sections": "13-96", "parts": {"A": "Heads", "B": "Salaries 15-19", "C": "House Property 20-25", "D": "PGBP 26-66", "E": "Capital Gains 67-91", "F": "Other Sources 92-96"}},
-    "V": {"title": "Income of Other Persons (Clubbing)", "sections": "97-101"},
-    "VI": {"title": "Aggregation of Income / Unexplained Items", "sections": "102-107"},
-    "VII": {"title": "Set off and Carry Forward of Losses", "sections": "108-121"},
-    "VIII": {"title": "Deductions in Total Income (old Ch VIA)", "sections": "122-154"},
-    "IX": {"title": "Rebates and Reliefs", "sections": "155-160"},
-    "X": {"title": "Special Provisions for Avoidance of Tax", "sections": "161-177"},
-    "XI": {"title": "GAAR", "sections": "178-184"},
-    "XII": {"title": "Mode of Payment", "sections": "185-191"},
-    "XIII": {"title": "Determination of Tax in Special Cases", "sections": "192-236"},
-    "XIV": {"title": "Tax Administration", "sections": "237-262"},
-    "XV": {"title": "Return of Income", "sections": "263-267"},
-    "XVI": {"title": "Procedure for Assessment", "sections": "268-301"},
-    "XVII": {"title": "Special Provisions for Certain Persons", "sections": "302-355"},
-    "XVIII": {"title": "Appeals, Revisions, ADR", "sections": "356-389"},
-    "XIX": {"title": "Collection and Recovery of Tax", "sections": "390-426"},
-    "XX": {"title": "Refunds", "sections": "427-438"},
-    "XXI": {"title": "Penalties", "sections": "439-474"},
-    "XXII": {"title": "Offences and Prosecution", "sections": "475-500"},
-    "XXIII": {"title": "Miscellaneous", "sections": "501-536"}
+    "I": {
+      "title": "Preliminary",
+      "sections": "1-3"
+    },
+    "II": {
+      "title": "Basis of Charge",
+      "sections": "4-10"
+    },
+    "III": {
+      "title": "Incomes not in Total Income",
+      "sections": "11-12"
+    },
+    "IV": {
+      "title": "Computation of Total Income",
+      "sections": "13-96",
+      "parts": {
+        "A": "Heads",
+        "B": "Salaries 15-19",
+        "C": "House Property 20-25",
+        "D": "PGBP 26-66",
+        "E": "Capital Gains 67-91",
+        "F": "Other Sources 92-96"
+      }
+    },
+    "V": {
+      "title": "Income of Other Persons (Clubbing)",
+      "sections": "97-101"
+    },
+    "VI": {
+      "title": "Aggregation of Income / Unexplained Items",
+      "sections": "102-107"
+    },
+    "VII": {
+      "title": "Set off and Carry Forward of Losses",
+      "sections": "108-121"
+    },
+    "VIII": {
+      "title": "Deductions in Total Income (old Ch VIA)",
+      "sections": "122-154"
+    },
+    "IX": {
+      "title": "Rebates and Reliefs",
+      "sections": "155-160"
+    },
+    "X": {
+      "title": "Special Provisions for Avoidance of Tax",
+      "sections": "161-177"
+    },
+    "XI": {
+      "title": "GAAR",
+      "sections": "178-184"
+    },
+    "XII": {
+      "title": "Mode of Payment",
+      "sections": "185-191"
+    },
+    "XIII": {
+      "title": "Determination of Tax in Special Cases",
+      "sections": "192-236"
+    },
+    "XIV": {
+      "title": "Tax Administration",
+      "sections": "237-262"
+    },
+    "XV": {
+      "title": "Return of Income",
+      "sections": "263-267"
+    },
+    "XVI": {
+      "title": "Procedure for Assessment",
+      "sections": "268-301"
+    },
+    "XVII": {
+      "title": "Special Provisions for Certain Persons",
+      "sections": "302-355"
+    },
+    "XVIII": {
+      "title": "Appeals, Revisions, ADR",
+      "sections": "356-389"
+    },
+    "XIX": {
+      "title": "Collection and Recovery of Tax",
+      "sections": "390-426"
+    },
+    "XX": {
+      "title": "Refunds",
+      "sections": "427-438"
+    },
+    "XXI": {
+      "title": "Penalties",
+      "sections": "439-474"
+    },
+    "XXII": {
+      "title": "Offences and Prosecution",
+      "sections": "475-500"
+    },
+    "XXIII": {
+      "title": "Miscellaneous",
+      "sections": "501-536"
+    }
   },
-
   "definitions": {
-    "tax_year": {"section": "3", "description": "12-month period of FY beginning 1 April; for new business: from set-up to 31 March"},
-    "person": {"section": "2(77)", "categories": ["Individual", "HUF", "Company", "Firm", "AOP/BOI", "Local authority", "AJP"]},
-    "agricultural_income": {"section": "2(5)", "key_points": ["From Indian agri land", "Includes nursery saplings", "Excludes urban-distance land transfer", "Used only for rate purposes"]},
-    "capital_asset": {"section": "2(22)", "includes": "Property, FII/AIF securities, non-exempt ULIPs", "excludes": "Stock-in-trade, personal effects (NOT jewellery), agri land in non-urban areas, Gold Deposit/Monetisation Bonds"},
-    "short_term_capital_asset": {"section": "2(101)", "default_period": 24, "exceptions": {"listed_securities_RSE": 12, "UTI_units": 12, "equity_oriented_fund_units": 12, "zero_coupon_bonds": 12}, "unit": "months"},
-    "long_term_capital_asset": {"section": "2(67)", "definition": "Not short-term capital asset"},
-    "VDA": {"section": "2(111)", "includes": ["Cryptographic info/code/number/token", "NFTs and similar", "Other notified digital assets", "Crypto-assets"]},
-    "senior_citizen": {"section": "2(100)", "definition": "Resident individual aged 60+"},
-    "relative_for_individual": {"section": "2(94)", "list": ["spouse", "brother", "sister", "any lineal ascendant maternal+paternal", "any lineal descendant"]},
-    "dividend": {"section": "2(40)", "includes": ["Accumulated profits distribution", "Bonus shares to preference holders", "Liquidation distribution", "Capital reduction", "Loans to shareholders >=10% (deemed dividend)"], "excludes": ["Money-lending business loans", "Demerger distributions"]}
+    "tax_year": {
+      "section": "3",
+      "description": "12-month period of FY beginning 1 April; for new business: from set-up to 31 March"
+    },
+    "person": {
+      "section": "2(77)",
+      "categories": [
+        "Individual",
+        "HUF",
+        "Company",
+        "Firm",
+        "AOP/BOI",
+        "Local authority",
+        "AJP"
+      ]
+    },
+    "agricultural_income": {
+      "section": "2(5)",
+      "key_points": [
+        "From Indian agri land",
+        "Includes nursery saplings",
+        "Excludes urban-distance land transfer",
+        "Used only for rate purposes"
+      ]
+    },
+    "capital_asset": {
+      "section": "2(22)",
+      "includes": "Property, FII/AIF securities, non-exempt ULIPs",
+      "excludes": "Stock-in-trade, personal effects (NOT jewellery), agri land in non-urban areas, Gold Deposit/Monetisation Bonds"
+    },
+    "short_term_capital_asset": {
+      "section": "2(101)",
+      "default_period": 24,
+      "exceptions": {
+        "listed_securities_RSE": 12,
+        "UTI_units": 12,
+        "equity_oriented_fund_units": 12,
+        "zero_coupon_bonds": 12
+      },
+      "unit": "months"
+    },
+    "long_term_capital_asset": {
+      "section": "2(67)",
+      "definition": "Not short-term capital asset"
+    },
+    "VDA": {
+      "section": "2(111)",
+      "includes": [
+        "Cryptographic info/code/number/token",
+        "NFTs and similar",
+        "Other notified digital assets",
+        "Crypto-assets"
+      ]
+    },
+    "senior_citizen": {
+      "section": "2(100)",
+      "definition": "Resident individual aged 60+"
+    },
+    "relative_for_individual": {
+      "section": "2(94)",
+      "list": [
+        "spouse",
+        "brother",
+        "sister",
+        "any lineal ascendant maternal+paternal",
+        "any lineal descendant"
+      ]
+    },
+    "dividend": {
+      "section": "2(40)",
+      "includes": [
+        "Accumulated profits distribution",
+        "Bonus shares to preference holders",
+        "Liquidation distribution",
+        "Capital reduction",
+        "Loans to shareholders >=10% (deemed dividend)"
+      ],
+      "excludes": [
+        "Money-lending business loans",
+        "Demerger distributions"
+      ]
+    }
   },
-
   "residence_rules": {
     "individual": {
       "section": "6(2)",
@@ -73,36 +219,61 @@
         "Deemed resident under 6(7)"
       ]
     },
-    "huf_firm_aop": {"section": "6(9)", "test": "Resident UNLESS control & management wholly outside India"},
-    "company": {"section": "6(10)", "test": "Indian company OR POEM in India"},
-    "single_residence_rule": {"section": "6(12)", "rule": "If resident for one source, deemed resident for ALL sources"}
+    "huf_firm_aop": {
+      "section": "6(9)",
+      "test": "Resident UNLESS control & management wholly outside India"
+    },
+    "company": {
+      "section": "6(10)",
+      "test": "Indian company OR POEM in India"
+    },
+    "single_residence_rule": {
+      "section": "6(12)",
+      "rule": "If resident for one source, deemed resident for ALL sources"
+    }
   },
-
   "scope_of_total_income": {
     "section": "5",
     "resident": "ALL income (received in India + accruing in India + accruing outside India)",
     "nor": "Indian-source + foreign income from India-controlled business / India-set-up profession ONLY",
     "non_resident": "Indian-source ONLY (received or accruing in India)"
   },
-
   "heads_of_income": {
     "section": "13",
     "five_heads": [
-      {"head": "Salaries", "sections": "15-19"},
-      {"head": "Income from House Property", "sections": "20-25"},
-      {"head": "Profits and Gains of Business or Profession", "sections": "26-66"},
-      {"head": "Capital Gains", "sections": "67-91"},
-      {"head": "Income from Other Sources", "sections": "92-96"}
+      {
+        "head": "Salaries",
+        "sections": "15-19"
+      },
+      {
+        "head": "Income from House Property",
+        "sections": "20-25"
+      },
+      {
+        "head": "Profits and Gains of Business or Profession",
+        "sections": "26-66"
+      },
+      {
+        "head": "Capital Gains",
+        "sections": "67-91"
+      },
+      {
+        "head": "Income from Other Sources",
+        "sections": "92-96"
+      }
     ]
   },
-
   "salaries": {
     "charge_section": "15",
     "definition_section": "16",
     "perquisite_section": "17",
     "profits_in_lieu_section": "18",
     "deductions_section": "19",
-    "standard_deduction": {"new_regime": 75000, "old_regime": 50000, "rule": "lower of amount or salary"},
+    "standard_deduction": {
+      "new_regime": 75000,
+      "old_regime": 50000,
+      "rule": "lower of amount or salary"
+    },
     "professional_tax_deduction": "Old regime only",
     "vrs_compensation_max": 500000,
     "retrenchment_compensation_floor": 50000,
@@ -110,7 +281,6 @@
     "perquisite_employer_contribution_threshold_section_17_1_h": 750000,
     "esop_value": "FMV on exercise date - amount paid"
   },
-
   "house_property": {
     "charge_section": "20",
     "annual_value_section": "21",
@@ -129,7 +299,6 @@
     "co_owner_section": 24,
     "owner_includes_section_25": "Spouse transfer + minor child transfer + impartible estate holder + co-op society allottee + sec 53A possessor + lessee >= 12 years"
   },
-
   "pgbp": {
     "charge_section": "26",
     "computation_sections": "27-60 (excl. 58)",
@@ -159,7 +328,6 @@
     "presumptive_threshold_profession_low_cash": 7500000,
     "presumptive_lock_in_years": 5
   },
-
   "capital_gains": {
     "charge_section": "67",
     "non_transfer_section": "70",
@@ -188,10 +356,20 @@
     "extension_compulsory_acq_section": "89",
     "ltcg_rate_general_section_197": 12.5,
     "ltcg_grandfathering_pre_23jul2024": "Lower of 12.5% without indexation OR 20% with indexation (Sec 197(3))",
-    "ltcg_stt_paid_section_198": {"rate": 12.5, "exemption_threshold": 125000},
-    "stcg_stt_paid_section_196": {"rate": 20},
+    "ltcg_stt_paid_section_198": {
+      "rate": 12.5,
+      "exemption_threshold": 125000
+    },
+    "stcg_stt_paid_section_196": {
+      "rate": 20
+    },
     "stcg_other": "As per slab rates",
-    "VDA_rate_section_194": {"rate": 30, "no_deduction_except_COA": true, "no_loss_setoff": true, "no_loss_CF": true},
+    "VDA_rate_section_194": {
+      "rate": 30,
+      "no_deduction_except_COA": true,
+      "no_loss_setoff": true,
+      "no_loss_CF": true
+    },
     "buyback_promoter_additional_tax_section_69": {
       "domestic_promoter_STCG": 2,
       "domestic_promoter_LTCG": 9.5,
@@ -199,7 +377,6 @@
       "other_promoter_LTCG": 17.5
     }
   },
-
   "other_sources": {
     "charge_section": "92",
     "deductions_section": "93",
@@ -216,7 +393,6 @@
     "gift_immovable_safe_harbour_pct": 10,
     "life_insurance_tax_excess_over_premium": "if not exempt under Schedule II Sl.2"
   },
-
   "clubbing": {
     "chapter": "V",
     "spouse_clubbing_section": "99(1)(a)",
@@ -228,7 +404,6 @@
     "substantial_interest_voting_pct": 20,
     "substantial_interest_profit_pct": 20
   },
-
   "unexplained_items": {
     "chapter": "VI",
     "credits_section": "102",
@@ -240,54 +415,202 @@
     "tax_rate_section_195_pre_FA2026": 60,
     "no_deduction_allowed": true
   },
-
   "loss_carry_forward": {
     "chapter": "VII",
     "rules": [
-      {"section": "108", "type": "Same head set-off"},
-      {"section": "109", "type": "Inter-head set-off", "restrictions": ["PGBP not against Salaries", "HP cap ₹2L"]},
-      {"section": "110", "type": "HP loss CF", "years": 8, "set_off_against": "HP only"},
-      {"section": "111", "type": "Capital loss CF", "years": 8, "STCL_against": "STCG/LTCG", "LTCL_against": "LTCG only"},
-      {"section": "112", "type": "Business loss CF (non-spec)", "years": 8, "set_off_against": "PGBP only"},
-      {"section": "113", "type": "Speculation loss CF", "years": 4, "set_off_against": "Speculation only"},
-      {"section": "114", "type": "Specified business (Sec 46)", "years": "Indefinite"},
-      {"section": "115", "type": "Specified activity (race horses)", "years": 4},
-      {"section": "119", "type": "No CF if return not filed by due date"}
+      {
+        "section": "108",
+        "type": "Same head set-off"
+      },
+      {
+        "section": "109",
+        "type": "Inter-head set-off",
+        "restrictions": [
+          "PGBP not against Salaries",
+          "HP cap ₹2L"
+        ]
+      },
+      {
+        "section": "110",
+        "type": "HP loss CF",
+        "years": 8,
+        "set_off_against": "HP only"
+      },
+      {
+        "section": "111",
+        "type": "Capital loss CF",
+        "years": 8,
+        "STCL_against": "STCG/LTCG",
+        "LTCL_against": "LTCG only"
+      },
+      {
+        "section": "112",
+        "type": "Business loss CF (non-spec)",
+        "years": 8,
+        "set_off_against": "PGBP only"
+      },
+      {
+        "section": "113",
+        "type": "Speculation loss CF",
+        "years": 4,
+        "set_off_against": "Speculation only"
+      },
+      {
+        "section": "114",
+        "type": "Specified business (Sec 46)",
+        "years": "Indefinite"
+      },
+      {
+        "section": "115",
+        "type": "Specified activity (race horses)",
+        "years": 4
+      },
+      {
+        "section": "119",
+        "type": "No CF if return not filed by due date"
+      }
     ]
   },
-
   "deductions_chapter_viii": {
-    "available_in_new_regime_only": ["124(1)", "124(2)", "125(2)", "146"],
+    "available_in_new_regime_only": [
+      "124(1)",
+      "124(2)",
+      "125(2)",
+      "146"
+    ],
     "items": {
-      "123": {"name": "Old 80C class", "limit": 150000, "schedule": "XV", "items_list": "Life insurance, PPF, ELSS, NSC, FD>=5yr, ULIP, NPS Tier-I, school fees, housing principal, Sukanya, etc."},
-      "124(1)": {"name": "Employer NPS contribution", "limit_govt": "14% of salary", "limit_other_old_regime": "10%", "limit_other_new_regime": "14%"},
-      "124(3)": {"name": "Self NPS Tier-I additional", "limit": 50000, "available_in_new_regime": false},
-      "125": {"name": "Agnipath Scheme contribution", "limit": "Full amount", "available_in_new_regime": true},
-      "126": {"name": "Old 80D - Health insurance", "limit_self_family": 25000, "limit_senior_citizen": 50000, "limit_parents": 25000, "limit_parents_senior": 50000, "preventive_check_up_max": 5000},
-      "127": {"name": "Old 80DD - Disabled dependant", "limit_disability": 75000, "limit_severe": 125000},
-      "128": {"name": "Old 80DDB - Specified disease", "limit": 40000, "limit_senior": 100000},
-      "129": {"name": "Old 80E - Education loan interest", "limit": "actual", "max_years": 8},
-      "130": {"name": "Old 80EE - Home loan interest", "limit": 50000, "loan_period": "1 Apr 2016 - 31 Mar 2017", "loan_max": 3500000, "property_max": 5000000},
-      "131": {"name": "Old 80EEA - Home loan interest", "limit": 150000, "loan_period": "1 Apr 2019 - 31 Mar 2022", "SDV_max": 4500000},
-      "132": {"name": "Old 80EEB - EV loan interest", "limit": 150000, "loan_period": "1 Apr 2019 - 31 Mar 2023"},
-      "133": {"name": "Old 80G - Donations", "rates": "100%/50% with/without qualifying limit (10% AGTI cap)"},
+      "123": {
+        "name": "Old 80C class",
+        "limit": 150000,
+        "schedule": "XV",
+        "items_list": "Life insurance, PPF, ELSS, NSC, FD>=5yr, ULIP, NPS Tier-I, school fees, housing principal, Sukanya, etc."
+      },
+      "124(1)": {
+        "name": "Employer NPS contribution",
+        "limit_govt": "14% of salary",
+        "limit_other_old_regime": "10%",
+        "limit_other_new_regime": "14%"
+      },
+      "124(3)": {
+        "name": "Self NPS Tier-I additional",
+        "limit": 50000,
+        "available_in_new_regime": false
+      },
+      "125": {
+        "name": "Agnipath Scheme contribution",
+        "limit": "Full amount",
+        "available_in_new_regime": true
+      },
+      "126": {
+        "name": "Old 80D - Health insurance",
+        "limit_self_family": 25000,
+        "limit_senior_citizen": 50000,
+        "limit_parents": 25000,
+        "limit_parents_senior": 50000,
+        "preventive_check_up_max": 5000
+      },
+      "127": {
+        "name": "Old 80DD - Disabled dependant",
+        "limit_disability": 75000,
+        "limit_severe": 125000
+      },
+      "128": {
+        "name": "Old 80DDB - Specified disease",
+        "limit": 40000,
+        "limit_senior": 100000
+      },
+      "129": {
+        "name": "Old 80E - Education loan interest",
+        "limit": "actual",
+        "max_years": 8
+      },
+      "130": {
+        "name": "Old 80EE - Home loan interest",
+        "limit": 50000,
+        "loan_period": "1 Apr 2016 - 31 Mar 2017",
+        "loan_max": 3500000,
+        "property_max": 5000000
+      },
+      "131": {
+        "name": "Old 80EEA - Home loan interest",
+        "limit": 150000,
+        "loan_period": "1 Apr 2019 - 31 Mar 2022",
+        "SDV_max": 4500000
+      },
+      "132": {
+        "name": "Old 80EEB - EV loan interest",
+        "limit": 150000,
+        "loan_period": "1 Apr 2019 - 31 Mar 2023"
+      },
+      "133": {
+        "name": "Old 80G - Donations",
+        "rates": "100%/50% with/without qualifying limit (10% AGTI cap)"
+      },
       "133_cash_max": 2000,
-      "134": {"name": "Old 80GG - Rent paid (no HRA)", "rule": "lowest of (5000/month, 25% of TI, actual rent - 10% of TI)"},
-      "135": {"name": "Old 80GGA - Sci research donations", "non_PGBP_only": true, "cash_max": 2000},
-      "136": {"name": "Old 80GGB - Company political contribution", "non_cash_only": true},
-      "137": {"name": "Old 80GGC - Other political contribution", "non_cash_only": true},
-      "146": {"name": "Old 80JJAA - Additional employee cost", "rate": 0.30, "years": 3, "available_in_new_regime": true, "emolument_max_per_employee": 25000, "min_employment_days_general": 240, "min_employment_days_textile": 150},
-      "147": {"name": "Old 80LA - IFSC/Offshore", "rate": 1.0, "years_offshore": 20, "years_IFSC_out_of": 25},
-      "148": {"name": "Old 80M - Inter-corporate dividend", "limit": "lower of received or distributed 1 month before due date"},
-      "149": {"name": "Old 80P - Co-op society", "details": "Activity-wise list"},
-      "150": {"name": "Federal co-op dividend (FA 2026)", "sunset": "TY ending 31 Mar 2029"},
-      "151": {"name": "Old 80QQB - Author royalty", "limit": 300000},
-      "152": {"name": "Old 80RRB - Patent royalty", "limit": 300000},
-      "153": {"name": "Old 80TTA / 80TTB - Interest on deposits", "limit_general": 10000, "limit_senior_citizen": 50000},
-      "154": {"name": "Old 80U - Self disability", "limit_disability": 75000, "limit_severe": 125000}
+      "134": {
+        "name": "Old 80GG - Rent paid (no HRA)",
+        "rule": "lowest of (5000/month, 25% of TI, actual rent - 10% of TI)"
+      },
+      "135": {
+        "name": "Old 80GGA - Sci research donations",
+        "non_PGBP_only": true,
+        "cash_max": 2000
+      },
+      "136": {
+        "name": "Old 80GGB - Company political contribution",
+        "non_cash_only": true
+      },
+      "137": {
+        "name": "Old 80GGC - Other political contribution",
+        "non_cash_only": true
+      },
+      "146": {
+        "name": "Old 80JJAA - Additional employee cost",
+        "rate": 0.3,
+        "years": 3,
+        "available_in_new_regime": true,
+        "emolument_max_per_employee": 25000,
+        "min_employment_days_general": 240,
+        "min_employment_days_textile": 150
+      },
+      "147": {
+        "name": "Old 80LA - IFSC/Offshore",
+        "rate": 1.0,
+        "years_offshore": 20,
+        "years_IFSC_out_of": 25
+      },
+      "148": {
+        "name": "Old 80M - Inter-corporate dividend",
+        "limit": "lower of received or distributed 1 month before due date"
+      },
+      "149": {
+        "name": "Old 80P - Co-op society",
+        "details": "Activity-wise list"
+      },
+      "150": {
+        "name": "Federal co-op dividend (FA 2026)",
+        "sunset": "TY ending 31 Mar 2029"
+      },
+      "151": {
+        "name": "Old 80QQB - Author royalty",
+        "limit": 300000
+      },
+      "152": {
+        "name": "Old 80RRB - Patent royalty",
+        "limit": 300000
+      },
+      "153": {
+        "name": "Old 80TTA / 80TTB - Interest on deposits",
+        "limit_general": 10000,
+        "limit_senior_citizen": 50000
+      },
+      "154": {
+        "name": "Old 80U - Self disability",
+        "limit_disability": 75000,
+        "limit_severe": 125000
+      }
     }
   },
-
   "rebate_section_156": {
     "old_regime_threshold_TI": 500000,
     "old_regime_max_rebate": 12500,
@@ -295,7 +618,6 @@
     "new_regime_max_rebate": 60000,
     "marginal_relief_above_12L": "rebate = tax - (TI - 1200000)"
   },
-
   "tax_rates_chapter_xiii": {
     "block_assessment_rate": 60,
     "GDR_dividend_specified_industry_rate": 10,
@@ -312,18 +634,51 @@
     "new_manufacturing_other_income_rate": 22,
     "new_manufacturing_deemed_excess_rate": 30
   },
-
   "new_tax_regime_section_202": {
-    "applies_to": ["Individual", "HUF", "AOP (non co-op)", "BOI", "AJP"],
+    "applies_to": [
+      "Individual",
+      "HUF",
+      "AOP (non co-op)",
+      "BOI",
+      "AJP"
+    ],
     "default": true,
     "slabs_ty_2026_27": [
-      {"from": 0, "to": 400000, "rate_pct": 0},
-      {"from": 400001, "to": 800000, "rate_pct": 5},
-      {"from": 800001, "to": 1200000, "rate_pct": 10},
-      {"from": 1200001, "to": 1600000, "rate_pct": 15},
-      {"from": 1600001, "to": 2000000, "rate_pct": 20},
-      {"from": 2000001, "to": 2400000, "rate_pct": 25},
-      {"from": 2400001, "to": null, "rate_pct": 30}
+      {
+        "from": 0,
+        "to": 400000,
+        "rate_pct": 0
+      },
+      {
+        "from": 400001,
+        "to": 800000,
+        "rate_pct": 5
+      },
+      {
+        "from": 800001,
+        "to": 1200000,
+        "rate_pct": 10
+      },
+      {
+        "from": 1200001,
+        "to": 1600000,
+        "rate_pct": 15
+      },
+      {
+        "from": 1600001,
+        "to": 2000000,
+        "rate_pct": 20
+      },
+      {
+        "from": 2000001,
+        "to": 2400000,
+        "rate_pct": 25
+      },
+      {
+        "from": 2400001,
+        "to": null,
+        "rate_pct": 30
+      }
     ],
     "disallowed_deductions": [
       "Schedule III items 5, 6, 7, 8, 11, 17 (LTC, HRA, conveyance, daily allowance, transport allowance for disabled, etc.)",
@@ -338,11 +693,13 @@
       "Sec 47(1)(a) - Agri extension/skill development",
       "Chapter VIII (except Sec 124(1)/(2), 125(2), 146)"
     ],
-    "loss_restrictions": ["HP loss not allowed against any other head", "Brought-forward losses/depreciation attributable to disallowed items deemed fully effected"],
+    "loss_restrictions": [
+      "HP loss not allowed against any other head",
+      "Brought-forward losses/depreciation attributable to disallowed items deemed fully effected"
+    ],
     "opt_out_with_business": "File prescribed form before due date u/s 263(1); applies to subsequent years; one withdrawal lifetime",
     "opt_out_without_business": "Annual choice along with return"
   },
-
   "MAT_AMT_section_206": {
     "MAT_companies_rate": 14,
     "MAT_IFSC_unit_rate": 9,
@@ -350,7 +707,6 @@
     "AMT_non_corporate_threshold": "When adjusted total income > regular tax",
     "AMT_rate": 18.5
   },
-
   "return_filing_section_263": {
     "compulsory_filers": [
       "Every company",
@@ -364,65 +720,157 @@
       "Resident (other than RNOR) holding any foreign asset / signing authority / beneficial interest"
     ],
     "due_dates": [
-      {"category": "Sec 172 TP-applicable + partners/spouse", "date": "30 November"},
-      {"category": "Company; auditable; partner of audited firm", "date": "31 October"},
-      {"category": "PGBP non-audited + partner thereof", "date": "31 August"},
-      {"category": "Any other assessee (typical individual)", "date": "31 July"}
+      {
+        "category": "Sec 172 TP-applicable + partners/spouse",
+        "date": "30 November"
+      },
+      {
+        "category": "Company; auditable; partner of audited firm",
+        "date": "31 October"
+      },
+      {
+        "category": "PGBP non-audited + partner thereof",
+        "date": "31 August"
+      },
+      {
+        "category": "Any other assessee (typical individual)",
+        "date": "31 July"
+      }
     ],
-    "belated_return_section_263_4": {"deadline": "9 months from end of TY OR before assessment, whichever earlier"},
-    "revised_return_section_263_5": {"deadline": "12 months from end of TY OR before assessment, whichever earlier"},
+    "belated_return_section_263_4": {
+      "deadline": "9 months from end of TY OR before assessment, whichever earlier"
+    },
+    "revised_return_section_263_5": {
+      "deadline": "12 months from end of TY OR before assessment, whichever earlier"
+    },
     "updated_return_section_263_6": {
       "deadline": "48 months from end of FY succeeding the TY",
-      "restrictions": ["Cannot be loss return", "Cannot reduce tax", "Cannot increase refund"]
+      "restrictions": [
+        "Cannot be loss return",
+        "Cannot reduce tax",
+        "Cannot increase refund"
+      ]
     }
   },
-
   "updated_return_additional_tax_section_267": {
     "0_to_12_months": 25,
     "12_to_24_months": 50,
     "24_to_36_months": 60,
     "36_to_48_months": 70
   },
-
   "tds_section_393": {
     "salary_tds_rule": "Average rate on estimated income (Sec 392)",
     "thresholds_and_rates": {
-      "interest_securities": {"threshold": 10000, "rate": 10, "govt_threshold": 5000},
-      "dividend_company": {"threshold": 5000, "rate": 10},
-      "interest_other_individual_huf": {"threshold": 40000, "rate": 10},
-      "interest_other_senior_citizen": {"threshold": 50000, "rate": 10},
-      "lottery_winnings": {"threshold": 10000, "rate": 30},
-      "insurance_commission": {"threshold": 15000, "rate": 5},
-      "life_insurance_maturity_non_exempt": {"threshold": 100000, "rate": 5},
-      "commission_brokerage": {"threshold": 15000, "rate": 2},
-      "rent_land_building": {"threshold": 240000, "rate": 10},
-      "rent_machinery": {"threshold": 240000, "rate": 2},
-      "professional_fees": {"threshold": 30000, "rate": 10},
-      "FTS": {"threshold": 30000, "rate": 2},
-      "compulsory_acquisition_compensation": {"threshold": 250000, "rate": 10},
-      "immovable_property_purchase": {"threshold": 5000000, "rate": 1},
-      "cash_withdrawal_filer": {"threshold": 30000000, "rate": 2},
-      "cash_withdrawal_non_filer": {"threshold": 10000000, "rate": 5},
-      "online_game_winnings": {"threshold": 0, "rate": 30},
-      "ecommerce_individual_huf": {"threshold": 500000, "rate": 0.1},
-      "VDA_individual_specified": {"threshold": 50000, "rate": 1},
-      "VDA_other": {"threshold": 10000, "rate": 1},
-      "EPF_withdrawal_pre_5yrs": {"threshold": 50000, "rate": 10}
+      "interest_securities": {
+        "threshold": 10000,
+        "rate": 10,
+        "govt_threshold": 5000
+      },
+      "dividend_company": {
+        "threshold": 5000,
+        "rate": 10
+      },
+      "interest_other_individual_huf": {
+        "threshold": 40000,
+        "rate": 10
+      },
+      "interest_other_senior_citizen": {
+        "threshold": 50000,
+        "rate": 10
+      },
+      "lottery_winnings": {
+        "threshold": 10000,
+        "rate": 30
+      },
+      "insurance_commission": {
+        "threshold": 15000,
+        "rate": 5
+      },
+      "life_insurance_maturity_non_exempt": {
+        "threshold": 100000,
+        "rate": 5
+      },
+      "commission_brokerage": {
+        "threshold": 15000,
+        "rate": 2
+      },
+      "rent_land_building": {
+        "threshold": 240000,
+        "rate": 10
+      },
+      "rent_machinery": {
+        "threshold": 240000,
+        "rate": 2
+      },
+      "professional_fees": {
+        "threshold": 30000,
+        "rate": 10
+      },
+      "FTS": {
+        "threshold": 30000,
+        "rate": 2
+      },
+      "compulsory_acquisition_compensation": {
+        "threshold": 250000,
+        "rate": 10
+      },
+      "immovable_property_purchase": {
+        "threshold": 5000000,
+        "rate": 1
+      },
+      "cash_withdrawal_filer": {
+        "threshold": 30000000,
+        "rate": 2
+      },
+      "cash_withdrawal_non_filer": {
+        "threshold": 10000000,
+        "rate": 5
+      },
+      "online_game_winnings": {
+        "threshold": 0,
+        "rate": 30
+      },
+      "ecommerce_individual_huf": {
+        "threshold": 500000,
+        "rate": 0.1
+      },
+      "VDA_individual_specified": {
+        "threshold": 50000,
+        "rate": 1
+      },
+      "VDA_other": {
+        "threshold": 10000,
+        "rate": 1
+      },
+      "EPF_withdrawal_pre_5yrs": {
+        "threshold": 50000,
+        "rate": 10
+      }
     },
     "non_PAN_higher_rate": "20% or specified rate, whichever higher"
   },
-
   "advance_tax": {
     "trigger_amount_section_403": 10000,
     "instalments_section_408": [
-      {"due_date": "15 June", "cumulative_pct": 15},
-      {"due_date": "15 September", "cumulative_pct": 45},
-      {"due_date": "15 December", "cumulative_pct": 75},
-      {"due_date": "15 March", "cumulative_pct": 100}
+      {
+        "due_date": "15 June",
+        "cumulative_pct": 15
+      },
+      {
+        "due_date": "15 September",
+        "cumulative_pct": 45
+      },
+      {
+        "due_date": "15 December",
+        "cumulative_pct": 75
+      },
+      {
+        "due_date": "15 March",
+        "cumulative_pct": 100
+      }
     ],
     "presumptive_assessees_section_58_due": "100% by 15 March"
   },
-
   "interest": {
     "section_423_late_return_pct_per_month": 1,
     "section_424_advance_tax_default_pct_per_month": 1,
@@ -430,14 +878,12 @@
     "section_425_deferment_pct_per_month": 1,
     "section_426_excess_refund_pct_per_month": 0.5
   },
-
   "refund": {
     "claim_section": "427",
     "interest_on_refund_section": "437",
     "interest_rate_pct_per_month": 0.5,
     "withhold_section": "438"
   },
-
   "penalties": {
     "under_reporting_pct_section_439": 50,
     "mis_reporting_pct_section_439": 200,
@@ -448,57 +894,236 @@
     "cash_loan_section_185_penalty": "Equal amount",
     "cash_receipt_section_186_penalty": "Equal amount"
   },
-
   "schedule_overview": {
-    "I": {"subject": "Eligible Investment Fund / Manager conditions", "anchor_section": "9(12)"},
-    "II": {"subject": "Income not in total income", "anchor_section": "11", "key_items": ["Agri income", "Life insurance (with limits)", "PPF/RPF/Sukanya", "NPS withdrawal", "Agniveer Corpus", "Approved superannuation", "Scholarships", "Awards", "Govt securities interest", "Gold Bonds"]},
-    "III": {"subject": "Specific allowance exemptions (HRA, LTC, etc.)", "anchor_section": "11", "old_regime_only": ["Sl.5/6/7/8/11/17"]},
-    "IV": {"subject": "Eligible NRs income exclusions", "anchor_section": "11"},
-    "V": {"subject": "Certain entities (mutual funds, securitization)", "anchor_section": "11"},
-    "VI": {"subject": "IFSC Units, aircraft/ship leasing", "anchor_section": "11"},
-    "VII": {"subject": "Persons exempt from tax (charitable trusts, sports bodies, etc.)", "anchor_section": "11"},
-    "VIII": {"subject": "Political parties / Electoral trusts", "anchor_section": "12"},
-    "IX": {"subject": "Tea/Coffee/Rubber Development Account", "anchor_section": "48", "deduction_max_pct": 40},
-    "X": {"subject": "Site Restoration Fund", "anchor_section": "49", "deduction_max_pct": 20},
-    "XI": {"subject": "RPF, approved gratuity, approved superannuation", "anchor_section": "2(91)", "RPF_TDS_threshold": 50000, "RPF_TDS_rate": 10},
-    "XII": {"subject": "Mineral prospecting amortisation (1/10 over 10 years)", "anchor_section": "51"},
-    "XIII": {"subject": "Articles excluded from in-house R&D weighted (tobacco, beer, cosmetics)", "anchor_section": "45(2)"},
-    "XIV": {"subject": "Insurance business computation", "anchor_section": "55"},
-    "XV": {"subject": "Sec 123 (old 80C) eligible items list - LIC/PPF/ELSS/NSC/etc.", "anchor_section": "123", "max_limit": 150000},
-    "XVI": {"subject": "Permitted investment modes for charitable trusts", "anchor_section": "350"}
-  },
-
-  "itr_form_mapping": {
-    "ITR-1": {"name": "Sahaj", "eligibility": "Resident individual, TI <= 50 lakh, only Salary + 1 HP + Other Sources + agri <= 5,000", "covers_sections": ["15-19", "20-25", "92", "202"]},
-    "ITR-2": {"name": "ITR-2", "eligibility": "Individual/HUF, no PGBP, capital gains/foreign income allowed", "covers_sections": ["15-25", "67-91", "92-96", "196", "198", "263(1)(a)(ix)"]},
-    "ITR-3": {"name": "ITR-3", "eligibility": "Individual/HUF with PGBP", "covers_sections": ["15-96"]},
-    "ITR-4": {"name": "Sugam", "eligibility": "Presumptive (Sec 58/59)", "covers_sections": ["58-59", "263"]},
-    "ITR-5": {"eligibility": "Firm/AOP/BOI/Cooperative/AJP", "covers_sections": "All applicable"},
-    "ITR-6": {"eligibility": "Companies (other than charitable)", "covers_sections": "All applicable"},
-    "ITR-7": {"eligibility": "Charitable trusts, RNPOs, political parties", "covers_sections": "11, 12, 332-355"}
-  },
-
-  "ai_pipeline": {
-    "step1_parse": {"description": "Parse uploaded documents", "documents": ["Form 16", "Form 16A", "AIS", "26AS", "Broker P&L (Zerodha/Groww/Upstox)", "Bank statements", "FD interest certificates", "Capital gains statements"]},
-    "step2_classify": {"description": "Classify line items into 5 heads", "section": "13"},
-    "step3_compute_each_head": {
-      "Salaries": {"sections": "15-19", "deductions": "Standard deduction + professional tax (old regime only)"},
-      "House Property": {"sections": "20-25", "deductions": "30% std + interest"},
-      "PGBP": {"sections": "26-66", "deductions": "Multiple"},
-      "Capital Gains": {"sections": "67-91", "treatment": "STCG (Sec 196 for STT-paid equity), LTCG (Sec 197/198), VDA (Sec 194)"},
-      "Other Sources": {"sections": "92-96", "deductions": "Family pension, etc."}
+    "I": {
+      "subject": "Eligible Investment Fund / Manager conditions",
+      "anchor_section": "9(12)"
     },
-    "step4_clubbing": {"section": "99", "description": "spouse/minor child clubbing"},
-    "step5_aggregation": {"sections": "102-107", "section_195_rate_pct": 30},
-    "step6_loss_setoff": {"chapter": "VII", "sections": "108-119", "new_regime_HP_loss_inter_head": "NOT ALLOWED"},
-    "step7_chapter_viii_deductions": {"sections": "122-154", "available_in_new_regime_only": ["124(1)/(2)", "125(2)", "146"]},
-    "step8_compute_tax": {"new_regime_default": "Section 202", "special_rates": ["192-198"]},
-    "step9_rebate_surcharge_cess": {"rebate_section": "156", "surcharge": "from Finance Act", "cess": "4% Health & Education Cess"},
-    "step10_credits": {"reduce": ["TDS (Sec 393)", "TCS (Sec 394)", "Advance tax", "Self-assessment tax"]},
-    "step11_interest": {"sections": ["423", "424", "425", "426"]},
-    "step12_output": {"format": "CBDT JSON schema", "submission": "incometax.gov.in or via ERI"}
+    "II": {
+      "subject": "Income not in total income",
+      "anchor_section": "11",
+      "key_items": [
+        "Agri income",
+        "Life insurance (with limits)",
+        "PPF/RPF/Sukanya",
+        "NPS withdrawal",
+        "Agniveer Corpus",
+        "Approved superannuation",
+        "Scholarships",
+        "Awards",
+        "Govt securities interest",
+        "Gold Bonds"
+      ]
+    },
+    "III": {
+      "subject": "Specific allowance exemptions (HRA, LTC, etc.)",
+      "anchor_section": "11",
+      "old_regime_only": [
+        "Sl.5/6/7/8/11/17"
+      ]
+    },
+    "IV": {
+      "subject": "Eligible NRs income exclusions",
+      "anchor_section": "11"
+    },
+    "V": {
+      "subject": "Certain entities (mutual funds, securitization)",
+      "anchor_section": "11"
+    },
+    "VI": {
+      "subject": "IFSC Units, aircraft/ship leasing",
+      "anchor_section": "11"
+    },
+    "VII": {
+      "subject": "Persons exempt from tax (charitable trusts, sports bodies, etc.)",
+      "anchor_section": "11"
+    },
+    "VIII": {
+      "subject": "Political parties / Electoral trusts",
+      "anchor_section": "12"
+    },
+    "IX": {
+      "subject": "Tea/Coffee/Rubber Development Account",
+      "anchor_section": "48",
+      "deduction_max_pct": 40
+    },
+    "X": {
+      "subject": "Site Restoration Fund",
+      "anchor_section": "49",
+      "deduction_max_pct": 20
+    },
+    "XI": {
+      "subject": "RPF, approved gratuity, approved superannuation",
+      "anchor_section": "2(91)",
+      "RPF_TDS_threshold": 50000,
+      "RPF_TDS_rate": 10
+    },
+    "XII": {
+      "subject": "Mineral prospecting amortisation (1/10 over 10 years)",
+      "anchor_section": "51"
+    },
+    "XIII": {
+      "subject": "Articles excluded from in-house R&D weighted (tobacco, beer, cosmetics)",
+      "anchor_section": "45(2)"
+    },
+    "XIV": {
+      "subject": "Insurance business computation",
+      "anchor_section": "55"
+    },
+    "XV": {
+      "subject": "Sec 123 (old 80C) eligible items list - LIC/PPF/ELSS/NSC/etc.",
+      "anchor_section": "123",
+      "max_limit": 150000
+    },
+    "XVI": {
+      "subject": "Permitted investment modes for charitable trusts",
+      "anchor_section": "350"
+    }
   },
-
+  "itr_form_mapping": {
+    "ITR-1": {
+      "name": "Sahaj",
+      "eligibility": "Resident individual, TI <= 50 lakh, only Salary + 1 HP + Other Sources + agri <= 5,000",
+      "covers_sections": [
+        "15-19",
+        "20-25",
+        "92",
+        "202"
+      ]
+    },
+    "ITR-2": {
+      "name": "ITR-2",
+      "eligibility": "Individual/HUF, no PGBP, capital gains/foreign income allowed",
+      "covers_sections": [
+        "15-25",
+        "67-91",
+        "92-96",
+        "196",
+        "198",
+        "263(1)(a)(ix)"
+      ]
+    },
+    "ITR-3": {
+      "name": "ITR-3",
+      "eligibility": "Individual/HUF with PGBP",
+      "covers_sections": [
+        "15-96"
+      ]
+    },
+    "ITR-4": {
+      "name": "Sugam",
+      "eligibility": "Presumptive (Sec 58/59)",
+      "covers_sections": [
+        "58-59",
+        "263"
+      ]
+    },
+    "ITR-5": {
+      "eligibility": "Firm/AOP/BOI/Cooperative/AJP",
+      "covers_sections": "All applicable"
+    },
+    "ITR-6": {
+      "eligibility": "Companies (other than charitable)",
+      "covers_sections": "All applicable"
+    },
+    "ITR-7": {
+      "eligibility": "Charitable trusts, RNPOs, political parties",
+      "covers_sections": "11, 12, 332-355"
+    }
+  },
+  "ai_pipeline": {
+    "step1_parse": {
+      "description": "Parse uploaded documents",
+      "documents": [
+        "Form 16",
+        "Form 16A",
+        "AIS",
+        "26AS",
+        "Broker P&L (Zerodha/Groww/Upstox)",
+        "Bank statements",
+        "FD interest certificates",
+        "Capital gains statements"
+      ]
+    },
+    "step2_classify": {
+      "description": "Classify line items into 5 heads",
+      "section": "13"
+    },
+    "step3_compute_each_head": {
+      "Salaries": {
+        "sections": "15-19",
+        "deductions": "Standard deduction + professional tax (old regime only)"
+      },
+      "House Property": {
+        "sections": "20-25",
+        "deductions": "30% std + interest"
+      },
+      "PGBP": {
+        "sections": "26-66",
+        "deductions": "Multiple"
+      },
+      "Capital Gains": {
+        "sections": "67-91",
+        "treatment": "STCG (Sec 196 for STT-paid equity), LTCG (Sec 197/198), VDA (Sec 194)"
+      },
+      "Other Sources": {
+        "sections": "92-96",
+        "deductions": "Family pension, etc."
+      }
+    },
+    "step4_clubbing": {
+      "section": "99",
+      "description": "spouse/minor child clubbing"
+    },
+    "step5_aggregation": {
+      "sections": "102-107",
+      "section_195_rate_pct": 30
+    },
+    "step6_loss_setoff": {
+      "chapter": "VII",
+      "sections": "108-119",
+      "new_regime_HP_loss_inter_head": "NOT ALLOWED"
+    },
+    "step7_chapter_viii_deductions": {
+      "sections": "122-154",
+      "available_in_new_regime_only": [
+        "124(1)/(2)",
+        "125(2)",
+        "146"
+      ]
+    },
+    "step8_compute_tax": {
+      "new_regime_default": "Section 202",
+      "special_rates": [
+        "192-198"
+      ]
+    },
+    "step9_rebate_surcharge_cess": {
+      "rebate_section": "156",
+      "surcharge": "from Finance Act",
+      "cess": "4% Health & Education Cess"
+    },
+    "step10_credits": {
+      "reduce": [
+        "TDS (Sec 393)",
+        "TCS (Sec 394)",
+        "Advance tax",
+        "Self-assessment tax"
+      ]
+    },
+    "step11_interest": {
+      "sections": [
+        "423",
+        "424",
+        "425",
+        "426"
+      ]
+    },
+    "step12_output": {
+      "format": "CBDT JSON schema",
+      "submission": "incometax.gov.in or via ERI"
+    }
+  },
   "regime_comparison_logic": {
     "default": "New regime (Sec 202)",
     "old_regime_better_when": [
@@ -513,15 +1138,16 @@
       "Section 156 rebate makes income up to 12 lakh tax-free"
     ]
   },
-
   "sources_and_authorities": {
     "primary": "Income-tax Act, 2025 (30 of 2025) as amended by Finance Act, 2026",
     "rules": "Income-tax Rules (to be notified after Act commencement)",
     "circulars": "CBDT Circulars to be issued",
     "case_law": "1961 Act case law continues to apply where wording substantially same",
     "note": "When AI explains anything, cite SECTION NUMBER from THIS Act (with optional 1961 equivalent in brackets)"
-  }
-}
-ackets)"
+  },
+  "_meta": {
+    "last_validated": "2026-05-03",
+    "version": "1.1",
+    "note": "Cleaned duplicate trailing block. JSON valid."
   }
 }

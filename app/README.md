@@ -24,12 +24,12 @@ In `app.html`, click **"Demo with sample data"** to see the full flow:
 - Asks only the questions it can't figure out
 - Computes both regimes
 - Shows recommendation with savings
-- Generates downloadable ITR-1 JSON in CBDT-compliant structure
+- Generates downloadable ITR-1 JSON in DRAFT structure (modelled on CBDT schema for AY 2027-28; pending official notification)
 
 In `index.html`:
 - Hero with the chat preview embedded
 - Feature grid (6 cards)
-- Real comparison block ("Priya saved ₹36,608")
+- Real comparison block ("Priya saved ₹36,587" — engine-computed)
 - 3-tier pricing
 - FAQ
 - Final CTA

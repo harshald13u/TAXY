@@ -641,6 +641,7 @@
       </a>
     </div>
     <p class="hero-disclaimer">No credit card · India-hosted · Built on the Income-tax Act, 2025</p>
+    <p class="hero-disclaimer" style="margin-top: 8px; color: #f59e0b;">⚠ Currently supports <b>ITR-1 (Sahaj)</b> for salaried filers. Capital gains, business income, and complex cases — coming soon.</p>
   </div>
 </section>
 
@@ -976,15 +977,15 @@
     <div style="margin-top: 40px; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--bg-surface);">
 
       <details open style="border-bottom: 1px solid var(--border);"><summary style="padding: 18px 22px; cursor: pointer; font-weight: 600; color: var(--text-primary);"><span style="color: #c4b5fd; font-weight: 700; margin-right: 10px;">01</span>Is Taxy safe? Where is my data stored?</summary><div style="padding: 0 22px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
-        <p style="margin: 0 0 10px;"><b style="color: var(--text-primary);">Your tax data lives in AWS Mumbai region — never leaves Indian soil.</b> 256-bit AES encryption at rest, TLS 1.3 in transit, with audit logs for every read.</p>
-        <p style="margin: 0 0 10px;">We are fully compliant with India's DPDP Act, 2023 — you can export your full data set or delete your account from settings at any time, and we delete derivative copies within 30 days. We never sell or share data with third parties for advertising.</p>
-        <p style="margin: 0;">Filing-time data (Form 16, AIS, broker P&amp;L) is processed in-memory and persisted only in your encrypted vault. Even our engineers can't read your numbers without your explicit consent.</p>
+        <p style="margin: 0 0 10px;"><b style="color: var(--text-primary);">Plan: tax data hosted in AWS Mumbai region — never leaves Indian soil.</b> Architected for 256-bit AES encryption at rest and TLS 1.3 in transit. Today, the demo runs entirely in your browser — your numbers never reach a server.</p>
+        <p style="margin: 0 0 10px;">Built with India's DPDP Act, 2023 in mind from day one. The principles we'll honour: you can export or delete your data, we won't sell or share it for advertising, and derivative copies will be deleted within 30 days of an account-delete request. Formal DPDP audit pending.</p>
+        <p style="margin: 0;">For the current demo: Form 16 PDF parsing happens in your browser via PDF.js — your file never uploads anywhere. The chat is a single-page app with no backend yet.</p>
       </div></details>
 
       <details style="border-bottom: 1px solid var(--border);"><summary style="padding: 18px 22px; cursor: pointer; font-weight: 600; color: var(--text-primary);"><span style="color: #c4b5fd; font-weight: 700; margin-right: 10px;">02</span>AI will hallucinate and make my filing wrong.</summary><div style="padding: 0 22px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
         <p style="margin: 0 0 10px;"><b style="color: var(--text-primary);">Taxy doesn't generate numbers — it computes them.</b> Every line on your return is produced by a deterministic engine that follows the Income-tax Act, 2025 verbatim. There is no LLM choosing your tax slab, your HRA exemption, or your Sec 198 LTCG. Those are if-then rules tested against the Act PDF.</p>
         <p style="margin: 0 0 10px;">The AI sits in two places, and only two: <b>(a) reading your documents</b> (Form 16, AIS, broker P&amp;L) and <b>(b) writing the chat copy</b>. Both outputs go through cross-checks — Form 16 numbers are reconciled against TRACES Sec 393 statements, AIS items against the official JSON from incometax.gov.in.</p>
-        <p style="margin: 0;">Bottom line: if a number is wrong, it is wrong because the <i>Act</i> is wrong, or your <i>documents</i> are wrong. Both are auditable. Hover any §pill in the app — the section appears. Click it — the original text appears. You can verify every rupee.</p>
+        <p style="margin: 0;">Bottom line: if a number is wrong, it is wrong because the <i>Act</i> is wrong, or your <i>documents</i> are wrong. Both are auditable. Hover any §pill in the app — the section number, title, and principle appear. You can verify every rupee against the Act PDF.</p>
       </div></details>
 
       <details style="border-bottom: 1px solid var(--border);"><summary style="padding: 18px 22px; cursor: pointer; font-weight: 600; color: var(--text-primary);"><span style="color: #c4b5fd; font-weight: 700; margin-right: 10px;">03</span>ITA 2025 is too new — software hasn't been tested.</summary><div style="padding: 0 22px 22px; color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
