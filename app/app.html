@@ -878,6 +878,73 @@ function parseForm16(text) {
   return out;
 }
 
+// Generic tax-image extractor — works on salary slips, screenshots, bank statements.
+// Strategy: hunt for any number near financial keywords. Looser regex, lower confidence.
+// Used as fallback when parseForm16() returns nothing (e.g. user uploads anything besides a CBDT Form 16).
+function parseGenericTaxImage(text) {
+  const out = { confidence: {} };
+  const norm = text.replace(/\s+/g, ' ').replace(/,/g, '');
+  const num = s => s ? parseInt(s.replace(/[^\d]/g, ''), 10) : 0;
+
+  // Helper: find first number within ~50 chars after a keyword pattern.
+  // Returns the number or 0. Keyword can be a regex source.
+  const nearNumber = (keywords) => {
+    for (const kw of keywords) {
+      const re = new RegExp('(?:' + kw + ')[\\s:.\\-=₹Rs]{0,20}([\\d,]{3,12})', 'i');
+      const m = norm.match(re);
+      if (m) {
+        const n = num(m[1]);
+        if (n >= 1000 && n <= 100000000) return n; // sanity range
+      }
+    }
+    return 0;
+  };
+
+  // PAN — same pattern (5 letters + 4 digits + 1 letter, anywhere in text)
+  const panMatch = norm.match(/\b([A-Z]{5}\d{4}[A-Z])\b/);
+  if (panMatch) { out.pan = panMatch[1]; out.confidence.pan = 'high'; }
+
+  // Salary — try many phrasings used across salary slips, Form 16, bank credits
+  const salary = nearNumber([
+    'gross salary', 'gross pay', 'gross earnings', 'gross income',
+    'total salary', 'total earnings', 'total income',
+    'annual salary', 'annual income', 'annual pay', 'annual ctc',
+    'ctc', 'cost to company',
+    'salary credited', 'salary credit',
+    'basic salary', 'basic\\+da', 'basic and da',  // sometimes only basic visible
+    'salary'  // last resort
+  ]);
+  if (salary) { out.salary = salary; out.confidence.salary = 'low'; }
+
+  // HRA
+  const hra = nearNumber(['house rent allowance', 'hra exempt', 'hra received', 'hra']);
+  if (hra) { out.hra = hra; out.confidence.hra = 'low'; }
+
+  // TDS
+  const tds = nearNumber([
+    'tax deducted at source', 'total tax deducted',
+    'tds deducted', 'tds amount', 'tds',
+    'income tax deducted', 'income tax', 'tax paid'
+  ]);
+  if (tds) { out.tdsPaid = tds; out.confidence.tdsPaid = 'low'; }
+
+  // 80C
+  const sec80c = nearNumber(['section 80c', 'sec 80c', '80c investment', '80c']);
+  if (sec80c) { out.sec80c = sec80c; out.confidence.sec80c = 'low'; }
+
+  // 80D
+  const sec80d = nearNumber(['section 80d', 'sec 80d', 'medical insurance', '80d']);
+  if (sec80d) { out.sec80d = sec80d; out.confidence.sec80d = 'low'; }
+
+  // Employer — look near "company", "employer", "M/s"
+  const empMatch = norm.match(/(?:Employer|Company|M\/s\.?|Organization)[\s:]{1,5}([A-Z][A-Za-z &.,'-]{3,60}?)(?=\s+(?:PAN|TAN|Address|Pvt|Limited|Ltd|Inc|LLP|$|\d))/i);
+  if (empMatch) { out.employer = empMatch[1].trim(); out.confidence.employer = 'low'; }
+
+  out.rawTextLength = norm.length;
+  out._source = 'generic';
+  return out;
+}
+
 // Friendly extracted-data card for chat — every field shown with confidence + edit
 function extractedCardHtml(data) {
   const fmt = n => '₹' + (n||0).toLocaleString('en-IN');
@@ -962,13 +1029,23 @@ async function tryParseUploadedFile(file) {
     const card = document.getElementById(progressId);
     if (card) card.remove();
 
-    // Reuse the existing PDF Form 16 regex parser on the OCR text
-    const data = parseForm16(text);
+    // Try strict Form 16 parser first
+    let data = parseForm16(text);
+    let usedFallback = false;
+    // Fallback to generic tax-image parser if strict parser found nothing
     if (!data.salary && !data.tdsPaid && !data.pan) {
-      return { error: 'no-match', text: "I read the image but couldn't find Form 16 fields. The image may be blurry, rotated, or not a Form 16. Try a clearer photo, or type the values manually." };
+      const generic = parseGenericTaxImage(text);
+      if (generic.salary || generic.tdsPaid || generic.pan || generic.hra) {
+        data = generic;
+        usedFallback = true;
+      } else {
+        // Truly nothing — show what text WAS extracted so user can copy values manually
+        const snippet = text.trim().slice(0, 400).replace(/\s+/g, ' ');
+        return { error: 'no-match', text: 'I read the image but couldn\'t find any salary or tax numbers I could recognise. <br><br>What I read from the image: <br><span style="font-family:monospace;font-size:11.5px;color:var(--text-muted);">' + esc(snippet) + (text.length > 400 ? '…' : '') + '</span><br><br>If your salary/TDS values are in there, please type them — e.g. <i>"salary 18 lakh, tds 2 lakh"</i>.' };
+      }
     }
-    data._source = 'ocr-image';
-    // Mark all confidence as "low" since OCR is less reliable than PDF text extraction
+    data._source = usedFallback ? 'ocr-generic' : 'ocr-form16';
+    // Mark all confidence one notch lower since OCR is less reliable than digital PDF text
     Object.keys(data.confidence || {}).forEach(k => {
       if (data.confidence[k] === 'high') data.confidence[k] = 'medium';
       else if (data.confidence[k] === 'medium') data.confidence[k] = 'low';
@@ -1563,15 +1640,29 @@ async function generate(regime) {
 function checkSvg() { return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>'; }
 function arrowDownSvg(size) { size = size || 14; return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>'; }
 
+// Cross-call dedup — file input + drop zone often fire BOTH for the same drop.
+// Anything seen in the last 3 seconds is rejected.
+window._recentlyProcessedFiles = window._recentlyProcessedFiles || new Map();
+
 async function handleFiles(fileList) {
   const incoming = Array.from(fileList);
+  const now = Date.now();
 
-  // Audit Issue 3 fix: deduplicate by name+size (drag-drop + file-picker can double-add)
+  // Clear entries older than 3s
+  for (const [k, ts] of window._recentlyProcessedFiles) {
+    if (now - ts > 3000) window._recentlyProcessedFiles.delete(k);
+  }
+
+  // Dedup within this call AND against recent calls
   const seen = new Set();
   const files = [];
   for (const f of incoming) {
     const key = f.name + '|' + f.size;
-    if (!seen.has(key)) { seen.add(key); files.push(f); }
+    if (seen.has(key)) continue;
+    if (window._recentlyProcessedFiles.has(key)) continue; // already processed in last 3s
+    seen.add(key);
+    window._recentlyProcessedFiles.set(key, now);
+    files.push(f);
   }
   if (files.length === 0) return;
 
